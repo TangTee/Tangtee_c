@@ -359,6 +359,7 @@ class _EditActState extends State<EditAct> {
                                       MediaQuery.of(context).size.width * 0.85,
                                   child: TextFormField(
                                     controller: _peopleLimitController,
+                                    keyboardType: TextInputType.number,
                                     decoration: textInputDecorationp.copyWith(
                                         hintText: 'People Limit',
                                         prefixIcon: Icon(
