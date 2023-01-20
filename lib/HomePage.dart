@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tangteevs/utils/color.dart';
-import 'Event.dart';
+import 'event/Event.dart';
 import 'feed/FeedPage.dart';
 import 'Profile/Profile.dart';
 import 'activity/Activity.dart';
@@ -122,7 +122,6 @@ class HomeTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: FeedPage(
-        
         uid: FirebaseAuth.instance.currentUser!.uid,
       ),
     );
