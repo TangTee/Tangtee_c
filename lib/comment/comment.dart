@@ -166,7 +166,9 @@ class _MyCommentState extends State<Comment> {
                                                   style: const TextStyle(
                                                     fontSize: 20,
                                                     fontFamily: 'MyCustomFont',
+
                                                     color: mobileSearchColor,
+
                                                     fontWeight: FontWeight.bold,
                                                   )),
                                             ),
@@ -703,6 +705,7 @@ class _MyCommentState extends State<Comment> {
                                                                                         fontSize: 16,
                                                                                         fontFamily: 'MyCustomFont',
                                                                                         color: mobileSearchColor,
+
                                                                                         fontWeight: FontWeight.bold,
                                                                                       )),
                                                                                 ),
