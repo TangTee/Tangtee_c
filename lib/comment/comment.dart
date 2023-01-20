@@ -223,31 +223,196 @@ class _MyCommentState extends State<Comment> {
                                                 width: 0.5,
                                               ),
                                             ),
-                                            //margin: const EdgeInsets.only(top: 15),
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: SizedBox(
-                                                width: MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 15.0, top: 8.0),
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .only(
-                                                                bottom: 8.0),
-                                                        child: Row(
-                                                          children: [
-                                                            SizedBox(
+
+                                          ),
+                                          //margin: const EdgeInsets.only(top: 15),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: SizedBox(
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 15.0, top: 8.0),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              bottom: 8.0),
+                                                      child: Row(
+                                                        children: [
+                                                          SizedBox(
+                                                            width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width *
+                                                                0.62,
+                                                            child: Text(
+                                                                documentSnapshot[
+                                                                    'activityName'],
+                                                                style:
+                                                                    const TextStyle(
+                                                                  fontSize: 20,
+                                                                  fontFamily:
+                                                                      'MyCustomFont',
+                                                                  color:
+                                                                      unselected,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                )),
+                                                          ),
+                                                          SizedBox(
+                                                              child: Icon(Icons
+                                                                  .person)),
+                                                          Text.rich(TextSpan(
+                                                              children: <
+                                                                  InlineSpan>[
+                                                                TextSpan(
+                                                                    text: '\t' +
+                                                                        '0 / ' +
+                                                                        documentSnapshot[
+                                                                            'peopleLimit'],
+                                                                    style:
+                                                                        const TextStyle(
+                                                                      fontSize:
+                                                                          20,
+                                                                      fontFamily:
+                                                                          'MyCustomFont',
+                                                                      color:
+                                                                          unselected,
+                                                                    )),
+                                                              ])),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    Text.rich(TextSpan(
+                                                        children: <InlineSpan>[
+                                                          const TextSpan(
+                                                            text: '',
+                                                          ),
+                                                          const WidgetSpan(
+                                                            child: Icon(
+                                                              Icons
+                                                                  .calendar_today,
+                                                            ),
+                                                          ),
+                                                          TextSpan(
+                                                              text:
+                                                                  '${'\t\t' + documentSnapshot['date'] + '\t\t(' + documentSnapshot['time']})',
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontFamily:
+                                                                    'MyCustomFont',
+                                                                color:
+                                                                    unselected,
+                                                              )),
+                                                        ])),
+                                                    SizedBox(
+                                                      height:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .height *
+                                                              0.01,
+                                                    ),
+                                                    Text.rich(TextSpan(
+                                                        children: <InlineSpan>[
+                                                          const TextSpan(
+                                                            text: '',
+                                                          ),
+                                                          const WidgetSpan(
+                                                            child: Icon(
+                                                              Icons
+                                                                  .maps_home_work,
+                                                            ),
+                                                          ),
+                                                          TextSpan(
+                                                              text: '\t\t' +
+                                                                  documentSnapshot[
+                                                                      'place'],
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontFamily:
+                                                                    'MyCustomFont',
+                                                                color:
+                                                                    unselected,
+                                                              )),
+                                                        ])),
+                                                    SizedBox(
+                                                      height:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .height *
+                                                              0.01,
+                                                    ),
+                                                    Text.rich(TextSpan(
+                                                        children: <InlineSpan>[
+                                                          const TextSpan(
+                                                            text: '',
+                                                          ),
+                                                          const WidgetSpan(
+                                                            child: Icon(
+                                                              Icons.place,
+                                                            ),
+                                                          ),
+                                                          TextSpan(
+                                                              text: '\t\t' +
+                                                                  documentSnapshot[
+                                                                      'location'],
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontFamily:
+                                                                    'MyCustomFont',
+                                                                color:
+                                                                    unselected,
+                                                              )),
+                                                        ])),
+                                                    SizedBox(
+                                                      height:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .height *
+                                                              0.01,
+                                                    ),
+                                                    SizedBox(
+                                                        width: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width *
+                                                            0.7,
+                                                        child: Text(
+                                                            '\nDetail\n\t\t\t\t\t' +
+                                                                documentSnapshot[
+                                                                        'detail']
+                                                                    .toString(),
+                                                            style: const TextStyle(
+                                                                fontSize: 16,
+                                                                fontFamily:
+                                                                    'MyCustomFont',
+                                                                color:
+                                                                    unselected))),
+                                                    SizedBox(
+                                                      height:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .height *
+                                                              0.02,
+                                                    ),
+                                                    Row(
+                                                      children: [
+                                                        SingleChildScrollView(
+                                                          scrollDirection:
+                                                              Axis.horizontal,
+                                                          child: Padding(
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                    1),
+                                                            child: SizedBox(
+
                                                               width: MediaQuery.of(
                                                                           context)
                                                                       .size
