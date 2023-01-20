@@ -1,18 +1,13 @@
-import 'dart:ffi';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tangteevs/Landing.dart';
 import 'package:tangteevs/admin/home.dart';
-import 'package:tangteevs/feed/FeedPage.dart';
 import 'package:tangteevs/profile/edit.dart';
 import 'package:tangteevs/utils/color.dart';
 import 'package:tangteevs/utils/showSnackbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:age_calculator/age_calculator.dart';
-
-import '../regis,login/Login.dart';
 import '../widgets/PostCard.dart';
 import '../widgets/custom_textfield.dart';
 

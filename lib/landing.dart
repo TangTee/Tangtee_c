@@ -51,7 +51,7 @@ class _LandingPageState extends State<LandingPage> {
           const Text.rich(TextSpan(
             text: "ไม่มีเพื่อนไปทำกิจกรรมอย่างงั้นหรอ?",
             style: const TextStyle(
-                color: Colors.black,
+                color: mobileSearchColor,
                 fontSize: 12,
                 fontFamily: 'MyCustomFont',
                 fontWeight: FontWeight.bold),
@@ -59,7 +59,7 @@ class _LandingPageState extends State<LandingPage> {
           const Text.rich(TextSpan(
             text: "มาสิ เดี๋ยวพวกเราช่วยหาเพื่อนที่ชอบทำกิจกรรมเดียวกันให้",
             style: const TextStyle(
-                color: Colors.black,
+                color: mobileSearchColor,
                 fontSize: 12,
                 fontFamily: 'MyCustomFont',
                 fontWeight: FontWeight.bold),
@@ -80,7 +80,7 @@ class _LandingPageState extends State<LandingPage> {
                       borderRadius: BorderRadius.circular(30))),
               child: const Text(
                 "login",
-                style: TextStyle(color: Colors.white, fontSize: 24),
+                style: TextStyle(color: white, fontSize: 24),
               ),
               onPressed: () {
                 nextScreen(context, Login());
@@ -93,7 +93,7 @@ class _LandingPageState extends State<LandingPage> {
                 backgroundColor: mobileBackgroundColor,
                 side: const BorderSide(
                   width: 2.0,
-                  color: Colors.purple,
+                  color: purple,
                 ),
                 minimumSize: const Size(307, 49),
                 elevation: 0,
@@ -101,7 +101,7 @@ class _LandingPageState extends State<LandingPage> {
                     borderRadius: BorderRadius.circular(30))),
             child: const Text(
               "Create Account",
-              style: TextStyle(color: Colors.purple, fontSize: 24),
+              style: TextStyle(color: purple, fontSize: 24),
             ),
             onPressed: () {
               nextScreen(context, const RegisterPage());
@@ -113,19 +113,21 @@ class _LandingPageState extends State<LandingPage> {
           const Text.rich(TextSpan(
             text: "การลงชื่อเข้าใช้แสดงว่าคุณยอมรับ",
             style: const TextStyle(
-              color: Colors.black,
+              color: mobileSearchColor,
               fontSize: 12,
               fontFamily: 'MyCustomFont',
             ),
           )),
           Text.rich(TextSpan(
             style: const TextStyle(
-                color: Colors.black, fontSize: 12, fontFamily: 'MyCustomFont'),
+                color: mobileSearchColor,
+                fontSize: 12,
+                fontFamily: 'MyCustomFont'),
             children: <TextSpan>[
               TextSpan(
                   text: " เงื่อนไขการใช้งาน",
                   style: const TextStyle(
-                      color: Colors.black,
+                      color: mobileSearchColor,
                       decoration: TextDecoration.underline,
                       fontWeight: FontWeight.bold),
                   recognizer: TapGestureRecognizer()
@@ -135,12 +137,13 @@ class _LandingPageState extends State<LandingPage> {
               TextSpan(
                   text: " และ ",
                   style: const TextStyle(
-                      color: Colors.black, decoration: TextDecoration.none),
+                      color: mobileSearchColor,
+                      decoration: TextDecoration.none),
                   recognizer: TapGestureRecognizer()),
               TextSpan(
                   text: "นโยบายความเป็นส่วนตัวของเรา",
                   style: const TextStyle(
-                      color: Colors.black,
+                      color: mobileSearchColor,
                       decoration: TextDecoration.underline,
                       fontWeight: FontWeight.bold),
                   recognizer: TapGestureRecognizer()

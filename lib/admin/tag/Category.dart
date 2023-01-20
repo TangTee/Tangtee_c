@@ -249,7 +249,7 @@ class _tagCategoryState extends State<CategoryWidget> {
                         style: TextStyle(
                           fontSize: 32,
                           fontFamily: 'MyCustomFont',
-                          color: Colors.grey,
+                          color: unselected,
                           fontWeight: FontWeight.bold,
                         ),
                       ),

@@ -9,8 +9,6 @@ import '../../widgets/custom_textfield.dart';
 import 'Category.dart';
 
 class BeforeTagPage extends StatefulWidget {
-  // final String uid;
-  // const BeforeTagPage({Key? key, required this.uid}) : super(key: key);
   const BeforeTagPage({Key? key}) : super(key: key);
   @override
   _BeforeTagPageState createState() => _BeforeTagPageState();

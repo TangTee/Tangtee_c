@@ -1,20 +1,13 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:tangteevs/profile/Profile.dart';
 import 'package:tangteevs/profile/profileback.dart';
 import 'package:tangteevs/services/auth_service.dart';
 import 'package:tangteevs/services/database_service.dart';
-import '../helper/helper_function.dart';
 import '../utils/color.dart';
 import '../utils/showSnackbar.dart';
 import '../widgets/custom_textfield.dart';
-
-import 'package:image_picker/image_picker.dart';
 
 class EditAct extends StatefulWidget {
   final String postid;

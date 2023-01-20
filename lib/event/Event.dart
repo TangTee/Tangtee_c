@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -8,10 +6,9 @@ import 'package:tangteevs/utils/color.dart';
 import 'package:tangteevs/widgets/custom_textfield.dart';
 import 'package:intl/intl.dart';
 
-import '../utils/color.dart';
-import '../utils/showSnackbar.dart';
-
 class CreateEventScreen extends StatefulWidget {
+  // DocumentSnapshot tagId;
+  // CreateEventScreen({Key? key, required this.tagId}) : super(key: key);
   const CreateEventScreen({Key? key}) : super(key: key);
 
   @override
@@ -59,7 +56,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                         ),
                         decoration: const InputDecoration(
                           labelStyle: TextStyle(
-                              color: Colors.black,
+                              color: mobileSearchColor,
                               fontWeight: FontWeight.bold,
                               fontFamily: "MyCustomFont"),
                           suffixIcon: Icon(Icons.edit),
@@ -80,7 +77,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                         controller: _place,
                         decoration: textInputDecoration.copyWith(
                           labelStyle: const TextStyle(
-                            color: Colors.black,
+                            color: mobileSearchColor,
                             fontFamily: "MyCustomFont",
                           ),
                           hintText: 'Place',
@@ -103,15 +100,13 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                               hintText: 'Location URL',
                               labelStyle: const TextStyle(
                                   fontFamily: "MyCustomFont",
-                                  color: Colors.black)),
+                                  color: mobileSearchColor)),
                           validator: (value) {
                             if (value!.isEmpty) {
                               return 'Please enter a valid location';
                             }
                             return null;
                           },
-
-
                         ),
                       ),
                       Padding(
@@ -129,9 +124,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                                     decoration: textInputDecoration.copyWith(
                                       prefixIcon: Icon(Icons.calendar_month),
                                       labelStyle: const TextStyle(
-
                                         color: mobileSearchColor,
-
                                         fontFamily: "MyCustomFont",
                                       ),
                                       hintText: '_ _ / _ _ / _ _ ',
@@ -152,18 +145,15 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                                             DateFormat('yyyy/MM/dd')
                                                 .format(pickedDate);
                                         setState(() {
-
                                           isDateSelect = true;
                                           dateController.text = formattedDate;
                                         });
-
                                       }
                                     },
                                   ),
                                 ),
                               ],
                             ),
-
                             if (isDateSelect == false)
                               Column(
                                 children: [
@@ -175,7 +165,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                                       decoration: textInputDecoration.copyWith(
                                           enabled: false,
                                           labelStyle: const TextStyle(
-                                            color: Colors.black,
+                                            color: mobileSearchColor,
                                             fontFamily: "MyCustomFont",
                                           ),
                                           disabledBorder: OutlineInputBorder(
@@ -231,7 +221,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                                       controller: _time,
                                       decoration: textInputDecoration.copyWith(
                                           labelStyle: const TextStyle(
-                                            color: Colors.black,
+                                            color: mobileSearchColor,
                                             fontFamily: "MyCustomFont",
                                           ),
                                           prefixIcon: const Icon(
@@ -286,7 +276,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                               controller: _detail,
                               decoration: textInputDecoration.copyWith(
                                 labelStyle: const TextStyle(
-                                  color: Colors.black,
+                                  color: mobileSearchColor,
                                   fontFamily: "MyCustomFont",
                                 ),
                                 hintText: 'Detail',
@@ -301,19 +291,16 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                                 return null;
                               },
                             ),
-
                           ),
                         ),
                       ),
                       Padding(
-
                         padding: const EdgeInsets.only(top: 0.0),
-
                         child: TextFormField(
                             controller: _peopleLimit,
                             decoration: textInputDecoration.copyWith(
                               labelStyle: const TextStyle(
-                                color: Colors.black,
+                                color: mobileSearchColor,
                                 fontFamily: "MyCustomFont",
                               ),
                               hintText: 'People Limit',
@@ -334,9 +321,11 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                         child: Row(
                           children: [
                             TextButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                // showModalBottomSheetT(context);
+                              },
                               style: OutlinedButton.styleFrom(
-                                foregroundColor: Colors.black,
+                                foregroundColor: mobileSearchColor,
                               ),
                               child: Container(
                                 width: 50,
@@ -362,10 +351,8 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                               style: TextStyle(fontSize: 20),
                             ),
                             style: ElevatedButton.styleFrom(
-
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(30)),
-
                                 backgroundColor: green),
                             onPressed: () async {
                               if (_formKey.currentState!.validate() == true) {

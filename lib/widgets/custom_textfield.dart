@@ -1,14 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
-import 'package:tangteevs/feed/FeedPage.dart';
-import '../HomePage.dart';
-import '../utils/color.dart';
 import '../utils/color.dart';
 
 const textInputDecoration = InputDecoration(
-  labelStyle: TextStyle(color: Colors.black),
+  labelStyle: TextStyle(color: mobileSearchColor),
   focusedBorder: OutlineInputBorder(
     borderRadius: BorderRadius.all(Radius.circular(70.0)),
     borderSide: BorderSide(color: green, width: 2),
@@ -30,7 +24,7 @@ const textInputDecoration = InputDecoration(
 );
 
 const textInputDecorationp = InputDecoration(
-  labelStyle: TextStyle(color: Colors.black),
+  labelStyle: TextStyle(color: mobileSearchColor),
   focusedBorder: OutlineInputBorder(
     borderRadius: BorderRadius.all(Radius.circular(70.0)),
     borderSide: BorderSide(color: purple, width: 2),
@@ -52,7 +46,7 @@ const textInputDecorationp = InputDecoration(
 );
 
 const searchInputDecoration = InputDecoration(
-  labelStyle: TextStyle(color: Colors.black),
+  labelStyle: TextStyle(color: mobileSearchColor),
   focusedBorder: OutlineInputBorder(
     borderRadius: BorderRadius.all(Radius.circular(70)),
     borderSide: BorderSide(color: lightOrange, width: 2),
@@ -99,7 +93,7 @@ void showSnackbar(context, color, message) {
       action: SnackBarAction(
         label: "OK",
         onPressed: () {},
-        textColor: Colors.white,
+        textColor: white,
       ),
     ),
   );

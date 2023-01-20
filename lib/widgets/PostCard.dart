@@ -1,24 +1,14 @@
-import 'package:favorite_button/favorite_button.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:tangteevs/feed/EditAct.dart';
 import 'package:tangteevs/utils/showSnackbar.dart';
-import 'package:tangteevs/widgets/custom_textfield.dart';
 import 'package:tangteevs/widgets/like.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../HomePage.dart';
 import '../Report.dart';
 import '../comment/comment.dart';
 import '../utils/color.dart';
-import '../services/auth_service.dart';
-import 'package:getwidget/getwidget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:timeago/timeago.dart' as timeago;
-import 'dart:math';
-import '../feed/FeedPage.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
 class CardWidget extends StatefulWidget {
   final snap;

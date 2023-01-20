@@ -5,14 +5,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:tangteevs/Homepage.dart';
-import 'package:tangteevs/profile/Profile.dart';
 import 'package:tangteevs/regis,login/Registernext.dart';
 import 'package:tangteevs/services/auth_service.dart';
 import 'package:tangteevs/services/database_service.dart';
-import '../helper/helper_function.dart';
 import '../team/privacy.dart';
 import '../team/team.dart';
 import '../utils/color.dart';
@@ -84,8 +80,8 @@ class _IdcardPageState extends State<IdcardPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        iconTheme: const IconThemeData(color: Colors.black),
+        backgroundColor: transparent,
+        iconTheme: const IconThemeData(color: mobileSearchColor),
         toolbarHeight: 120,
         centerTitle: true,
         elevation: 0,
@@ -98,7 +94,7 @@ class _IdcardPageState extends State<IdcardPage> {
             shadows: [
               Shadow(
                 blurRadius: 5,
-                color: Colors.grey,
+                color: unselected,
                 offset: Offset(3, 3),
               ),
             ],
@@ -391,7 +387,7 @@ class _IdcardPageState extends State<IdcardPage> {
                         ),
                         Text.rich(TextSpan(
                           style: const TextStyle(
-                              color: Colors.black,
+                              color: mobileSearchColor,
                               fontSize: 12,
                               fontFamily: 'MyCustomFont'),
                           children: <TextSpan>[
@@ -399,14 +395,14 @@ class _IdcardPageState extends State<IdcardPage> {
                                 text:
                                     "ฉันขอรับรองว่ามีอายุมากกว่า 15 ปี และยอมรับ",
                                 style: const TextStyle(
-                                  color: Colors.black,
+                                  color: mobileSearchColor,
                                   decoration: TextDecoration.none,
                                 ),
                                 recognizer: TapGestureRecognizer()),
                             TextSpan(
                                 text: "เงื่อนไขการใช้งาน\n",
                                 style: const TextStyle(
-                                    color: Colors.black,
+                                    color: mobileSearchColor,
                                     decoration: TextDecoration.underline,
                                     fontWeight: FontWeight.bold),
                                 recognizer: TapGestureRecognizer()
@@ -416,14 +412,14 @@ class _IdcardPageState extends State<IdcardPage> {
                             TextSpan(
                                 text: "และ",
                                 style: const TextStyle(
-                                  color: Colors.black,
+                                  color: mobileSearchColor,
                                   decoration: TextDecoration.none,
                                 ),
                                 recognizer: TapGestureRecognizer()),
                             TextSpan(
                                 text: "นโยบายความเป็นส่วนตัว",
                                 style: const TextStyle(
-                                    color: Colors.black,
+                                    color: mobileSearchColor,
                                     decoration: TextDecoration.underline,
                                     fontWeight: FontWeight.bold),
                                 recognizer: TapGestureRecognizer()

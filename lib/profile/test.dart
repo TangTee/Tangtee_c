@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:tangteevs/profile/profileback.dart';
 import '../widgets/custom_textfield.dart';
-
 
 class UserPage extends StatefulWidget {
   const UserPage({Key? key}) : super(key: key);
@@ -57,7 +54,8 @@ class _UserPageState extends State<UserPage> {
                     final double? email =
                         double.tryParse(_emailController.text);
                     if (email != null) {
-                      await _users.add({"Displayname": Displayname, "email": email});
+                      await _users
+                          .add({"Displayname": Displayname, "email": email});
 
                       _DisplaynameController.text = '';
                       _emailController.text = '';
@@ -131,8 +129,8 @@ class _UserPageState extends State<UserPage> {
   Future<void> _delete(String usersId) async {
     await _users.doc(usersId).delete();
 
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('You have successfully deleted a users')));
+    ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('You have successfully deleted a users')));
   }
 
   @override

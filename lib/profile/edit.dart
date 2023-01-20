@@ -4,11 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:tangteevs/profile/Profile.dart';
 import 'package:tangteevs/profile/profileback.dart';
 import 'package:tangteevs/services/auth_service.dart';
 import 'package:tangteevs/services/database_service.dart';
-import '../helper/helper_function.dart';
 import '../utils/color.dart';
 import '../utils/showSnackbar.dart';
 import '../widgets/custom_textfield.dart';
@@ -162,7 +160,7 @@ class _EditPageState extends State<EditPage> {
                                               )),
                                           child: CircleAvatar(
                                             radius: 60,
-                                            backgroundColor: Colors.transparent,
+                                            backgroundColor: transparent,
                                             child: ClipRRect(
                                               borderRadius:
                                                   BorderRadius.circular(60),

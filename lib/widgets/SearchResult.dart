@@ -1,17 +1,7 @@
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:favorite_button/favorite_button.dart';
 import 'package:flutter/material.dart';
-import 'package:tangteevs/HomePage.dart';
 import 'package:tangteevs/utils/color.dart';
-import 'package:tangteevs/services/auth_service.dart';
-import 'package:getwidget/getwidget.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'dart:math';
 import '../widgets/PostCard.dart';
-import '../widgets/SearchResult.dart';
 import '../widgets/custom_textfield.dart';
 
 class SearchResult extends StatefulWidget {

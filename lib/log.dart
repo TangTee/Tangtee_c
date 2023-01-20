@@ -1,13 +1,7 @@
-import 'dart:math';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:tangteevs/HomePage.dart';
 import 'package:tangteevs/landing.dart';
-import 'package:tangteevs/utils/showSnackbar.dart';
-import 'package:tangteevs/widgets/custom_textfield.dart';
-
 import 'admin/home.dart';
 
 class Log extends StatefulWidget {
