@@ -20,7 +20,9 @@ class CreateEventScreen extends StatefulWidget {
 
 class _CreateEventScreenState extends State<CreateEventScreen> {
   bool _isLoading = false;
+
   bool isDateSelect = false;
+
   final _post = FirebaseFirestore.instance.collection('post').doc();
 
   final _formKey = GlobalKey<FormState>();
@@ -108,6 +110,8 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                             }
                             return null;
                           },
+
+
                         ),
                       ),
                       Padding(
@@ -125,7 +129,9 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                                     decoration: textInputDecoration.copyWith(
                                       prefixIcon: Icon(Icons.calendar_month),
                                       labelStyle: const TextStyle(
+
                                         color: mobileSearchColor,
+
                                         fontFamily: "MyCustomFont",
                                       ),
                                       hintText: '_ _ / _ _ / _ _ ',
@@ -146,15 +152,18 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                                             DateFormat('yyyy/MM/dd')
                                                 .format(pickedDate);
                                         setState(() {
+
                                           isDateSelect = true;
                                           dateController.text = formattedDate;
                                         });
+
                                       }
                                     },
                                   ),
                                 ),
                               ],
                             ),
+
                             if (isDateSelect == false)
                               Column(
                                 children: [
@@ -292,11 +301,14 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                                 return null;
                               },
                             ),
+
                           ),
                         ),
                       ),
                       Padding(
+
                         padding: const EdgeInsets.only(top: 0.0),
+
                         child: TextFormField(
                             controller: _peopleLimit,
                             decoration: textInputDecoration.copyWith(
@@ -350,8 +362,10 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                               style: TextStyle(fontSize: 20),
                             ),
                             style: ElevatedButton.styleFrom(
+
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(30)),
+
                                 backgroundColor: green),
                             onPressed: () async {
                               if (_formKey.currentState!.validate() == true) {
