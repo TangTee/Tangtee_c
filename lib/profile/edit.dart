@@ -329,7 +329,7 @@ class _EditPageState extends State<EditPage> {
 
   Widget bottomSheet() {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.15,
+      height: MediaQuery.of(context).size.height * 0.18,
       width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.symmetric(
         vertical: 20,
