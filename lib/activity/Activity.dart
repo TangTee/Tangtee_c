@@ -1,88 +1,63 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:favorite_button/favorite_button.dart';
 import 'package:flutter/material.dart';
-import 'package:tangteevs/activity/favorite.dart';
-import 'package:tangteevs/activity/history.dart';
-import 'package:tangteevs/activity/waiting.dart';
 import 'package:tangteevs/utils/color.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:tangteevs/widgets/custom_textfield.dart';
+import '../comment/comment.dart';
+import '../widgets/PostCard.dart';
 
-class ActivityPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return DefaultTabController(
-        length: 3,
-        child: Scaffold(
-          backgroundColor: mobileBackgroundColor,
-          appBar: AppBar(
-            backgroundColor: mobileBackgroundColor,
-            elevation: 1,
-            centerTitle: false,
-            title: Image.asset(
-              "assets/images/logo with name.png",
-              width: MediaQuery.of(context).size.width * 0.31,
-            ),
-            actions: [
-              IconButton(
-                icon: const Icon(
-                  Icons.notifications_none,
-                  color: purple,
-                  size: 30,
-                ),
-                onPressed: () {},
-              ),
-            ],
-            bottom: const TabBar(
-              indicatorColor: green,
-              labelColor: green,
-              labelPadding: EdgeInsets.symmetric(horizontal: 30),
-              unselectedLabelColor: unselected,
-              labelStyle: TextStyle(
-                  fontSize: 20.0,
-                  fontFamily: 'MyCustomFont'), //For Selected tab
-              unselectedLabelStyle: TextStyle(
-                  fontSize: 20.0,
-                  fontFamily: 'MyCustomFont'), //For Un-selected Tabs
-              tabs: [
-                Tab(text: 'Waiting'),
-                Tab(text: 'History'),
-                Tab(text: 'Favorite'),
-              ],
-            ),
-          ),
-          body: TabBarView(
-            children: [
-              Waiting(),
-              History(),
-              Favorite(),
-            ],
-          ),
-        ));
-  }
-}
+class FavoritePage extends StatelessWidget {
+  const FavoritePage({Key? key, required}) : super(key: key);
 
-class Favorite extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: mobileBackgroundColor,
       body: PostCard(),
     );
   }
 }
 
-class History extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: HistoryPage(),
-    );
-  }
-}
+class PostCard extends StatelessWidget {
+  final _post = FirebaseFirestore.instance.collection('post');
 
-class Waiting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: WaitingCard(),
+    return Container(
+      color: mobileBackgroundColor,
+      child: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('post')
+            .where('likes',
+                arrayContains: FirebaseAuth.instance.currentUser!.uid)
+            .orderBy('timeStamp', descending: true)
+            .snapshots(),
+        builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+          if (streamSnapshot.hasData) {
+            return ListView.builder(
+                itemCount: streamSnapshot.data!.docs.length,
+                itemBuilder: (context, index) => Container(
+                      child: CardWidget(
+                          snap: (streamSnapshot.data! as dynamic).docs[index]),
+                    ));
+          }
+          return Container(
+            child: Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: const <Widget>[
+                  SizedBox(
+                    height: 30.0,
+                    width: 30.0,
+                    child: CircularProgressIndicator(),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }
