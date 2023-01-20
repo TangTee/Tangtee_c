@@ -17,6 +17,10 @@ const textInputDecoration = InputDecoration(
     borderRadius: BorderRadius.all(Radius.circular(20.0)),
     borderSide: BorderSide(color: green, width: 2),
   ),
+  disabledBorder: OutlineInputBorder(
+    borderRadius: BorderRadius.all(Radius.circular(20.0)),
+    borderSide: BorderSide(color: disable, width: 2),
+  ),
   errorBorder: OutlineInputBorder(
     borderRadius: BorderRadius.all(Radius.circular(70.0)),
     borderSide: BorderSide(color: green, width: 2),
@@ -35,6 +39,10 @@ const textInputDecorationp = InputDecoration(
     borderRadius: BorderRadius.all(Radius.circular(20.0)),
     borderSide: BorderSide(color: purple, width: 2),
   ),
+  disabledBorder: OutlineInputBorder(
+    borderRadius: BorderRadius.all(Radius.circular(20.0)),
+    borderSide: BorderSide(color: disable, width: 2),
+  ),
   errorBorder: OutlineInputBorder(
     borderRadius: BorderRadius.all(Radius.circular(70.0)),
     borderSide: BorderSide(color: purple, width: 2),
@@ -52,6 +60,10 @@ const searchInputDecoration = InputDecoration(
   enabledBorder: OutlineInputBorder(
     borderRadius: BorderRadius.all(Radius.circular(15.0)),
     borderSide: BorderSide(color: lightOrange, width: 2),
+  ),
+  disabledBorder: OutlineInputBorder(
+    borderRadius: BorderRadius.all(Radius.circular(15.0)),
+    borderSide: BorderSide(color: disable, width: 2),
   ),
   errorBorder: OutlineInputBorder(
     borderRadius: BorderRadius.all(Radius.circular(70.0)),

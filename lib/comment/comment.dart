@@ -377,7 +377,8 @@ class _MyCommentState extends State<Comment> {
                                                         child: Text(
                                                             '\nDetail\n\t\t\t\t\t' +
                                                                 documentSnapshot[
-                                                                    'detail'],
+                                                                        'detail']
+                                                                    .toString(),
                                                             style: const TextStyle(
                                                                 fontSize: 16,
                                                                 fontFamily:

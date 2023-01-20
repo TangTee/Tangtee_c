@@ -20,6 +20,7 @@ class CreateEventScreen extends StatefulWidget {
 
 class _CreateEventScreenState extends State<CreateEventScreen> {
   bool _isLoading = false;
+  bool isDateSelect = false;
   final _post = FirebaseFirestore.instance.collection('post').doc();
 
   final _formKey = GlobalKey<FormState>();
@@ -107,7 +108,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                             }
                             return null;
                           },
-                          //onSaved: (value) => _location = value!,
                         ),
                       ),
                       Padding(
@@ -125,7 +125,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                                     decoration: textInputDecoration.copyWith(
                                       prefixIcon: Icon(Icons.calendar_month),
                                       labelStyle: const TextStyle(
-                                        color: Colors.black,
+                                        color: mobileSearchColor,
                                         fontFamily: "MyCustomFont",
                                       ),
                                       hintText: '_ _ / _ _ / _ _ ',
@@ -146,97 +146,157 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                                             DateFormat('yyyy/MM/dd')
                                                 .format(pickedDate);
                                         setState(() {
+                                          isDateSelect = true;
                                           dateController.text = formattedDate;
                                         });
-                                      } else {
-                                        print("Date is not selected");
                                       }
                                     },
                                   ),
                                 ),
                               ],
                             ),
-                            Column(
-                              children: [
-                                Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.43,
-                                  child: TextField(
-                                    controller: _time,
-                                    decoration: textInputDecoration.copyWith(
-                                        labelStyle: const TextStyle(
-                                          color: Colors.black,
-                                          fontFamily: "MyCustomFont",
-                                        ),
-                                        prefixIcon: const Icon(
-                                          Icons.query_builder,
-                                        ),
-                                        hintText: "_ _ : _ _ "),
-                                    readOnly: true,
-                                    onTap: () async {
-                                      TimeOfDay? pickedTime =
-                                          await showTimePicker(
-                                        context: context,
-                                        initialTime: TimeOfDay.now(),
-                                      );
-                                      TimeOfDay now = TimeOfDay.now();
-                                      int nowInMinutes =
-                                          now.hour * 60 + now.minute + 60;
-                                      int pickedInMinutes =
-                                          pickedTime!.hour * 60 +
-                                              pickedTime.minute;
+                            if (isDateSelect == false)
+                              Column(
+                                children: [
+                                  Container(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.43,
+                                    child: TextField(
+                                      controller: _time,
+                                      decoration: textInputDecoration.copyWith(
+                                          enabled: false,
+                                          labelStyle: const TextStyle(
+                                            color: Colors.black,
+                                            fontFamily: "MyCustomFont",
+                                          ),
+                                          disabledBorder: OutlineInputBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(20.0)),
+                                            borderSide: BorderSide(
+                                                color: disable, width: 2),
+                                          ),
+                                          prefixIcon: const Icon(
+                                            Icons.query_builder,
+                                          ),
+                                          hintText: "_ _ : _ _ "),
+                                      readOnly: true,
+                                      onTap: () async {
+                                        TimeOfDay? pickedTime =
+                                            await showTimePicker(
+                                          context: context,
+                                          initialTime: TimeOfDay.now(),
+                                        );
+                                        TimeOfDay now = TimeOfDay.now();
+                                        int nowInMinutes =
+                                            now.hour * 60 + now.minute + 60;
+                                        int pickedInMinutes =
+                                            pickedTime!.hour * 60 +
+                                                pickedTime.minute;
 
-                                      if (pickedInMinutes > nowInMinutes) {
-                                        setState(() {
-                                          _time.text =
-                                              pickedTime.format(context);
-                                        });
-                                        // } else {
-                                        //   print("Time is not selected");
-                                        // }
-                                      } else if (pickedInMinutes <
-                                          nowInMinutes) {
-                                        return print("Please selec time ...");
-                                      } else {
-                                        print("Time is not selected");
-                                      }
-                                    },
+                                        if (pickedInMinutes > nowInMinutes) {
+                                          setState(() {
+                                            _time.text =
+                                                pickedTime.format(context);
+                                          });
+                                          // } else {
+                                          //   print("Time is not selected");
+                                          // }
+                                        } else if (pickedInMinutes <
+                                            nowInMinutes) {
+                                          return print("Please selec time ...");
+                                        } else {
+                                          print("Time is not selected");
+                                        }
+                                      },
+                                    ),
                                   ),
-                                ),
-                              ],
-                            )
+                                ],
+                              )
+                            else
+                              Column(
+                                children: [
+                                  Container(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.43,
+                                    child: TextField(
+                                      controller: _time,
+                                      decoration: textInputDecoration.copyWith(
+                                          labelStyle: const TextStyle(
+                                            color: Colors.black,
+                                            fontFamily: "MyCustomFont",
+                                          ),
+                                          prefixIcon: const Icon(
+                                            Icons.query_builder,
+                                          ),
+                                          hintText: "_ _ : _ _ "),
+                                      readOnly: true,
+                                      onTap: () async {
+                                        TimeOfDay? pickedTime =
+                                            await showTimePicker(
+                                          context: context,
+                                          initialTime: TimeOfDay.now(),
+                                        );
+                                        TimeOfDay now = TimeOfDay.now();
+                                        int nowInMinutes =
+                                            now.hour * 60 + now.minute + 60;
+                                        int pickedInMinutes =
+                                            pickedTime!.hour * 60 +
+                                                pickedTime.minute;
+
+                                        if (pickedInMinutes > nowInMinutes) {
+                                          setState(() {
+                                            _time.text =
+                                                pickedTime.format(context);
+                                          });
+                                          // } else {
+                                          //   print("Time is not selected");
+                                          // }
+                                        } else if (pickedInMinutes <
+                                            nowInMinutes) {
+                                          return print("Please selec time ...");
+                                        } else {
+                                          print("Time is not selected");
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              )
                           ],
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10.0),
-                        child: Container(
-                          alignment: Alignment.center,
-                          width: MediaQuery.of(context).size.width * 0.85,
-                          child: TextFormField(
-                            maxLines: 3,
-                            controller: _detail,
-                            decoration: textInputDecoration.copyWith(
-                              labelStyle: const TextStyle(
-                                color: Colors.black,
-                                fontFamily: "MyCustomFont",
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.16,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 0),
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: MediaQuery.of(context).size.width * 0.90,
+                            child: TextFormField(
+                              maxLines: 3,
+                              controller: _detail,
+                              decoration: textInputDecoration.copyWith(
+                                labelStyle: const TextStyle(
+                                  color: Colors.black,
+                                  fontFamily: "MyCustomFont",
+                                ),
+                                hintText: 'Detail',
                               ),
-                              hintText: 'Detail',
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return 'Please enter a valid detail';
+                                }
+                                if (value.length > 150) {
+                                  return 'Limit at 150 characters ';
+                                }
+                                return null;
+                              },
                             ),
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Please enter a valid detail';
-                              }
-                              if (value.length > 150) {
-                                return 'Limit at 150 characters ';
-                              }
-                              return null;
-                            },
                           ),
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 10.0),
+                        padding: const EdgeInsets.only(top: 0.0),
                         child: TextFormField(
                             controller: _peopleLimit,
                             decoration: textInputDecoration.copyWith(
@@ -290,6 +350,8 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                               style: TextStyle(fontSize: 20),
                             ),
                             style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30)),
                                 backgroundColor: green),
                             onPressed: () async {
                               if (_formKey.currentState!.validate() == true) {
