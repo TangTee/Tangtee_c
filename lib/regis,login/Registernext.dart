@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -10,10 +9,8 @@ import 'package:tangteevs/HomePage.dart';
 import 'package:tangteevs/services/auth_service.dart';
 import 'package:tangteevs/services/database_service.dart';
 import 'package:tangteevs/utils/color.dart';
-import '../helper/helper_function.dart';
 import '../utils/showSnackbar.dart';
 import '../widgets/custom_textfield.dart';
-import 'idcard.dart';
 
 class RegisnextPage extends StatefulWidget {
   final String uid;
@@ -96,7 +93,7 @@ class _RegisnextPageState extends State<RegisnextPage> {
             shadows: [
               Shadow(
                 blurRadius: 5,
-                color: Colors.grey,
+                color: unselected,
                 offset: Offset(3, 3),
               ),
             ],
@@ -269,7 +266,7 @@ class _RegisnextPageState extends State<RegisnextPage> {
                                   borderRadius: BorderRadius.circular(30))),
                           child: const Text(
                             "Register",
-                            style: TextStyle(color: Colors.white, fontSize: 16),
+                            style: TextStyle(color: white, fontSize: 16),
                           ),
                           onPressed: () {
                             Updata();

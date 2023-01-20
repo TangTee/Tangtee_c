@@ -181,7 +181,7 @@ class _TagCategoryState extends State<TagCategory> {
             ],
           ),
           bottomNavigationBar: Container(
-            color: Colors.white,
+            color: white,
             child: Form(
               child: Row(
                 children: [

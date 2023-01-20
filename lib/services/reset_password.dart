@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:tangteevs/utils/color.dart';
 
 import '../regis,login/Login.dart';
-import '../utils/color.dart';
 import '../widgets/custom_textfield.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -30,7 +29,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                   image: AssetImage("assets/images/reset.png"),
                   fit: BoxFit.scaleDown)),
         ),
-        backgroundColor: Colors.transparent,
+        backgroundColor: transparent,
         elevation: 0,
         automaticallyImplyLeading: false,
       ),
@@ -89,7 +88,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                     foregroundColor: primaryColor,
                     side: const BorderSide(
                       width: 2.0,
-                      color: Colors.purple,
+                      color: purple,
                     ),
                     minimumSize: const Size(307, 49),
                     elevation: 0,
@@ -97,7 +96,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                         borderRadius: BorderRadius.circular(30))),
                 child: const Text(
                   "Send",
-                  style: TextStyle(color: Colors.purple, fontSize: 24),
+                  style: TextStyle(color: purple, fontSize: 24),
                 ),
                 onPressed: () {
                   String email = _emailController.text;
@@ -115,7 +114,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
               ),
               Text.rich(TextSpan(
                 style: const TextStyle(
-                    color: Colors.black,
+                    color: mobileSearchColor,
                     fontSize: 12,
                     fontFamily: 'MyCustomFont'),
                 children: <TextSpan>[

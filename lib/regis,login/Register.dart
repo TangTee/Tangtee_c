@@ -1,7 +1,4 @@
-import 'dart:math';
-
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
@@ -58,7 +55,7 @@ class _RegistrationScreen extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: transparent,
         toolbarHeight: 120,
         centerTitle: true,
         elevation: 0,
@@ -71,7 +68,7 @@ class _RegistrationScreen extends State<RegisterPage> {
             shadows: [
               Shadow(
                 blurRadius: 5,
-                color: Colors.grey,
+                color: unselected,
                 offset: Offset(3, 3),
               ),
             ],
@@ -262,12 +259,12 @@ class _RegistrationScreen extends State<RegisterPage> {
                         Text.rich(TextSpan(
                           text: "มีบัญชีแล้วหรอ? ",
                           style: const TextStyle(
-                              color: Colors.black, fontSize: 14),
+                              color: mobileSearchColor, fontSize: 14),
                           children: <TextSpan>[
                             TextSpan(
                                 text: " เข้าสู่ระบบ",
                                 style: const TextStyle(
-                                    color: Colors.black,
+                                    color: mobileSearchColor,
                                     decoration: TextDecoration.underline),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
@@ -325,7 +322,7 @@ class _RegistrationScreen extends State<RegisterPage> {
                 uid: FirebaseAuth.instance.currentUser!.uid,
               ));
         } else {
-          showSnackbar(context, Colors.red, value);
+          showSnackbar(context, redColor, value);
           setState(() {
             _isLoading = false;
           });
