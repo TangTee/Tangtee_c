@@ -58,7 +58,7 @@ class _MySearchState extends State<SearchResult> {
               stream: _post
                   .where('activityName',
                       isGreaterThanOrEqualTo: widget.activity)
-                  .orderBy('activityName', descending: true)
+                  //.orderBy('activityName', descending: true)
                   .snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
