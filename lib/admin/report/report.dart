@@ -123,8 +123,8 @@ class _ReportPageState extends State<ReportPage> {
                 fontSize: 20.0,
                 fontFamily: 'MyCustomFont'), //For Un-selected Tabs
             tabs: [
-              Tab(text: 'Verify'),
-              Tab(text: 'Data'),
+              Tab(text: 'Post'),
+              Tab(text: 'Comment'),
             ],
           ),
         ),
