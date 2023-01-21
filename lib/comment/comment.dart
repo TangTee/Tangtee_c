@@ -27,6 +27,7 @@ class _MyCommentState extends State<Comment> {
   var commentLen = 0;
   bool isLoading = false;
   bool _waiting = false;
+  bool enable = false;
 
   @override
   void initState() {
@@ -81,6 +82,12 @@ class _MyCommentState extends State<Comment> {
     setState(() {
       isLoading = false;
     });
+  }
+
+  @override
+  void dispose() {
+    _commentController.dispose();
+    super.dispose();
   }
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -166,9 +173,7 @@ class _MyCommentState extends State<Comment> {
                                                   style: const TextStyle(
                                                     fontSize: 20,
                                                     fontFamily: 'MyCustomFont',
-
                                                     color: mobileSearchColor,
-
                                                     fontWeight: FontWeight.bold,
                                                   )),
                                             ),
@@ -705,7 +710,6 @@ class _MyCommentState extends State<Comment> {
                                                                                         fontSize: 16,
                                                                                         fontFamily: 'MyCustomFont',
                                                                                         color: mobileSearchColor,
-
                                                                                         fontWeight: FontWeight.bold,
                                                                                       )),
                                                                                 ),
@@ -810,12 +814,20 @@ class _MyCommentState extends State<Comment> {
                             maxLines: 5,
                             minLines: 1,
                             controller: commentController,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Please enter a comment';
+                            onChanged: (data) {
+                              if (commentController.text.isEmpty) {
+                                enable = false;
+                              } else {
+                                enable = true;
                               }
-                              return null;
+                              setState(() {});
                             },
+                            // validator: (value) {
+                            //   if (value!.isEmpty) {
+                            //     return 'Please enter a comment';
+                            //   }
+                            //   return null;
+                            // },
                             decoration: const InputDecoration(
                               contentPadding: EdgeInsets.symmetric(
                                   vertical: 15, horizontal: 10),
@@ -840,28 +852,37 @@ class _MyCommentState extends State<Comment> {
                           ),
                         ),
                         IconButton(
-                          onPressed: () async {
-                            if (_formKey.currentState!.validate() == true) {
-                              setState(() {
-                                _isLoading = true;
-                              });
-                              var commentSet2 = commentSet
-                                  .doc(postData['postid'])
-                                  .collection('comments')
-                                  .doc();
-                              await commentSet2.set({
-                                'cid': commentSet2.id,
-                                'comment': commentController.text,
-                                'postid': postData['postid'],
-                                'uid': FirebaseAuth.instance.currentUser!.uid,
-                                'profile': currentUser['profile'],
-                                'Displayname': currentUser['Displayname'],
-                                'timeStamp': DateTime.now(),
-                              }).whenComplete(() {
-                                commentController.clear();
-                              });
-                            }
-                          },
+                          onPressed: enable
+                              ? () async {
+                                  if (_formKey.currentState!.validate() ==
+                                      true) {
+                                    setState(() {
+                                      _isLoading = true;
+                                    });
+                                    var commentSet2 = commentSet
+                                        .doc(postData['postid'])
+                                        .collection('comments')
+                                        .doc();
+                                    await commentSet2.set({
+                                      'cid': commentSet2.id,
+                                      'comment': commentController.text,
+                                      'postid': postData['postid'],
+                                      'uid': FirebaseAuth
+                                          .instance.currentUser!.uid,
+                                      'profile': currentUser['profile'],
+                                      'Displayname': currentUser['Displayname'],
+                                      'timeStamp': DateTime.now(),
+                                    }).whenComplete(() {
+                                      commentController.clear();
+                                      FocusManager.instance.primaryFocus
+                                          ?.unfocus();
+                                      setState(() {
+                                        enable = false;
+                                      });
+                                    });
+                                  }
+                                }
+                              : null,
                           icon: const Icon(
                             Icons.send_outlined,
                             size: 30,
