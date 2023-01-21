@@ -77,7 +77,7 @@ void showModalBottomSheetRP(BuildContext context, r_pid) {
                     'timeStamp': DateTime.now(),
                     'reportBy': FirebaseAuth.instance.currentUser?.uid,
                   }).whenComplete(() {
-                    nextScreenReplaceOut(context, MyHomePage());
+                     Navigator.of(context).popUntil((route) => route.isFirst);
                   });
                 },
               ),
@@ -110,7 +110,7 @@ void showModalBottomSheetRP(BuildContext context, r_pid) {
                     'timeStamp': DateTime.now(),
                     'reportBy': FirebaseAuth.instance.currentUser?.uid,
                   }).whenComplete(() {
-                    nextScreenReplaceOut(context, MyHomePage());
+                     Navigator.of(context).popUntil((route) => route.isFirst);
                   });
                 },
               ),
@@ -143,7 +143,7 @@ void showModalBottomSheetRP(BuildContext context, r_pid) {
                     'timeStamp': DateTime.now(),
                     'reportBy': FirebaseAuth.instance.currentUser?.uid,
                   }).whenComplete(() {
-                    nextScreenReplaceOut(context, MyHomePage());
+                     Navigator.of(context).popUntil((route) => route.isFirst);
                   });
                 },
               ),
@@ -176,7 +176,7 @@ void showModalBottomSheetRP(BuildContext context, r_pid) {
                     'timeStamp': DateTime.now(),
                     'reportBy': FirebaseAuth.instance.currentUser?.uid,
                   }).whenComplete(() {
-                    nextScreenReplaceOut(context, MyHomePage());
+                     Navigator.of(context).popUntil((route) => route.isFirst);
                   });
                 },
               ),
@@ -209,7 +209,7 @@ void showModalBottomSheetRP(BuildContext context, r_pid) {
                     'timeStamp': DateTime.now(),
                     'reportBy': FirebaseAuth.instance.currentUser?.uid,
                   }).whenComplete(() {
-                    nextScreenReplaceOut(context, MyHomePage());
+                     Navigator.of(context).popUntil((route) => route.isFirst);
                   });
                 },
               ),
@@ -416,7 +416,7 @@ void showModalBottomSheetRC(BuildContext context, r_pid, Map mytext) {
                     'timeStamp': DateTime.now(),
                     'reportBy': FirebaseAuth.instance.currentUser?.uid,
                   }).whenComplete(() {
-                    nextScreenReplaceOut(context, MyHomePage());
+                     Navigator.of(context).popUntil((route) => route.isFirst);
                   });
                 },
               ),
