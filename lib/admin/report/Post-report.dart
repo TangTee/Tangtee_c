@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../utils/color.dart';
+import '../../utils/showSnackbar.dart';
 import '../../widgets/custom_textfield.dart';
 
 class PostPage extends StatefulWidget {
@@ -13,82 +15,23 @@ class PostPage extends StatefulWidget {
 class _PostPageState extends State<PostPage> {
   String name = '';
   bool _isLoading = false;
+  var userData = {};
+  bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return _isLoading
-        ? const Center()
-        : NestedScrollView(
-            floatHeaderSlivers: true,
-            headerSliverBuilder: (context, innerBoxIsScrolled) {
-              return <Widget>[
-                SliverAppBar(
-                  //preferredSize: const Size.fromHeight(80),
-                  //child: AppBar(
-                  floating: true,
-                  snap: true,
-                  forceElevated: innerBoxIsScrolled,
-                  backgroundColor: mobileBackgroundColor,
-                  elevation: 0,
-                  centerTitle: false,
-                  title: const Padding(
-                    padding: EdgeInsets.only(top: 5.0),
-                    child: SizedBox(
-                      width: 400.0,
-                      height: 45.0,
-                      child: TextField(
-                        decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(15)),
-                            borderSide:
-                                BorderSide(width: 2, color: lightOrange),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(15)),
-                            borderSide: BorderSide(width: 1, color: orange),
-                          ),
-                          hintText: 'ค้นหาuserด้วยdisplayname หรือ email',
-                          hintStyle: TextStyle(
-                            color: unselected,
-                            fontFamily: 'MyCustomFont',
-                          ),
-                          suffixIcon: Icon(
-                            Icons.search_outlined,
-                            color: orange,
-                            size: 30,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                //),
-              ];
-            },
-            body: const DataPage(),
-          );
-  }
-}
-
-class DataPage extends StatefulWidget {
-  const DataPage({Key? key}) : super(key: key);
-
-  @override
-  _DataPageState createState() => _DataPageState();
-}
-
-class _DataPageState extends State<DataPage> {
 // text fields' controllers
   final TextEditingController _DisplaynameController = TextEditingController();
   final TextEditingController _idcardController = TextEditingController();
   final TextEditingController _verifyController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+  final uid = FirebaseAuth.instance.currentUser!.uid;
 
+  final CollectionReference _report =
+      FirebaseFirestore.instance.collection('report');
   final CollectionReference _users =
       FirebaseFirestore.instance.collection('users');
 
@@ -128,7 +71,7 @@ class _DataPageState extends State<DataPage> {
                     final String Displayname = _DisplaynameController.text;
                     final String email = _emailController.text;
                     if (email != null) {
-                      await _users
+                      await _report
                           .add({"Displayname": Displayname, "email": email});
 
                       _DisplaynameController.text = '';
@@ -202,12 +145,12 @@ class _DataPageState extends State<DataPage> {
                       onPressed: () async {
                         const bool verify = true;
                         if (verify != null) {
-                          await _users
+                          await _report
                               .doc(documentSnapshot!.id)
                               .update({"verify": verify});
                           _DisplaynameController.text = '';
                           _emailController.text = '';
-                          nextScreen(context, DataPage());
+                          nextScreen(context, PostPage());
                         }
                       },
                     ),
@@ -216,12 +159,12 @@ class _DataPageState extends State<DataPage> {
                       onPressed: () async {
                         const bool verify = false;
                         if (verify != null) {
-                          await _users
+                          await _report
                               .doc(documentSnapshot!.id)
                               .update({"verify": verify});
                           _DisplaynameController.text = '';
                           _emailController.text = '';
-                          nextScreen(context, DataPage());
+                          nextScreen(context, PostPage());
                         }
                       },
                     ),
@@ -234,7 +177,7 @@ class _DataPageState extends State<DataPage> {
   }
 
   Future<void> _delete(String usersId) async {
-    await _users.doc(usersId).delete();
+    await _report.doc(usersId).delete();
 
     ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('You have successfully deleted a users')));
@@ -243,71 +186,92 @@ class _DataPageState extends State<DataPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: StreamBuilder(
-          stream: _users.where('verify', isEqualTo: true).snapshots(),
-          builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
-            if (streamSnapshot.hasData) {
-              return ListView.builder(
-                itemCount: streamSnapshot.data!.docs.length,
-                itemBuilder: (context, index) {
-                  final DocumentSnapshot documentSnapshot =
-                      streamSnapshot.data!.docs[index];
-                  return Card(
-                    margin: const EdgeInsets.all(10),
-                    child: ListTile(
-                      title: Text(documentSnapshot['Displayname']),
-                      subtitle: Text(documentSnapshot['email']),
-                      trailing: SingleChildScrollView(
-                        child: SizedBox(
-                          width: 100,
-                          child: Row(
-                            children: [
-                              IconButton(
-                                  icon: const Icon(Icons.edit),
-                                  onPressed: () => _update(documentSnapshot)),
-                              IconButton(
-                                  icon: const Icon(Icons.delete),
-                                  onPressed: () => showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          return AlertDialog(
-                                            title: Text('Are you sure?'),
-                                            content: Text(
-                                                'This action cannot be undone.'),
-                                            actions: [
-                                              TextButton(
-                                                child: Text('Cancel'),
-                                                onPressed: () {
-                                                  Navigator.of(context)
-                                                      .pop(); // dismiss the dialog
-                                                },
-                                              ),
-                                              TextButton(
-                                                child: Text('OK'),
-                                                onPressed: () {
-                                                  _delete(documentSnapshot.id);
-                                                  Navigator.of(context)
-                                                      .pop(); // dismiss the dialog
-                                                },
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      )),
-                            ],
-                          ),
+        body: SafeArea(
+          child: StreamBuilder(
+            stream: _report.where('type', isEqualTo: 'post').snapshots(),
+            builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+              if (streamSnapshot.hasData) {
+                return ListView.builder(
+                  itemCount: streamSnapshot.data!.docs.length,
+                  itemBuilder: (context, index) {
+                    final DocumentSnapshot documentSnapshot =
+                        streamSnapshot.data!.docs[index];
+
+                    var userData = _users
+                        .doc(documentSnapshot['reportBy'])
+                        .get()
+                        .toString();
+                    return Card(
+                      margin: const EdgeInsets.all(15),
+                      child: Container(
+                        width: 100,
+                        height: 100,
+                        padding: const EdgeInsets.only(
+                          top: 15,
+                          left: 25,
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  flex: 1,
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text.rich(
+                                          TextSpan(
+                                              text: 'Report By: ' + userData),
+                                        ),
+                                      ),
+                                      Container(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text.rich(
+                                          TextSpan(
+                                            text: 'Reported: ' +
+                                                documentSnapshot['uid'],
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text.rich(
+                                          TextSpan(
+                                            text: 'Activity Name: ' +
+                                                documentSnapshot[
+                                                    'activityName'],
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text.rich(
+                                          TextSpan(
+                                            text: 'Problem: ' +
+                                                documentSnapshot['problem'],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
-                    ),
-                  );
-                },
-              );
-            }
+                    );
+                  },
+                );
+              }
 
-            return const Center(
-              child: Text('no data yet'),
-            );
-          },
+              return const Center(
+                child: Text('no data yet'),
+              );
+            },
+          ),
         ),
 // Add new users
         // floatingActionButton: FloatingActionButton(

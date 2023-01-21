@@ -19,78 +19,14 @@ class _CommentpageState extends State<Commentpage> {
     super.initState();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return _isLoading
-        ? const Center()
-        : NestedScrollView(
-            floatHeaderSlivers: true,
-            headerSliverBuilder: (context, innerBoxIsScrolled) {
-              return <Widget>[
-                SliverAppBar(
-                  //preferredSize: const Size.fromHeight(80),
-                  //child: AppBar(
-                  floating: true,
-                  snap: true,
-                  forceElevated: innerBoxIsScrolled,
-                  backgroundColor: mobileBackgroundColor,
-                  elevation: 0,
-                  centerTitle: false,
-                  title: const Padding(
-                    padding: EdgeInsets.only(top: 5.0),
-                    child: SizedBox(
-                      width: 400.0,
-                      height: 45.0,
-                      child: TextField(
-                        decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(15)),
-                            borderSide:
-                                BorderSide(width: 2, color: lightOrange),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(15)),
-                            borderSide: BorderSide(width: 1, color: orange),
-                          ),
-                          hintText: 'ค้นหาuserด้วยdisplayname หรือ email',
-                          hintStyle: TextStyle(
-                            color: unselected,
-                            fontFamily: 'MyCustomFont',
-                          ),
-                          suffixIcon: Icon(
-                            Icons.search_outlined,
-                            color: orange,
-                            size: 30,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                //),
-              ];
-            },
-            body: const DataPage(),
-          );
-  }
-}
-
-class DataPage extends StatefulWidget {
-  const DataPage({Key? key}) : super(key: key);
-
-  @override
-  _DataPageState createState() => _DataPageState();
-}
-
-class _DataPageState extends State<DataPage> {
 // text fields' controllers
   final TextEditingController _DisplaynameController = TextEditingController();
   final TextEditingController _idcardController = TextEditingController();
   final TextEditingController _verifyController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
 
-  final CollectionReference _users =
-      FirebaseFirestore.instance.collection('users');
+  final CollectionReference _report =
+      FirebaseFirestore.instance.collection('report');
 
   Future<void> _create([DocumentSnapshot? documentSnapshot]) async {
     await showModalBottomSheet(
@@ -128,7 +64,7 @@ class _DataPageState extends State<DataPage> {
                     final String Displayname = _DisplaynameController.text;
                     final String email = _emailController.text;
                     if (email != null) {
-                      await _users
+                      await _report
                           .add({"Displayname": Displayname, "email": email});
 
                       _DisplaynameController.text = '';
@@ -202,12 +138,12 @@ class _DataPageState extends State<DataPage> {
                       onPressed: () async {
                         const bool verify = true;
                         if (verify != null) {
-                          await _users
+                          await _report
                               .doc(documentSnapshot!.id)
                               .update({"verify": verify});
                           _DisplaynameController.text = '';
                           _emailController.text = '';
-                          nextScreen(context, DataPage());
+                          nextScreen(context, Commentpage());
                         }
                       },
                     ),
@@ -216,12 +152,12 @@ class _DataPageState extends State<DataPage> {
                       onPressed: () async {
                         const bool verify = false;
                         if (verify != null) {
-                          await _users
+                          await _report
                               .doc(documentSnapshot!.id)
                               .update({"verify": verify});
                           _DisplaynameController.text = '';
                           _emailController.text = '';
-                          nextScreen(context, DataPage());
+                          nextScreen(context, Commentpage());
                         }
                       },
                     ),
@@ -234,7 +170,7 @@ class _DataPageState extends State<DataPage> {
   }
 
   Future<void> _delete(String usersId) async {
-    await _users.doc(usersId).delete();
+    await _report.doc(usersId).delete();
 
     ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('You have successfully deleted a users')));
@@ -244,7 +180,7 @@ class _DataPageState extends State<DataPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: StreamBuilder(
-          stream: _users.where('verify', isEqualTo: true).snapshots(),
+          stream: _report.where('type', isEqualTo: 'comment').snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
             if (streamSnapshot.hasData) {
               return ListView.builder(
@@ -256,46 +192,10 @@ class _DataPageState extends State<DataPage> {
                     margin: const EdgeInsets.all(10),
                     child: ListTile(
                       title: Text(documentSnapshot['Displayname']),
-                      subtitle: Text(documentSnapshot['email']),
+                      subtitle: Text(documentSnapshot['problem']),
                       trailing: SingleChildScrollView(
                         child: SizedBox(
                           width: 100,
-                          child: Row(
-                            children: [
-                              IconButton(
-                                  icon: const Icon(Icons.edit),
-                                  onPressed: () => _update(documentSnapshot)),
-                              IconButton(
-                                  icon: const Icon(Icons.delete),
-                                  onPressed: () => showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          return AlertDialog(
-                                            title: Text('Are you sure?'),
-                                            content: Text(
-                                                'This action cannot be undone.'),
-                                            actions: [
-                                              TextButton(
-                                                child: Text('Cancel'),
-                                                onPressed: () {
-                                                  Navigator.of(context)
-                                                      .pop(); // dismiss the dialog
-                                                },
-                                              ),
-                                              TextButton(
-                                                child: Text('OK'),
-                                                onPressed: () {
-                                                  _delete(documentSnapshot.id);
-                                                  Navigator.of(context)
-                                                      .pop(); // dismiss the dialog
-                                                },
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      )),
-                            ],
-                          ),
                         ),
                       ),
                     ),
