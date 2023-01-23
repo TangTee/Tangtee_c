@@ -607,9 +607,6 @@ class _MyCommentState extends State<Comment> {
                                                           var postidD =
                                                               postData[
                                                                   'postid'];
-                                                          var timeStamp =
-                                                              postData[
-                                                                  'timeStamp'];
 
                                                           var Mytext =
                                                               new Map();
@@ -638,6 +635,9 @@ class _MyCommentState extends State<Comment> {
                                                           Mytext['uid'] =
                                                               documentSnapshot[
                                                                   'uid'];
+                                                          Mytext['timeStamp'] =
+                                                              documentSnapshot[
+                                                                  'timeStamp'];
 
                                                           return Center(
                                                             child: Padding(
@@ -668,8 +668,7 @@ class _MyCommentState extends State<Comment> {
                                                                     onLongPress: () => _showModalBottomSheet(
                                                                         context,
                                                                         postidD,
-                                                                        Mytext,
-                                                                        timeStamp),
+                                                                        Mytext),
                                                                     child: Card(
                                                                       clipBehavior:
                                                                           Clip.hardEdge,
@@ -1011,7 +1010,7 @@ class _MyCommentState extends State<Comment> {
   }
 
   void _showModalBottomSheet(
-      BuildContext context, postidD, Map mytext, timeStamp) {
+      BuildContext context, postidD, Map mytext) {
     _commentController.text = mytext['comment'].toString();
     String Comment = '';
 
@@ -1079,7 +1078,7 @@ class _MyCommentState extends State<Comment> {
                                         'uid': mytext['uid'],
                                         'profile': mytext['profile'],
                                         'Displayname': mytext['Displayname'],
-                                        'timeStamp': timeStamp,
+                                        'timeStamp': mytext['timeStamp'],
                                         "comment": _commentController.text
                                       }).whenComplete(() {
                                         Navigator.of(context)
