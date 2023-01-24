@@ -357,7 +357,8 @@ class _PostCardState extends State<CardWidget> {
                                   'Are you sure you want to permanently\nremove this Activity from Tungtee?'),
                               actions: [
                                 TextButton(
-                                    onPressed: () => Navigator.pop(context),
+                                    onPressed: () => Navigator.of(context)
+                                        .popUntil((route) => route.isFirst),
                                     child: Text('Cancle')),
                                 TextButton(
                                     onPressed: (() {
@@ -366,12 +367,8 @@ class _PostCardState extends State<CardWidget> {
                                           .doc(widget.snap['postid'])
                                           .delete()
                                           .whenComplete(() {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => MyHomePage(),
-                                          ),
-                                        );
+                                        Navigator.of(context)
+                                            .popUntil((route) => route.isFirst);
                                       });
                                     }),
                                     child: Text('Delete'))

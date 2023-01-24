@@ -28,7 +28,7 @@ class _MySearchState extends State<SearchResult> {
             leading: IconButton(
               icon: const Icon(Icons.arrow_back_ios, color: unselected),
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context).popUntil((route) => route.isFirst);
               },
             ),
             elevation: 1,
@@ -48,7 +48,6 @@ class _MySearchState extends State<SearchResult> {
               stream: _post
                   .where('activityName',
                       isGreaterThanOrEqualTo: widget.activity)
-                  //.orderBy('activityName', descending: true)
                   .snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {

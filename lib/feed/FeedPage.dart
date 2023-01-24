@@ -76,42 +76,41 @@ class _SearchFormState extends State<SearchForm> {
                 width: MediaQuery.of(context).size.width * 0.9,
                 height: MediaQuery.of(context).size.height * 0.05,
                 child: TextFormField(
-                  controller: activitySearch,
-                  textInputAction: TextInputAction.search,
-                  onChanged: (value) {
-                    setState(() {});
-                  },
-                  decoration: searchInputDecoration.copyWith(
-                    hintText: 'ค้นหากิจกรรม หรือ Tag ที่คุณสนใจ',
-                    hintStyle: TextStyle(
-                      color: unselected,
-                      fontFamily: 'MyCustomFont',
-                    ),
-                    prefixIcon: const Icon(
-                      Icons.search_outlined,
-                      color: orange,
-                      size: 30,
-                    ),
-                    suffixIcon: activitySearch.text.isEmpty
-                        ? null
-                        : IconButton(
-                            icon: Icon(Icons.clear),
-                            color: orange,
-                            iconSize: 18,
-                            onPressed: (() {
-                              activitySearch.clear();
-                              setState(() {});
-                            })),
-                  ),
-                  onFieldSubmitted: (value) {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            SearchResult(activity: activitySearch.text),
+                    controller: activitySearch,
+                    textInputAction: TextInputAction.search,
+                    onChanged: (value) {
+                      setState(() {});
+                    },
+                    decoration: searchInputDecoration.copyWith(
+                      hintText: 'ค้นหากิจกรรม หรือ Tag ที่คุณสนใจ',
+                      hintStyle: TextStyle(
+                        color: unselected,
+                        fontFamily: 'MyCustomFont',
                       ),
-                    );
-                  },
-                ),
+                      prefixIcon: const Icon(
+                        Icons.search_outlined,
+                        color: orange,
+                        size: 30,
+                      ),
+                      suffixIcon: activitySearch.text.isEmpty
+                          ? null
+                          : IconButton(
+                              icon: Icon(Icons.clear),
+                              color: orange,
+                              iconSize: 18,
+                              onPressed: (() {
+                                activitySearch.clear();
+                                setState(() {});
+                              })),
+                    ),
+                    onFieldSubmitted: (value) {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              SearchResult(activity: activitySearch.text),
+                        ),
+                      );
+                    }),
               ),
             ),
             actions: [
@@ -205,4 +204,3 @@ class PostCard extends StatelessWidget {
         });
   }
 }
-
