@@ -9,6 +9,7 @@ import '../../utils/showSnackbar.dart';
 import '../../widgets/custom_textfield.dart';
 
 class TagCategory extends StatefulWidget {
+  // final String categoryId; ต้องget data
   DocumentSnapshot categoryId;
   TagCategory({Key? key, required this.categoryId}) : super(key: key);
 
@@ -22,33 +23,9 @@ class _TagCategoryState extends State<TagCategory> {
   var categoryColorData = {};
   bool isLoading = false;
 
-  // String color = categoryColorData['color'];
   @override
   void initState() {
     super.initState();
-    getData();
-  }
-
-  getData() async {
-    setState(() {
-      isLoading = true;
-    });
-    try {
-      var categorySnap = await FirebaseFirestore.instance
-          .collection('categorys')
-          .doc(widget.categoryId['categoryId'])
-          .get();
-      categoryData = categorySnap.data()!;
-      setState(() {});
-    } catch (e) {
-      showSnackBar(
-        context,
-        e.toString(),
-      );
-    }
-    setState(() {
-      isLoading = false;
-    });
   }
 
   final CollectionReference _tags =
@@ -60,192 +37,487 @@ class _TagCategoryState extends State<TagCategory> {
   bool submit = false;
   final tagController = TextEditingController();
 
+  Future<void> _create([DocumentSnapshot? documentSnapshot]) async {
+    await showModalBottomSheet(
+        isScrollControlled: true,
+        context: context,
+        builder: (BuildContext ctx) {
+          return Padding(
+            padding: EdgeInsets.only(
+                top: 20,
+                left: 20,
+                right: 20,
+                bottom: MediaQuery.of(ctx).viewInsets.bottom + 20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextFormField(
+                  keyboardType: TextInputType.multiline,
+                  maxLines: 5,
+                  minLines: 1,
+                  controller: tagController,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Please enter a comment';
+                    }
+                    return null;
+                  },
+                  decoration: const InputDecoration(
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(15)),
+                      borderSide: BorderSide(width: 2, color: unselected),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(70)),
+                      borderSide: BorderSide(width: 2, color: unselected),
+                    ),
+                    hintText: 'Add Tag here',
+                    hintStyle: TextStyle(
+                      color: unselected,
+                      fontFamily: 'MyCustomFont',
+                    ),
+                  ),
+                ),
+                IconButton(
+                  onPressed: () async {
+                    setState(() {
+                      _isLoading = true;
+                    });
+                    var tagSet2 = tagSet
+                        .doc(widget.categoryId['categoryId'])
+                        .collection('tags')
+                        .doc();
+                    await tagSet2.set({
+                      'tagId': tagSet2.id,
+                      'tag': tagController.text,
+                      'tagColor': categoryData['color'].toString(),
+                    }).whenComplete(() {
+                      tagController.clear();
+                    });
+                  },
+                  icon: const Icon(
+                    Icons.add,
+                    size: 30,
+                    color: purple,
+                  ),
+                )
+              ],
+            ),
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return DismissKeyboard(
       child: MaterialApp(
         home: Scaffold(
-          appBar: AppBar(
-            toolbarHeight: 50,
-            backgroundColor: mobileBackgroundColor,
-            leadingWidth: 130,
-            centerTitle: true,
-            leading: Container(
-              padding: const EdgeInsets.all(0),
-              child: Image.asset('assets/images/logo with name.png',
-                  fit: BoxFit.scaleDown),
-            ),
-          ),
-          body: ListView(
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Padding(
-                  //   padding: const EdgeInsets.fromLTRB(12, 12, 0, 0),
-                  //   child: Text(
-                  //     categoryData['Category'],
-                  //     style: const TextStyle(
-                  //       fontSize: 24,
-                  //     ),
-                  //   ),
-                  // ),
-                  Expanded(
-                    child: StreamBuilder<QuerySnapshot>(
-                      stream: tagSet
-                          .doc(categoryData['categoryId'])
-                          .collection('tags')
-                          .snapshots(),
-                      builder:
-                          (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                        if (snapshot.hasData) {
-                          return Row(
-                            children: <Widget>[
-                              Expanded(
-                                child: SizedBox(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.33,
-                                  child: ListView.builder(
-                                      itemCount: snapshot.data!.docs.length,
-                                      itemBuilder: (context, index) {
-                                        final DocumentSnapshot
-                                            documentSnapshot =
-                                            snapshot.data!.docs[index];
+          body: SizedBox(
+            height: 500,
+            child: ListView(children: [
+              StreamBuilder<QuerySnapshot>(
+                stream: tagSet
+                    .doc(widget.categoryId['categoryId'])
+                    .collection('tags')
+                    .snapshots(),
+                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.hasData) {
+                    return SizedBox(
+                      height: 500,
+                      width: 600,
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: SizedBox(
+                              child: ListView.builder(
+                                  itemCount: snapshot.data!.docs.length,
+                                  itemBuilder: (context, index) {
+                                    final DocumentSnapshot documentSnapshot =
+                                        snapshot.data!.docs[index];
 
-                                        var categoryIdD =
-                                            categoryData['categoryId'];
-
-                                        var Mytext = new Map();
-                                        Mytext['tag'] = documentSnapshot['tag'];
-                                        Mytext['tagColor'] =
-                                            documentSnapshot['tagColor'];
-                                        return Card(
-                                          shape: RoundedRectangleBorder(
-                                            side: BorderSide(
-                                                color: HexColor(
-                                                    categoryData['color']),
-                                                width: 5),
-                                          ),
-                                          child: ClipPath(
-                                            child: Container(
-                                              height: 80,
-                                              child: ListTile(
-                                                title: Row(
+                                    var Mytext = new Map();
+                                    Mytext['tag'] = documentSnapshot['tag'];
+                                    return Card(
+                                      elevation: 2,
+                                      child: ClipPath(
+                                        child: Container(
+                                          height: 80,
+                                          child: ListTile(
+                                            title: Text(Mytext['tag']),
+                                            trailing: SingleChildScrollView(
+                                              child: SizedBox(
+                                                width: 160,
+                                                child: Row(
                                                   children: [
-                                                    Text(Mytext['tag']),
-                                                  ],
-                                                ),
-                                                trailing: SingleChildScrollView(
-                                                  child: SizedBox(
-                                                    width: 160,
-                                                    child: Row(
-                                                      children: [
-                                                        IconButton(
-                                                            icon: const Icon(
-                                                                Icons.edit),
-                                                            onPressed: () {}),
-                                                        IconButton(
-                                                            icon: const Icon(
-                                                                Icons.edit),
-                                                            onPressed: () {}),
-                                                        IconButton(
-                                                            icon: const Icon(
-                                                                Icons.edit),
-                                                            onPressed: () {}),
-                                                      ],
+                                                    TextButton(
+                                                      onPressed: () {},
+                                                      child: const Text(
+                                                        '+',
+                                                        style: TextStyle(
+                                                          fontSize: 32,
+                                                          fontFamily:
+                                                              'MyCustomFont',
+                                                          color: unselected,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
                                                     ),
-                                                  ),
+                                                    IconButton(
+                                                        icon: const Icon(
+                                                            Icons.edit),
+                                                        onPressed: () {}),
+                                                    IconButton(
+                                                        icon: const Icon(
+                                                            Icons.delete),
+                                                        onPressed:
+                                                            () => showDialog(
+                                                                  context:
+                                                                      context,
+                                                                  builder:
+                                                                      (context) {
+                                                                    return AlertDialog(
+                                                                      title: Text(
+                                                                          'Are you sure?'),
+                                                                      content: Text(
+                                                                          'This action cannot be undone.'),
+                                                                      actions: [
+                                                                        TextButton(
+                                                                          child:
+                                                                              Text('Cancel'),
+                                                                          onPressed:
+                                                                              () {
+                                                                            Navigator.of(context).pop();
+                                                                          },
+                                                                        ),
+                                                                        TextButton(
+                                                                          child:
+                                                                              Text('OK'),
+                                                                          onPressed:
+                                                                              () {},
+                                                                        ),
+                                                                      ],
+                                                                    );
+                                                                  },
+                                                                )),
+                                                  ],
                                                 ),
                                               ),
                                             ),
-                                            clipper: ShapeBorderClipper(
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            3))),
                                           ),
-                                          margin: const EdgeInsets.all(10),
-                                        );
-                                      }),
-                                ),
-                              ),
-                            ],
-                          );
-                        }
-                        return const Text('ho');
-                      },
-                    ),
-                  )
-                ],
-              ),
-            ],
-          ),
-          bottomNavigationBar: Container(
-            color: white,
-            child: Form(
-              child: Row(
-                children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.76,
-                    child: TextFormField(
-                      keyboardType: TextInputType.multiline,
-                      maxLines: 5,
-                      minLines: 1,
-                      controller: tagController,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter a comment';
-                        }
-                        return null;
-                      },
-                      decoration: const InputDecoration(
-                        contentPadding:
-                            EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(15)),
-                          borderSide: BorderSide(width: 2, color: unselected),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(70)),
-                          borderSide: BorderSide(width: 2, color: unselected),
-                        ),
-                        hintText: 'Add Tag here',
-                        hintStyle: TextStyle(
-                          color: unselected,
-                          fontFamily: 'MyCustomFont',
-                        ),
+                                        ),
+                                        clipper: ShapeBorderClipper(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(3))),
+                                      ),
+                                      margin: const EdgeInsets.all(10),
+                                    );
+                                  }),
+                            ),
+                          ),
+                        ],
                       ),
+                    );
+                  }
+
+                  return Center(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: const <Widget>[
+                        SizedBox(
+                          height: 30.0,
+                          width: 30.0,
+                          child: CircularProgressIndicator(),
+                        ),
+                      ],
                     ),
-                  ),
-                  IconButton(
-                    onPressed: () async {
-                      setState(() {
-                        _isLoading = true;
-                      });
-                      var tagSet2 = tagSet
-                          .doc(categoryData['categoryId'])
-                          .collection('tags')
-                          .doc();
-                      await tagSet2.set({
-                        'tagId': tagSet2.id,
-                        'tag': tagController.text,
-                        'tagColor': categoryData['color'].toString(),
-                      }).whenComplete(() {
-                        tagController.clear();
-                      });
-                    },
-                    icon: const Icon(
-                      Icons.add,
-                      size: 30,
-                      color: purple,
-                    ),
-                  )
-                ],
+                  );
+                },
               ),
-            ),
+            ]),
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () => _create(),
+            child: Icon(Icons.add),
           ),
         ),
+        // bottomNavigationBar: Container(
+        //   color: white,
+        //   child: Form(
+        //     child: Row(
+        //       children: [
+        //         SizedBox(
+        //           width: MediaQuery.of(context).size.width * 0.76,
+        //           child: TextFormField(
+        //             keyboardType: TextInputType.multiline,
+        //             maxLines: 5,
+        //             minLines: 1,
+        //             controller: tagController,
+        //             validator: (value) {
+        //               if (value!.isEmpty) {
+        //                 return 'Please enter a comment';
+        //               }
+        //               return null;
+        //             },
+        //             decoration: const InputDecoration(
+        //               contentPadding:
+        //                   EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+        //               enabledBorder: OutlineInputBorder(
+        //                 borderRadius: BorderRadius.all(Radius.circular(15)),
+        //                 borderSide: BorderSide(width: 2, color: unselected),
+        //               ),
+        //               focusedBorder: OutlineInputBorder(
+        //                 borderRadius: BorderRadius.all(Radius.circular(70)),
+        //                 borderSide: BorderSide(width: 2, color: unselected),
+        //               ),
+        //               hintText: 'Add Tag here',
+        //               hintStyle: TextStyle(
+        //                 color: unselected,
+        //                 fontFamily: 'MyCustomFont',
+        //               ),
+        //             ),
+        //           ),
+        //         ),
+        //         IconButton(
+        //           onPressed: () async {
+        //             setState(() {
+        //               _isLoading = true;
+        //             });
+        //             var tagSet2 = tagSet
+        //                 .doc(categoryData['categoryId'])
+        //                 .collection('tags')
+        //                 .doc();
+        //             await tagSet2.set({
+        //               'tagId': tagSet2.id,
+        //               'tag': tagController.text,
+        //               'tagColor': categoryData['color'].toString(),
+        //             }).whenComplete(() {
+        //               tagController.clear();
+        //             });
+        //           },
+        //           icon: const Icon(
+        //             Icons.add,
+        //             size: 30,
+        //             color: purple,
+        //           ),
+        //         )
+        //       ],
+        //     ),
+        //   ),
+        // ),
       ),
     );
   }
 }
+
+
+
+
+
+
+
+
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return DismissKeyboard(
+//       child: MaterialApp(
+//         home: Scaffold(
+//           appBar: AppBar(
+//             toolbarHeight: 50,
+//             backgroundColor: mobileBackgroundColor,
+//             leadingWidth: 130,
+//             centerTitle: true,
+//             leading: Container(
+//               padding: const EdgeInsets.all(0),
+//               child: Image.asset('assets/images/logo with name.png',
+//                   fit: BoxFit.scaleDown),
+//             ),
+//           ),
+//           body: ListView(
+//             children: [
+//               Column(
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: [
+//                   Padding(
+//                     padding: const EdgeInsets.fromLTRB(12, 12, 0, 0),
+//                     child: Text(
+//                       categoryData['categoryId'].toString(),
+//                       style: const TextStyle(
+//                         fontSize: 24,
+//                       ),
+//                     ),
+//                   ),
+//                   Expanded(
+//                     child: StreamBuilder<QuerySnapshot>(
+//                       stream: tagSet
+//                           .doc(categoryData['categoryId'])
+//                           .collection('tags')
+//                           .snapshots(),
+//                       builder:
+//                           (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+//                         if (snapshot.hasData) {
+//                           return Row(
+//                             children: <Widget>[
+//                               Expanded(
+//                                 child: SizedBox(
+//                                   child: ListView.builder(
+//                                       itemCount: snapshot.data!.docs.length,
+//                                       itemBuilder: (context, index) {
+//                                         final DocumentSnapshot
+//                                             documentSnapshot =
+//                                             snapshot.data!.docs[index];
+
+//                                         var categoryIdD =
+//                                             categoryData['categoryId'];
+
+//                                         var Mytext = new Map();
+//                                         Mytext['tag'] = documentSnapshot['tag'];
+//                                         Mytext['tagColor'] =
+//                                             documentSnapshot['tagColor'];
+//                                         return Card(
+//                                           shape: RoundedRectangleBorder(
+//                                             side: BorderSide(
+//                                                 color: HexColor(
+//                                                     categoryData['color']),
+//                                                 width: 5),
+//                                           ),
+//                                           child: ClipPath(
+//                                             child: Container(
+//                                               // height: 80,
+//                                               child: ListTile(
+//                                                 title: Row(
+//                                                   children: [
+//                                                     Text(Mytext['tag']),
+//                                                   ],
+//                                                 ),
+//                                                 trailing: SingleChildScrollView(
+//                                                   child: SizedBox(
+//                                                     // width: 160,
+//                                                     child: Row(
+//                                                       children: [
+//                                                         IconButton(
+//                                                             icon: const Icon(
+//                                                                 Icons.edit),
+//                                                             onPressed: () {}),
+//                                                         IconButton(
+//                                                             icon: const Icon(
+//                                                                 Icons.edit),
+//                                                             onPressed: () {}),
+//                                                         IconButton(
+//                                                             icon: const Icon(
+//                                                                 Icons.edit),
+//                                                             onPressed: () {}),
+//                                                       ],
+//                                                     ),
+//                                                   ),
+//                                                 ),
+//                                               ),
+//                                             ),
+//                                             clipper: ShapeBorderClipper(
+//                                                 shape: RoundedRectangleBorder(
+//                                                     borderRadius:
+//                                                         BorderRadius.circular(
+//                                                             3))),
+//                                           ),
+//                                           margin: const EdgeInsets.all(10),
+//                                         );
+//                                       }),
+//                                 ),
+//                               ),
+//                             ],
+//                           );
+//                         }
+
+//                         return Center(
+//                           child: Column(
+//                             crossAxisAlignment: CrossAxisAlignment.center,
+//                             children: const <Widget>[
+//                               SizedBox(
+//                                 height: 30.0,
+//                                 width: 30.0,
+//                                 child: CircularProgressIndicator(),
+//                               ),
+//                             ],
+//                           ),
+//                         );
+//                       },
+//                     ),
+//                   )
+//                 ],
+//               ),
+//             ],
+//           ),
+//           bottomNavigationBar: Container(
+//             color: white,
+//             child: Form(
+//               child: Row(
+//                 children: [
+//                   SizedBox(
+//                     width: MediaQuery.of(context).size.width * 0.76,
+//                     child: TextFormField(
+//                       keyboardType: TextInputType.multiline,
+//                       maxLines: 5,
+//                       minLines: 1,
+//                       controller: tagController,
+//                       validator: (value) {
+//                         if (value!.isEmpty) {
+//                           return 'Please enter a comment';
+//                         }
+//                         return null;
+//                       },
+//                       decoration: const InputDecoration(
+//                         contentPadding:
+//                             EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+//                         enabledBorder: OutlineInputBorder(
+//                           borderRadius: BorderRadius.all(Radius.circular(15)),
+//                           borderSide: BorderSide(width: 2, color: unselected),
+//                         ),
+//                         focusedBorder: OutlineInputBorder(
+//                           borderRadius: BorderRadius.all(Radius.circular(70)),
+//                           borderSide: BorderSide(width: 2, color: unselected),
+//                         ),
+//                         hintText: 'Add Tag here',
+//                         hintStyle: TextStyle(
+//                           color: unselected,
+//                           fontFamily: 'MyCustomFont',
+//                         ),
+//                       ),
+//                     ),
+//                   ),
+//                   IconButton(
+//                     onPressed: () async {
+//                       setState(() {
+//                         _isLoading = true;
+//                       });
+//                       var tagSet2 = tagSet
+//                           .doc(categoryData['categoryId'])
+//                           .collection('tags')
+//                           .doc();
+//                       await tagSet2.set({
+//                         'tagId': tagSet2.id,
+//                         'tag': tagController.text,
+//                         'tagColor': categoryData['color'].toString(),
+//                       }).whenComplete(() {
+//                         tagController.clear();
+//                       });
+//                     },
+//                     icon: const Icon(
+//                       Icons.add,
+//                       size: 30,
+//                       color: purple,
+//                     ),
+//                   )
+//                 ],
+//               ),
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
