@@ -247,6 +247,9 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                                             _time.text =
                                                 pickedTime.format(context);
                                           });
+                                          // } else {
+                                          //   print("Time is not selected");
+                                          // }
                                         } else if (pickedInMinutes <
                                             nowInMinutes) {
                                           return print("Please selec time ...");
