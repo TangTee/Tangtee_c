@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:tangteevs/profile/Profile.dart';
 import 'package:tangteevs/profile/profileback.dart';
 import 'package:tangteevs/services/auth_service.dart';
 import 'package:tangteevs/services/database_service.dart';
@@ -93,7 +94,13 @@ class _EditPageState extends State<EditPage> {
                   leading: IconButton(
                     icon: const Icon(Icons.arrow_back_ios,
                         color: mobileSearchColor, size: 30),
-                    onPressed: () => {nextScreen(context, MyHomePage())},
+                    onPressed: () => {
+                      nextScreen(
+                          context,
+                          ProfilePage(
+                            uid: FirebaseAuth.instance.currentUser!.uid,
+                          ))
+                    },
                   ),
                   toolbarHeight: MediaQuery.of(context).size.height * 0.13,
                   centerTitle: true,

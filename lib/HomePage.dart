@@ -1,92 +1,98 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:tangteevs/utils/color.dart';
 import 'event/Event.dart';
 import 'feed/FeedPage.dart';
 import 'Profile/Profile.dart';
 import 'activity/Activity.dart';
 
-class MyHomePage extends StatefulWidget {
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _selectedIndex = 0;
-
-  final List<Widget> _pages = [
-    const HomeTab(),
-    const ActivityTab(),
-    const Event(),
-    const ChatTab(),
-    const ProfileTab(),
-  ];
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
+class MyHomePage extends StatelessWidget {
+  const MyHomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    Widget currentPage;
-    switch (_selectedIndex) {
-      case 0:
-        currentPage = _pages[0];
-        break;
-      case 1:
-        currentPage = _pages[1];
-        break;
-      case 2:
-        currentPage = _pages[2];
-        break;
-      case 3:
-        currentPage = _pages[3];
-        break;
-      case 4:
-        currentPage = _pages[4];
-        break;
-      default:
-        currentPage = _pages[0];
-        break;
+    List<Widget> _buildScreens() {
+      return [
+        const HomeTab(),
+        const ActivityTab(),
+        const Event(),
+        const ChatTab(),
+        const ProfileTab(),
+      ];
     }
-    return Scaffold(
-      body: currentPage,
-      bottomNavigationBar: SizedBox(
-        height: 65,
-        child: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          currentIndex: _selectedIndex,
-          backgroundColor: purple,
-          unselectedItemColor: primaryColor,
-          selectedItemColor: lightGreen,
-          onTap: _onItemTapped,
-          iconSize: 30,
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.history),
-              label: 'Activity',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.add_box),
-              label: 'Post',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.chat),
-              label: 'Chat',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.account_circle),
-              label: 'Proflie',
-            ),
-          ],
+
+    List<PersistentBottomNavBarItem> _navBarsItems() {
+      return [
+        PersistentBottomNavBarItem(
+          icon: const Icon(Icons.home),
+          title: ("Home"),
+          activeColorPrimary: Colors.blue,
+          inactiveColorPrimary: Colors.grey,
         ),
+        PersistentBottomNavBarItem(
+          icon: const Icon(Icons.history),
+          title: ("Activity"),
+          activeColorPrimary: Colors.blue,
+          inactiveColorPrimary: Colors.grey,
+        ),
+        PersistentBottomNavBarItem(
+          icon: const Icon(
+            Icons.add_box,
+            color: Colors.white,
+          ),
+          inactiveIcon: const Icon(
+            Icons.add_box,
+            color: Colors.white,
+          ),
+          activeColorPrimary: Colors.blue,
+          inactiveColorPrimary: Colors.grey,
+        ),
+        PersistentBottomNavBarItem(
+          icon: const Icon(Icons.chat),
+          title: ("Chat"),
+          activeColorPrimary: Colors.blue,
+          inactiveColorPrimary: Colors.grey,
+        ),
+        PersistentBottomNavBarItem(
+          icon: const Icon(Icons.account_circle),
+          title: ("Proflie"),
+          activeColorPrimary: Colors.blue,
+          inactiveColorPrimary: Colors.grey,
+        ),
+      ];
+    }
+
+    PersistentTabController controller;
+
+    controller = PersistentTabController(initialIndex: 0);
+    return PersistentTabView(
+      context,
+      screens: _buildScreens(),
+      items: _navBarsItems(),
+      controller: controller,
+      confineInSafeArea: true,
+      backgroundColor: Colors.white,
+      handleAndroidBackButtonPress: true,
+      resizeToAvoidBottomInset: true,
+      stateManagement: true,
+      hideNavigationBarWhenKeyboardShows: true,
+      decoration: NavBarDecoration(
+        borderRadius: BorderRadius.circular(10.0),
+        colorBehindNavBar: Colors.white,
       ),
+      popAllScreensOnTapOfSelectedTab: true,
+      popActionScreens: PopActionScreensType.all,
+      itemAnimationProperties: const ItemAnimationProperties(
+        duration: Duration(milliseconds: 200),
+        curve: Curves.ease,
+      ),
+      screenTransitionAnimation: const ScreenTransitionAnimation(
+        animateTabTransition: true,
+        curve: Curves.ease,
+        duration: Duration(milliseconds: 200),
+      ),
+      navBarStyle: NavBarStyle.style16,
     );
   }
 }
