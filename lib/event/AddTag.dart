@@ -1,226 +1,111 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import '../HomePage.dart';
-import '../utils/color.dart';
-import 'package:tangteevs/widgets/custom_textfield.dart';
+import 'package:hexcolor/hexcolor.dart';
+import 'package:tangteevs/utils/color.dart';
 
-void showModalBottomSheetT(BuildContext context, t_id) {
-  final uid = FirebaseAuth.instance.currentUser!.uid;
-  final _report = FirebaseFirestore.instance
-      .collection('report')
-      .doc('reportPost')
-      .collection(t_id['uid'])
-      .doc();
+void showModalBottomSheetC(BuildContext context, tag) {
+  final CollectionReference _categorys =
+      FirebaseFirestore.instance.collection('categorys');
+
   showModalBottomSheet(
     useRootNavigator: true,
     context: context,
     builder: (BuildContext context) {
-      return SingleChildScrollView(
-        child: Text('hi'),
+      return StreamBuilder(
+        stream: _categorys.snapshots(),
+        builder: ((context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+              itemCount: (snapshot.data! as dynamic).docs.length,
+              itemBuilder: (context, index) {
+                final DocumentSnapshot documentSnapshot =
+                    snapshot.data!.docs[index];
+
+                var Mytext = new Map();
+                Mytext['Category'] = documentSnapshot['Category'];
+                Mytext['categoryId'] = documentSnapshot['categoryId'];
+                Mytext['color'] = documentSnapshot['color'];
+
+                return Card(
+                  child: Column(
+                    children: [
+                      ListTile(
+                        tileColor: HexColor(Mytext['color']),
+                        textColor: white,
+                        contentPadding:
+                            const EdgeInsets.symmetric(vertical: 8.0),
+                        title: Center(
+                            child: Text(Mytext['Category'],
+                                style: TextStyle(
+                                    fontFamily: 'MyCustomFont', fontSize: 20))),
+                        onTap: () {
+                          showModalBottomSheetT(context, Mytext['categoryId']);
+                        },
+                      )
+                    ],
+                  ),
+                );
+              },
+            );
+          }
+          return const Text('helo');
+        }),
       );
     },
   );
 }
 
-void showModalBottomSheetRC(BuildContext context, r_pid, Map mytext) {
-  final uid = FirebaseAuth.instance.currentUser!.uid;
-  final _report = FirebaseFirestore.instance
-      .collection('report')
-      .doc('reportComment')
-      .collection(mytext['uid'])
-      .doc();
+void showModalBottomSheetT(BuildContext context, categoryId) {
+  final CollectionReference _tags =
+      FirebaseFirestore.instance.collection('tags');
+
   showModalBottomSheet(
     useRootNavigator: true,
     context: context,
     builder: (BuildContext context) {
-      return SingleChildScrollView(
-        child: Container(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              ListTile(
-                contentPadding: const EdgeInsets.symmetric(vertical: 8.0),
-                title: Center(
-                  child: Text(
-                    'อนาจาร',
-                    style: TextStyle(fontFamily: 'MyCustomFont', fontSize: 20),
+      return StreamBuilder(
+        stream: _tags.where("categoryId", isEqualTo: categoryId).snapshots(),
+        builder: ((context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+              itemCount: (snapshot.data! as dynamic).docs.length,
+              itemBuilder: (context, index) {
+                final DocumentSnapshot documentSnapshot =
+                    snapshot.data!.docs[index];
+
+                var Mytext = new Map();
+                Mytext['tag'] = documentSnapshot['tag'];
+                Mytext['tagColor'] = documentSnapshot['tagColor'];
+
+                return Card(
+                  child: Column(
+                    children: [
+                      ListTile(
+                        tileColor: HexColor(Mytext['tagColor']),
+                        textColor: white,
+                        contentPadding:
+                            const EdgeInsets.symmetric(vertical: 8.0),
+                        title: Center(
+                            child: Text(
+                          Mytext['tag'],
+                          style: TextStyle(
+                              fontFamily: 'MyCustomFont', fontSize: 20),
+                        )),
+                        onTap: () {
+                          var tag = Mytext['tag'];
+                          Navigator.of(context)
+                              .popUntil((route) => route.isFirst);
+                        },
+                      )
+                    ],
                   ),
-                ),
-                onTap: () {
-                  _report.set({
-                    'rid': _report.id,
-                    'postid': mytext['postid'],
-                    'Displayname': mytext['Displayname'],
-                    'cid': mytext['cid'],
-                    'comment': mytext['comment'],
-                    'uid': mytext['uid'],
-                    'problem': 'อนาจาร',
-                    //'likes': [],
-                    'timeStamp': DateTime.now(),
-                    'reportBy': FirebaseAuth.instance.currentUser?.uid,
-                  }).whenComplete(() {
-                    Navigator.of(context).popUntil((route) => route.isFirst);
-                  });
-                },
-              ),
-              ListTile(
-                contentPadding: const EdgeInsets.symmetric(vertical: 8.0),
-                title: const Center(
-                  child: Text(
-                    'ความรุนแรง',
-                    style: TextStyle(
-                      fontFamily: 'MyCustomFont',
-                      fontSize: 20,
-                    ),
-                  ),
-                ),
-                onTap: () {
-                  _report.set({
-                    'rid': _report.id,
-                    'postid': mytext['postid'],
-                    'Displayname': mytext['Displayname'],
-                    'cid': mytext['cid'],
-                    'comment': mytext['comment'],
-                    'uid': mytext['uid'],
-                    'problem': 'ความรุนแรง',
-                    //'likes': [],
-                    'timeStamp': DateTime.now(),
-                    'reportBy': FirebaseAuth.instance.currentUser?.uid,
-                  }).whenComplete(() {
-                    Navigator.of(context).popUntil((route) => route.isFirst);
-                  });
-                },
-              ),
-              ListTile(
-                contentPadding: const EdgeInsets.symmetric(vertical: 8.0),
-                title: const Center(
-                  child: Text(
-                    'การคุกคาม',
-                    style: TextStyle(
-                      fontFamily: 'MyCustomFont',
-                      fontSize: 20,
-                    ),
-                  ),
-                ),
-                onTap: () {
-                  _report.set({
-                    'rid': _report.id,
-                    'postid': mytext['postid'],
-                    'Displayname': mytext['Displayname'],
-                    'cid': mytext['cid'],
-                    'comment': mytext['comment'],
-                    'uid': mytext['uid'],
-                    'problem': 'การคุกคาม',
-                    //'likes': [],
-                    'timeStamp': DateTime.now(),
-                    'reportBy': FirebaseAuth.instance.currentUser?.uid,
-                  }).whenComplete(() {
-                    Navigator.of(context).popUntil((route) => route.isFirst);
-                  });
-                },
-              ),
-              ListTile(
-                contentPadding: const EdgeInsets.symmetric(vertical: 8.0),
-                title: const Center(
-                  child: Text(
-                    'ข้อมูลเท็จ',
-                    style: TextStyle(
-                      fontFamily: 'MyCustomFont',
-                      fontSize: 20,
-                    ),
-                  ),
-                ),
-                onTap: () {
-                  _report.set({
-                    'rid': _report.id,
-                    'postid': mytext['postid'],
-                    'Displayname': mytext['Displayname'],
-                    'cid': mytext['cid'],
-                    'comment': mytext['comment'],
-                    'uid': mytext['uid'],
-                    'problem': 'ข้อมูลเท็จ',
-                    //'likes': [],
-                    'timeStamp': DateTime.now(),
-                    'reportBy': FirebaseAuth.instance.currentUser?.uid,
-                  }).whenComplete(() {
-                    Navigator.of(context).popUntil((route) => route.isFirst);
-                  });
-                },
-              ),
-              ListTile(
-                contentPadding: const EdgeInsets.symmetric(vertical: 8.0),
-                title: const Center(
-                  child: Text(
-                    'สแปม',
-                    style: TextStyle(
-                      fontFamily: 'MyCustomFont',
-                      fontSize: 20,
-                    ),
-                  ),
-                ),
-                onTap: () {
-                  _report.set({
-                    'rid': _report.id,
-                    'postid': mytext['postid'],
-                    'Displayname': mytext['Displayname'],
-                    'cid': mytext['cid'],
-                    'comment': mytext['comment'],
-                    'uid': mytext['uid'],
-                    'problem': 'สแปม',
-                    //'likes': [],
-                    'timeStamp': DateTime.now(),
-                    'reportBy': FirebaseAuth.instance.currentUser?.uid,
-                  }).whenComplete(() {
-                    Navigator.of(context).popUntil((route) => route.isFirst);
-                  });
-                },
-              ),
-              ListTile(
-                contentPadding: const EdgeInsets.symmetric(vertical: 8.0),
-                title: const Center(
-                  child: Text(
-                    'คำพูดแสดงความเกลีดชัง',
-                    style: TextStyle(
-                      fontFamily: 'MyCustomFont',
-                      fontSize: 20,
-                    ),
-                  ),
-                ),
-                onTap: () {
-                  _report.set({
-                    'rid': _report.id,
-                    'postid': mytext['postid'],
-                    'Displayname': mytext['Displayname'],
-                    'cid': mytext['cid'],
-                    'comment': mytext['comment'],
-                    'uid': mytext['uid'],
-                    'problem': 'คำพูดแสดงความเกลีดชัง',
-                    //'likes': [],
-                    'timeStamp': DateTime.now(),
-                    'reportBy': FirebaseAuth.instance.currentUser?.uid,
-                  }).whenComplete(() {
-                    nextScreenReplaceOut(context, MyHomePage());
-                  });
-                },
-              ),
-              ListTile(
-                contentPadding: const EdgeInsets.symmetric(vertical: 8.0),
-                title: const Center(
-                    child: Text(
-                  'Cancel',
-                  style: TextStyle(
-                      color: redColor,
-                      fontFamily: 'MyCustomFont',
-                      fontSize: 20),
-                )),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          ),
-        ),
+                );
+              },
+            );
+          }
+          return const Text('helo');
+        }),
       );
     },
   );

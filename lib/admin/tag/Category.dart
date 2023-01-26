@@ -5,7 +5,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:tangteevs/utils/showSnackbar.dart';
 import 'package:tangteevs/widgets/custom_textfield.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../activity/tag/before.dart';
+import '../tag/before.dart';
 import '../../utils/color.dart';
 import '../tag/tagCategory.dart';
 

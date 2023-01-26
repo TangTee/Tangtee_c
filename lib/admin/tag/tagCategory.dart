@@ -86,14 +86,12 @@ class _TagCategoryState extends State<TagCategory> {
                     setState(() {
                       _isLoading = true;
                     });
-                    var tagSet2 = tagSet
-                        .doc(widget.categoryId['categoryId'])
-                        .collection('tags')
-                        .doc();
+                    var tagSet2 = tagSet.doc();
                     await tagSet2.set({
                       'tagId': tagSet2.id,
                       'tag': tagController.text,
-                      'tagColor': categoryData['color'].toString(),
+                      'tagColor': widget.categoryId['color'],
+                      'categoryId': widget.categoryId['categoryId']
                     }).whenComplete(() {
                       tagController.clear();
                     });
@@ -115,409 +113,167 @@ class _TagCategoryState extends State<TagCategory> {
     return DismissKeyboard(
       child: MaterialApp(
         home: Scaffold(
-          body: SizedBox(
-            height: 500,
-            child: ListView(children: [
-              StreamBuilder<QuerySnapshot>(
-                stream: tagSet
-                    .doc(widget.categoryId['categoryId'])
-                    .collection('tags')
-                    .snapshots(),
-                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                  if (snapshot.hasData) {
-                    return SizedBox(
-                      height: 500,
-                      width: 600,
-                      child: Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: SizedBox(
-                              child: ListView.builder(
-                                  itemCount: snapshot.data!.docs.length,
-                                  itemBuilder: (context, index) {
-                                    final DocumentSnapshot documentSnapshot =
-                                        snapshot.data!.docs[index];
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 600,
+                child: ListView(children: [
+                  StreamBuilder<QuerySnapshot>(
+                    stream: tagSet
+                        .where("categoryId",
+                            isEqualTo: widget.categoryId['categoryId'])
+                        .snapshots(),
+                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (snapshot.hasData) {
+                        return SizedBox(
+                          height: 500,
+                          width: 600,
+                          child: Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: SizedBox(
+                                  child: ListView.builder(
+                                      itemCount: snapshot.data!.docs.length,
+                                      itemBuilder: (context, index) {
+                                        final DocumentSnapshot
+                                            documentSnapshot =
+                                            snapshot.data!.docs[index];
 
-                                    var Mytext = new Map();
-                                    Mytext['tag'] = documentSnapshot['tag'];
-                                    return Card(
-                                      elevation: 2,
-                                      child: ClipPath(
-                                        child: Container(
-                                          height: 80,
-                                          child: ListTile(
-                                            title: Text(Mytext['tag']),
-                                            trailing: SingleChildScrollView(
-                                              child: SizedBox(
-                                                width: 160,
-                                                child: Row(
-                                                  children: [
-                                                    TextButton(
-                                                      onPressed: () {},
-                                                      child: const Text(
-                                                        '+',
-                                                        style: TextStyle(
-                                                          fontSize: 32,
-                                                          fontFamily:
-                                                              'MyCustomFont',
-                                                          color: unselected,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                      ),
+                                        var Mytext = new Map();
+                                        Mytext['tag'] = documentSnapshot['tag'];
+                                        Mytext['tagColor'] =
+                                            documentSnapshot['tagColor'];
+                                        return Card(
+                                          elevation: 2,
+                                          child: ClipPath(
+                                            child: Container(
+                                              height: 80,
+                                              child: Container(
+                                                child: Container(
+                                                  height: 80,
+                                                  decoration: BoxDecoration(
+                                                      border: Border(
+                                                          left: BorderSide(
+                                                              color: HexColor(
+                                                                  Mytext[
+                                                                      'tagColor']),
+                                                              width: 10))),
+                                                  child: ListTile(
+                                                    title: Text(Mytext['tag']),
+                                                    trailing:
+                                                        SingleChildScrollView(
+                                                      child: SizedBox(
+                                                          width: 100,
+                                                          child: Row(
+                                                            children: [
+                                                              IconButton(
+                                                                  icon: const Icon(
+                                                                      Icons
+                                                                          .edit),
+                                                                  onPressed: () =>
+                                                                      showDialog(
+                                                                        context:
+                                                                            context,
+                                                                        builder:
+                                                                            (context) {
+                                                                          return AlertDialog(
+                                                                            title:
+                                                                                Text('Are you sure?'),
+                                                                            content:
+                                                                                Text('This action cannot be undone.'),
+                                                                            actions: [
+                                                                              TextButton(
+                                                                                child: Text('Cancel'),
+                                                                                onPressed: () {
+                                                                                  Navigator.of(context).pop();
+                                                                                },
+                                                                              ),
+                                                                              TextButton(
+                                                                                child: Text('OK'),
+                                                                                onPressed: () {},
+                                                                              ),
+                                                                            ],
+                                                                          );
+                                                                        },
+                                                                      )),
+                                                              IconButton(
+                                                                  icon: const Icon(
+                                                                      Icons
+                                                                          .delete),
+                                                                  onPressed: () =>
+                                                                      showDialog(
+                                                                        context:
+                                                                            context,
+                                                                        builder:
+                                                                            (context) {
+                                                                          return AlertDialog(
+                                                                            title:
+                                                                                Text('Are you sure?'),
+                                                                            content:
+                                                                                Text('This action cannot be undone.'),
+                                                                            actions: [
+                                                                              TextButton(
+                                                                                child: Text('Cancel'),
+                                                                                onPressed: () {
+                                                                                  Navigator.of(context).pop();
+                                                                                },
+                                                                              ),
+                                                                              TextButton(
+                                                                                child: Text('OK'),
+                                                                                onPressed: () {},
+                                                                              ),
+                                                                            ],
+                                                                          );
+                                                                        },
+                                                                      )),
+                                                            ],
+                                                          )),
                                                     ),
-                                                    IconButton(
-                                                        icon: const Icon(
-                                                            Icons.edit),
-                                                        onPressed: () {}),
-                                                    IconButton(
-                                                        icon: const Icon(
-                                                            Icons.delete),
-                                                        onPressed:
-                                                            () => showDialog(
-                                                                  context:
-                                                                      context,
-                                                                  builder:
-                                                                      (context) {
-                                                                    return AlertDialog(
-                                                                      title: Text(
-                                                                          'Are you sure?'),
-                                                                      content: Text(
-                                                                          'This action cannot be undone.'),
-                                                                      actions: [
-                                                                        TextButton(
-                                                                          child:
-                                                                              Text('Cancel'),
-                                                                          onPressed:
-                                                                              () {
-                                                                            Navigator.of(context).pop();
-                                                                          },
-                                                                        ),
-                                                                        TextButton(
-                                                                          child:
-                                                                              Text('OK'),
-                                                                          onPressed:
-                                                                              () {},
-                                                                        ),
-                                                                      ],
-                                                                    );
-                                                                  },
-                                                                )),
-                                                  ],
+                                                  ),
                                                 ),
                                               ),
                                             ),
+                                            clipper: ShapeBorderClipper(
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            3))),
                                           ),
-                                        ),
-                                        clipper: ShapeBorderClipper(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(3))),
-                                      ),
-                                      margin: const EdgeInsets.all(10),
-                                    );
-                                  }),
-                            ),
+                                          margin: const EdgeInsets.all(10),
+                                        );
+                                      }),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    );
-                  }
+                        );
+                      }
 
-                  return Center(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: const <Widget>[
-                        SizedBox(
-                          height: 30.0,
-                          width: 30.0,
-                          child: CircularProgressIndicator(),
+                      return Center(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: const <Widget>[
+                            SizedBox(
+                              height: 30.0,
+                              width: 30.0,
+                              child: CircularProgressIndicator(),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  );
-                },
+                      );
+                    },
+                  ),
+                ]),
               ),
-            ]),
+            ],
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () => _create(),
             child: Icon(Icons.add),
           ),
         ),
-        // bottomNavigationBar: Container(
-        //   color: white,
-        //   child: Form(
-        //     child: Row(
-        //       children: [
-        //         SizedBox(
-        //           width: MediaQuery.of(context).size.width * 0.76,
-        //           child: TextFormField(
-        //             keyboardType: TextInputType.multiline,
-        //             maxLines: 5,
-        //             minLines: 1,
-        //             controller: tagController,
-        //             validator: (value) {
-        //               if (value!.isEmpty) {
-        //                 return 'Please enter a comment';
-        //               }
-        //               return null;
-        //             },
-        //             decoration: const InputDecoration(
-        //               contentPadding:
-        //                   EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-        //               enabledBorder: OutlineInputBorder(
-        //                 borderRadius: BorderRadius.all(Radius.circular(15)),
-        //                 borderSide: BorderSide(width: 2, color: unselected),
-        //               ),
-        //               focusedBorder: OutlineInputBorder(
-        //                 borderRadius: BorderRadius.all(Radius.circular(70)),
-        //                 borderSide: BorderSide(width: 2, color: unselected),
-        //               ),
-        //               hintText: 'Add Tag here',
-        //               hintStyle: TextStyle(
-        //                 color: unselected,
-        //                 fontFamily: 'MyCustomFont',
-        //               ),
-        //             ),
-        //           ),
-        //         ),
-        //         IconButton(
-        //           onPressed: () async {
-        //             setState(() {
-        //               _isLoading = true;
-        //             });
-        //             var tagSet2 = tagSet
-        //                 .doc(categoryData['categoryId'])
-        //                 .collection('tags')
-        //                 .doc();
-        //             await tagSet2.set({
-        //               'tagId': tagSet2.id,
-        //               'tag': tagController.text,
-        //               'tagColor': categoryData['color'].toString(),
-        //             }).whenComplete(() {
-        //               tagController.clear();
-        //             });
-        //           },
-        //           icon: const Icon(
-        //             Icons.add,
-        //             size: 30,
-        //             color: purple,
-        //           ),
-        //         )
-        //       ],
-        //     ),
-        //   ),
-        // ),
       ),
     );
   }
 }
-
-
-
-
-
-
-
-
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return DismissKeyboard(
-//       child: MaterialApp(
-//         home: Scaffold(
-//           appBar: AppBar(
-//             toolbarHeight: 50,
-//             backgroundColor: mobileBackgroundColor,
-//             leadingWidth: 130,
-//             centerTitle: true,
-//             leading: Container(
-//               padding: const EdgeInsets.all(0),
-//               child: Image.asset('assets/images/logo with name.png',
-//                   fit: BoxFit.scaleDown),
-//             ),
-//           ),
-//           body: ListView(
-//             children: [
-//               Column(
-//                 crossAxisAlignment: CrossAxisAlignment.start,
-//                 children: [
-//                   Padding(
-//                     padding: const EdgeInsets.fromLTRB(12, 12, 0, 0),
-//                     child: Text(
-//                       categoryData['categoryId'].toString(),
-//                       style: const TextStyle(
-//                         fontSize: 24,
-//                       ),
-//                     ),
-//                   ),
-//                   Expanded(
-//                     child: StreamBuilder<QuerySnapshot>(
-//                       stream: tagSet
-//                           .doc(categoryData['categoryId'])
-//                           .collection('tags')
-//                           .snapshots(),
-//                       builder:
-//                           (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-//                         if (snapshot.hasData) {
-//                           return Row(
-//                             children: <Widget>[
-//                               Expanded(
-//                                 child: SizedBox(
-//                                   child: ListView.builder(
-//                                       itemCount: snapshot.data!.docs.length,
-//                                       itemBuilder: (context, index) {
-//                                         final DocumentSnapshot
-//                                             documentSnapshot =
-//                                             snapshot.data!.docs[index];
-
-//                                         var categoryIdD =
-//                                             categoryData['categoryId'];
-
-//                                         var Mytext = new Map();
-//                                         Mytext['tag'] = documentSnapshot['tag'];
-//                                         Mytext['tagColor'] =
-//                                             documentSnapshot['tagColor'];
-//                                         return Card(
-//                                           shape: RoundedRectangleBorder(
-//                                             side: BorderSide(
-//                                                 color: HexColor(
-//                                                     categoryData['color']),
-//                                                 width: 5),
-//                                           ),
-//                                           child: ClipPath(
-//                                             child: Container(
-//                                               // height: 80,
-//                                               child: ListTile(
-//                                                 title: Row(
-//                                                   children: [
-//                                                     Text(Mytext['tag']),
-//                                                   ],
-//                                                 ),
-//                                                 trailing: SingleChildScrollView(
-//                                                   child: SizedBox(
-//                                                     // width: 160,
-//                                                     child: Row(
-//                                                       children: [
-//                                                         IconButton(
-//                                                             icon: const Icon(
-//                                                                 Icons.edit),
-//                                                             onPressed: () {}),
-//                                                         IconButton(
-//                                                             icon: const Icon(
-//                                                                 Icons.edit),
-//                                                             onPressed: () {}),
-//                                                         IconButton(
-//                                                             icon: const Icon(
-//                                                                 Icons.edit),
-//                                                             onPressed: () {}),
-//                                                       ],
-//                                                     ),
-//                                                   ),
-//                                                 ),
-//                                               ),
-//                                             ),
-//                                             clipper: ShapeBorderClipper(
-//                                                 shape: RoundedRectangleBorder(
-//                                                     borderRadius:
-//                                                         BorderRadius.circular(
-//                                                             3))),
-//                                           ),
-//                                           margin: const EdgeInsets.all(10),
-//                                         );
-//                                       }),
-//                                 ),
-//                               ),
-//                             ],
-//                           );
-//                         }
-
-//                         return Center(
-//                           child: Column(
-//                             crossAxisAlignment: CrossAxisAlignment.center,
-//                             children: const <Widget>[
-//                               SizedBox(
-//                                 height: 30.0,
-//                                 width: 30.0,
-//                                 child: CircularProgressIndicator(),
-//                               ),
-//                             ],
-//                           ),
-//                         );
-//                       },
-//                     ),
-//                   )
-//                 ],
-//               ),
-//             ],
-//           ),
-//           bottomNavigationBar: Container(
-//             color: white,
-//             child: Form(
-//               child: Row(
-//                 children: [
-//                   SizedBox(
-//                     width: MediaQuery.of(context).size.width * 0.76,
-//                     child: TextFormField(
-//                       keyboardType: TextInputType.multiline,
-//                       maxLines: 5,
-//                       minLines: 1,
-//                       controller: tagController,
-//                       validator: (value) {
-//                         if (value!.isEmpty) {
-//                           return 'Please enter a comment';
-//                         }
-//                         return null;
-//                       },
-//                       decoration: const InputDecoration(
-//                         contentPadding:
-//                             EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-//                         enabledBorder: OutlineInputBorder(
-//                           borderRadius: BorderRadius.all(Radius.circular(15)),
-//                           borderSide: BorderSide(width: 2, color: unselected),
-//                         ),
-//                         focusedBorder: OutlineInputBorder(
-//                           borderRadius: BorderRadius.all(Radius.circular(70)),
-//                           borderSide: BorderSide(width: 2, color: unselected),
-//                         ),
-//                         hintText: 'Add Tag here',
-//                         hintStyle: TextStyle(
-//                           color: unselected,
-//                           fontFamily: 'MyCustomFont',
-//                         ),
-//                       ),
-//                     ),
-//                   ),
-//                   IconButton(
-//                     onPressed: () async {
-//                       setState(() {
-//                         _isLoading = true;
-//                       });
-//                       var tagSet2 = tagSet
-//                           .doc(categoryData['categoryId'])
-//                           .collection('tags')
-//                           .doc();
-//                       await tagSet2.set({
-//                         'tagId': tagSet2.id,
-//                         'tag': tagController.text,
-//                         'tagColor': categoryData['color'].toString(),
-//                       }).whenComplete(() {
-//                         tagController.clear();
-//                       });
-//                     },
-//                     icon: const Icon(
-//                       Icons.add,
-//                       size: 30,
-//                       color: purple,
-//                     ),
-//                   )
-//                 ],
-//               ),
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
