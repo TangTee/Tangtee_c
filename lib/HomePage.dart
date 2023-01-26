@@ -25,40 +25,54 @@ class MyHomePage extends StatelessWidget {
     List<PersistentBottomNavBarItem> _navBarsItems() {
       return [
         PersistentBottomNavBarItem(
-          icon: const Icon(Icons.home),
+          icon: const Icon(
+            Icons.home,
+            size: 30,
+          ),
           title: ("Home"),
-          activeColorPrimary: Colors.blue,
-          inactiveColorPrimary: Colors.grey,
-        ),
-        PersistentBottomNavBarItem(
-          icon: const Icon(Icons.history),
-          title: ("Activity"),
-          activeColorPrimary: Colors.blue,
-          inactiveColorPrimary: Colors.grey,
+          activeColorPrimary: lightGreen,
+          inactiveColorPrimary: white,
         ),
         PersistentBottomNavBarItem(
           icon: const Icon(
-            Icons.add_box,
-            color: Colors.white,
+            Icons.history,
+            size: 30,
+          ),
+          title: ("Activity"),
+          activeColorPrimary: lightGreen,
+          inactiveColorPrimary: white,
+        ),
+        PersistentBottomNavBarItem(
+          icon: const Icon(
+            Icons.add_circle,
+            size: 40,
+            color: lightGreen,
           ),
           inactiveIcon: const Icon(
-            Icons.add_box,
-            color: Colors.white,
+            Icons.add_circle,
+            size: 40,
+            color: white,
           ),
-          activeColorPrimary: Colors.blue,
-          inactiveColorPrimary: Colors.grey,
+          activeColorPrimary: purple,
+          inactiveColorPrimary: white,
         ),
         PersistentBottomNavBarItem(
-          icon: const Icon(Icons.chat),
+          icon: const Icon(
+            Icons.chat,
+            size: 30,
+          ),
           title: ("Chat"),
-          activeColorPrimary: Colors.blue,
-          inactiveColorPrimary: Colors.grey,
+          activeColorPrimary: lightGreen,
+          inactiveColorPrimary: white,
         ),
         PersistentBottomNavBarItem(
-          icon: const Icon(Icons.account_circle),
+          icon: const Icon(
+            Icons.account_circle,
+            size: 30,
+          ),
           title: ("Proflie"),
-          activeColorPrimary: Colors.blue,
-          inactiveColorPrimary: Colors.grey,
+          activeColorPrimary: lightGreen,
+          inactiveColorPrimary: white,
         ),
       ];
     }
@@ -72,7 +86,7 @@ class MyHomePage extends StatelessWidget {
       items: _navBarsItems(),
       controller: controller,
       confineInSafeArea: true,
-      backgroundColor: Colors.white,
+      backgroundColor: purple,
       handleAndroidBackButtonPress: true,
       resizeToAvoidBottomInset: true,
       stateManagement: true,
