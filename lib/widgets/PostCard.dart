@@ -267,7 +267,7 @@ class _PostCardState extends State<CardWidget> {
                               SingleChildScrollView(
                                 scrollDirection: Axis.horizontal,
                                 child: Padding(
-                                  padding: EdgeInsets.only(top: 2),
+                                  padding: EdgeInsets.only(top: 3),
                                   child: SizedBox(
                                     child: OutlinedButton(
                                       onPressed: () {},
@@ -285,7 +285,7 @@ class _PostCardState extends State<CardWidget> {
                                               color: HexColor(
                                                 widget.snap['tagColor'],
                                               ),
-                                              width: 2)),
+                                              width: 1.5)),
                                     ),
                                   ),
                                 ),

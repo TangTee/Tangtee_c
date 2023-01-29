@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:tangteevs/feed/EditAct.dart';
 import 'package:tangteevs/utils/showSnackbar.dart';
 import 'package:tangteevs/widgets/custom_textfield.dart';
@@ -24,6 +25,8 @@ class _MyCommentState extends State<Comment> {
   var userData = {};
   var commentData = {};
   var currentUser = {};
+  var tagData = {};
+  var tagColorData = {};
   var commentLen = 0;
   bool isLoading = false;
   bool _waiting = false;
@@ -413,15 +416,41 @@ class _MyCommentState extends State<Comment> {
                                                                       .size
                                                                       .height *
                                                                   0.03,
-                                                              child: const Text(
-                                                                  'add tag+',
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontFamily:
-                                                                        'MyCustomFont',
-                                                                    color:
-                                                                        unselected,
-                                                                  )),
+                                                              child: Container(
+                                                                width: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width *
+                                                                    0.30,
+                                                                child: Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .start,
+                                                                  children: [
+                                                                    OutlinedButton(
+                                                                      onPressed:
+                                                                          () {},
+                                                                      child:
+                                                                          Text(
+                                                                        postData[
+                                                                            'tag'],
+                                                                        style: const TextStyle(
+                                                                            color:
+                                                                                mobileSearchColor,
+                                                                            fontSize:
+                                                                                14),
+                                                                      ),
+                                                                      style: OutlinedButton.styleFrom(
+                                                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                                                                          side: BorderSide(
+                                                                              color: HexColor(
+                                                                                postData['tagColor'],
+                                                                              ),
+                                                                              width: 1.5)),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
                                                             ),
                                                           ),
                                                         ),
@@ -431,33 +460,49 @@ class _MyCommentState extends State<Comment> {
                                                                 .uid ==
                                                             documentSnapshot[
                                                                 'uid'])
-                                                          ElevatedButton(
-                                                            onPressed: () {},
-                                                            style:
-                                                                ElevatedButton
-                                                                    .styleFrom(
-                                                              backgroundColor:
-                                                                  lightGreen,
-                                                              shape:
-                                                                  RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            10.0),
-                                                              ),
-                                                            ),
-                                                            child: const Text(
-                                                              'Accepting',
-                                                              style: TextStyle(
-                                                                fontSize: 16,
-                                                                fontFamily:
-                                                                    'MyCustomFont',
-                                                                color:
-                                                                    unselected,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                              ),
+                                                          Container(
+                                                            width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width *
+                                                                0.3,
+                                                            child: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .end,
+                                                              children: [
+                                                                ElevatedButton(
+                                                                  onPressed:
+                                                                      () {},
+                                                                  style: ElevatedButton
+                                                                      .styleFrom(
+                                                                    backgroundColor:
+                                                                        lightGreen,
+                                                                    shape:
+                                                                        RoundedRectangleBorder(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              10.0),
+                                                                    ),
+                                                                  ),
+                                                                  child:
+                                                                      const Text(
+                                                                    'Accepting',
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontSize:
+                                                                          16,
+                                                                      fontFamily:
+                                                                          'MyCustomFont',
+                                                                      color:
+                                                                          unselected,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ],
                                                             ),
                                                           ),
                                                         if (FirebaseAuth
@@ -466,91 +511,97 @@ class _MyCommentState extends State<Comment> {
                                                                 .uid !=
                                                             documentSnapshot[
                                                                 'uid'])
-                                                          ElevatedButton(
-                                                            onPressed: () {
-                                                              _onPress();
-                                                              print(_waiting);
-                                                              if (_waiting ==
-                                                                  true) {
-                                                                var uid =
-                                                                    FirebaseAuth
-                                                                        .instance
-                                                                        .currentUser!
-                                                                        .uid;
-                                                                FirebaseFirestore
-                                                                    .instance
-                                                                    .collection(
-                                                                        "activity")
-                                                                    .doc(uid)
-                                                                    .collection(
-                                                                        'waiting list')
-                                                                    .doc(widget
-                                                                        .postid
-                                                                        .id)
-                                                                    .set({
-                                                                  "activityName":
-                                                                      widget.postid[
-                                                                          'activityName'],
-                                                                  "date": widget
-                                                                          .postid[
-                                                                      'date'],
-                                                                  "time": widget
-                                                                          .postid[
-                                                                      'time'],
-                                                                  "place": widget
-                                                                          .postid[
-                                                                      'place'],
-                                                                  "location": widget
-                                                                          .postid[
-                                                                      'location'],
-                                                                  "peopleLimit":
-                                                                      widget.postid[
-                                                                          'peopleLimit'],
-                                                                  "detail": widget
-                                                                          .postid[
-                                                                      'detail'],
-                                                                  "uid": widget
-                                                                          .postid[
-                                                                      'uid'],
-                                                                  "timeStamp": widget
-                                                                          .postid[
-                                                                      'timeStamp'],
-                                                                  "postid": widget
-                                                                          .postid[
-                                                                      'postid'],
-                                                                });
-                                                              }
-                                                            },
-                                                            style:
-                                                                ElevatedButton
-                                                                    .styleFrom(
-                                                              backgroundColor:
-                                                                  _waiting
-                                                                      ? lightPurple
-                                                                      : lightGreen,
-                                                              shape:
-                                                                  RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            10.0),
-                                                              ),
-                                                            ),
-                                                            child: Text(
-                                                              _waiting
-                                                                  ? 'Waiting'
-                                                                  : 'Request',
-                                                              style: TextStyle(
-                                                                fontSize: 16,
-                                                                fontFamily:
-                                                                    'MyCustomFont',
-                                                                color: _waiting
-                                                                    ? primaryColor
-                                                                    : unselected,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                              ),
+                                                          Container(
+                                                            width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width *
+                                                                0.3,
+                                                            child: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .end,
+                                                              children: [
+                                                                ElevatedButton(
+                                                                  onPressed:
+                                                                      () {
+                                                                    _onPress();
+                                                                    print(
+                                                                        _waiting);
+                                                                    if (_waiting ==
+                                                                        true) {
+                                                                      var uid = FirebaseAuth
+                                                                          .instance
+                                                                          .currentUser!
+                                                                          .uid;
+                                                                      FirebaseFirestore
+                                                                          .instance
+                                                                          .collection(
+                                                                              "activity")
+                                                                          .doc(
+                                                                              uid)
+                                                                          .collection(
+                                                                              'waiting list')
+                                                                          .doc(widget
+                                                                              .postid
+                                                                              .id)
+                                                                          .set({
+                                                                        "activityName":
+                                                                            widget.postid['activityName'],
+                                                                        "date":
+                                                                            widget.postid['date'],
+                                                                        "time":
+                                                                            widget.postid['time'],
+                                                                        "place":
+                                                                            widget.postid['place'],
+                                                                        "location":
+                                                                            widget.postid['location'],
+                                                                        "peopleLimit":
+                                                                            widget.postid['peopleLimit'],
+                                                                        "detail":
+                                                                            widget.postid['detail'],
+                                                                        "uid": widget
+                                                                            .postid['uid'],
+                                                                        "timeStamp":
+                                                                            widget.postid['timeStamp'],
+                                                                        "postid":
+                                                                            widget.postid['postid'],
+                                                                      });
+                                                                    }
+                                                                  },
+                                                                  style: ElevatedButton
+                                                                      .styleFrom(
+                                                                    backgroundColor:
+                                                                        _waiting
+                                                                            ? lightPurple
+                                                                            : lightGreen,
+                                                                    shape:
+                                                                        RoundedRectangleBorder(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              10.0),
+                                                                    ),
+                                                                  ),
+                                                                  child: Text(
+                                                                    _waiting
+                                                                        ? 'Waiting'
+                                                                        : 'Request',
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontSize:
+                                                                          16,
+                                                                      fontFamily:
+                                                                          'MyCustomFont',
+                                                                      color: _waiting
+                                                                          ? primaryColor
+                                                                          : unselected,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ],
                                                             ),
                                                           ),
                                                       ],
@@ -1009,8 +1060,7 @@ class _MyCommentState extends State<Comment> {
     );
   }
 
-  void _showModalBottomSheet(
-      BuildContext context, postidD, Map mytext) {
+  void _showModalBottomSheet(BuildContext context, postidD, Map mytext) {
     _commentController.text = mytext['comment'].toString();
     String Comment = '';
 
