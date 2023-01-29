@@ -65,12 +65,13 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                     final String Category = _CategoryController.text;
                     final String color = _colorController.text;
                     if (Category != null) {
-                      await _categorys
-                          .doc(documentSnapshot!.id)
-                          .update({"Category": Category, "color": color});
-                      _CategoryController.text = '';
-                      _colorController.text = '';
-                      Navigator.of(context).pop();
+                      // await _categorys
+                      //     .doc(documentSnapshot!.id)
+                      //     .update({"Category": Category, "color": color});
+                      // _CategoryController.text = '';
+                      // _colorController.text = '';
+                      // Navigator.of(context).pop();
+                      Updata();
                     }
                   },
                 )
@@ -85,6 +86,20 @@ class _CategoryWidgetState extends State<CategoryWidget> {
 
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('You have successfully deleted a category')));
+  }
+
+  final _formKey = GlobalKey<FormState>();
+  Updata() async {
+    final String Category = _CategoryController.text;
+    final String color = _colorController.text;
+
+    await _categorys.doc().update({
+      "Category": Category,
+      "color": color,
+    });
+    _CategoryController.text = '';
+    _colorController.text = '';
+    nextScreen(context, BeforeTagPage());
   }
 
   // call

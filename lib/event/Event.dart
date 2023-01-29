@@ -1,39 +1,166 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:tangteevs/HomePage.dart';
 import 'package:tangteevs/utils/color.dart';
 import 'package:tangteevs/widgets/custom_textfield.dart';
 import 'package:intl/intl.dart';
 
-import 'AddTag.dart';
+// import 'AddTag.dart';
 
 class CreateEventScreen extends StatefulWidget {
-  // DocumentSnapshot tagId;
-  // CreateEventScreen({Key? key, required this.tagId}) : super(key: key);
   const CreateEventScreen({Key? key}) : super(key: key);
-
   @override
   _CreateEventScreenState createState() => _CreateEventScreenState();
 }
 
 class _CreateEventScreenState extends State<CreateEventScreen> {
-  bool _isLoading = false;
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: LoadTag(),
+    );
+  }
+}
 
+class LoadTag extends StatefulWidget {
+  const LoadTag({super.key});
+
+  @override
+  State<LoadTag> createState() => _LoadTagState();
+}
+
+class _LoadTagState extends State<LoadTag> {
+  bool _isLoading = false;
   bool isDateSelect = false;
 
   final _post = FirebaseFirestore.instance.collection('post').doc();
-
   final _formKey = GlobalKey<FormState>();
-
   final _activityName = TextEditingController();
   final _place = TextEditingController();
   final _location = TextEditingController();
   final dateController = TextEditingController();
   final _time = TextEditingController();
   final _detail = TextEditingController();
-  final _tag = TextEditingController();
+  late var _tag = TextEditingController();
   final _peopleLimit = TextEditingController();
+  var _tag2;
+  var _tag2Color;
+
+  void showModalBottomSheetC(BuildContext context, tag) {
+    final CollectionReference _categorys =
+        FirebaseFirestore.instance.collection('categorys');
+
+    showModalBottomSheet(
+      useRootNavigator: true,
+      context: context,
+      builder: (BuildContext context) {
+        return StreamBuilder(
+          stream: _categorys.snapshots(),
+          builder: ((context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (snapshot.hasData) {
+              return ListView.builder(
+                itemCount: (snapshot.data! as dynamic).docs.length,
+                itemBuilder: (context, index) {
+                  final DocumentSnapshot documentSnapshot =
+                      snapshot.data!.docs[index];
+
+                  var Mytext = new Map();
+                  Mytext['Category'] = documentSnapshot['Category'];
+                  Mytext['categoryId'] = documentSnapshot['categoryId'];
+                  Mytext['color'] = documentSnapshot['color'];
+
+                  return Card(
+                    child: Column(
+                      children: [
+                        ListTile(
+                          tileColor: HexColor(Mytext['color']),
+                          textColor: white,
+                          contentPadding:
+                              const EdgeInsets.symmetric(vertical: 8.0),
+                          title: Center(
+                              child: Text(Mytext['Category'],
+                                  style: TextStyle(
+                                      fontFamily: 'MyCustomFont',
+                                      fontSize: 20))),
+                          onTap: () {
+                            showModalBottomSheetT(
+                                context, Mytext['categoryId']);
+                          },
+                        )
+                      ],
+                    ),
+                  );
+                },
+              );
+            }
+            return const Text('helo');
+          }),
+        );
+      },
+    );
+  }
+
+  showModalBottomSheetT(BuildContext context, categoryId) {
+    final CollectionReference _tags =
+        FirebaseFirestore.instance.collection('tags');
+
+    showModalBottomSheet(
+      useRootNavigator: true,
+      context: context,
+      builder: (BuildContext context) {
+        return StreamBuilder(
+          stream: _tags.where("categoryId", isEqualTo: categoryId).snapshots(),
+          builder: ((context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (snapshot.hasData) {
+              return ListView.builder(
+                itemCount: (snapshot.data! as dynamic).docs.length,
+                itemBuilder: (context, index) {
+                  final DocumentSnapshot documentSnapshot =
+                      snapshot.data!.docs[index];
+
+                  var Mytext = new Map();
+                  Mytext['tag'] = documentSnapshot['tag'];
+                  Mytext['tagColor'] = documentSnapshot['tagColor'];
+
+                  return Card(
+                    child: Column(
+                      children: [
+                        ListTile(
+                          tileColor: HexColor(Mytext['tagColor']),
+                          textColor: white,
+                          contentPadding:
+                              const EdgeInsets.symmetric(vertical: 8.0),
+                          title: Center(
+                              child: Text(
+                            Mytext['tag'],
+                            style: TextStyle(
+                                fontFamily: 'MyCustomFont', fontSize: 20),
+                          )),
+                          onTap: () {
+                            _tag2 = Mytext['tag'].toString();
+                            _tag2Color = Mytext['tagColor'].toString();
+                            Navigator.of(context)
+                                .popUntil((route) => route.isFirst);
+                            // ignore: void_checks
+                            return _tag2;
+                          },
+                        )
+                      ],
+                    ),
+                  );
+                },
+              );
+            }
+            return const Text('helo');
+          }),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -325,6 +452,10 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                             TextButton(
                               onPressed: () {
                                 showModalBottomSheetC(context, _tag);
+                                setState(() {
+                                  _tag =
+                                      _tag2.toString() as TextEditingController;
+                                });
                               },
                               style: OutlinedButton.styleFrom(
                                 foregroundColor: mobileSearchColor,
@@ -373,7 +504,8 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                                   'likes': [],
                                   'waiting': [],
                                   'join': [],
-                                  // 'tag': ,
+                                  'tag': _tag2,
+                                  'tagColor': _tag2Color,
                                   'timeStamp': FieldValue.serverTimestamp(),
                                   'uid': FirebaseAuth.instance.currentUser?.uid,
                                 }).whenComplete(() {
@@ -401,13 +533,4 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     _time.text = "";
     super.initState();
   }
-
-// void goToSecondScreen()async {
-//  var result = await Navigator.push(context, MaterialPageRoute(
-//  builder: (BuildContext context) => showModalBottomSheetC(context,_tag),
-//  fullscreenDialog: true,)
-// );
-
-// Scaffold.of(_context).showSnackBar(SnackBar(content: Text("$result"),duration: Duration(seconds: 3),));
-
 }

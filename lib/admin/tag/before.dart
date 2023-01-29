@@ -149,8 +149,12 @@ class Category extends StatelessWidget {
                     }
                     return ListView.builder(
                         itemCount: (snapshot.data! as dynamic).docs.length,
-                        itemBuilder: (context, index) => CategoryWidget(
-                            snap: (snapshot.data! as dynamic).docs[index]));
+                        itemBuilder: (context, index) {
+                          final DocumentSnapshot documentSnapshot =
+                              snapshot.data!.docs[index];
+                          return CategoryWidget(
+                              snap: (snapshot.data! as dynamic).docs[index]);
+                        });
                   })),
         ],
       ),

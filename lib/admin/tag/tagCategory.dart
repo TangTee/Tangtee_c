@@ -23,13 +23,21 @@ class _TagCategoryState extends State<TagCategory> {
   var categoryColorData = {};
   bool isLoading = false;
 
+  final CollectionReference _tags =
+      FirebaseFirestore.instance.collection('tags');
+
+  Future<void> _delete(String tagId) async {
+    await _tags.doc(tagId).delete();
+
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('You have successfully deleted a category')));
+  }
+
   @override
   void initState() {
     super.initState();
   }
 
-  final CollectionReference _tags =
-      FirebaseFirestore.instance.collection('tags');
   final TextEditingController _tagController = TextEditingController();
   final tagSet = FirebaseFirestore.instance.collection('tags');
 
@@ -161,6 +169,34 @@ class _TagCategoryState extends State<TagCategory> {
                                                               width: 10))),
                                                   child: ListTile(
                                                     title: Text(Mytext['tag']),
+                                                    subtitle: Row(
+                                                      children: [
+                                                        Column(
+                                                          children: [
+                                                            OutlinedButton(
+                                                              onPressed: () {},
+                                                              child: Text(
+                                                                Mytext['tag'],
+                                                                style: const TextStyle(
+                                                                    color:
+                                                                        mobileSearchColor),
+                                                              ),
+                                                              style: OutlinedButton.styleFrom(
+                                                                  shape: RoundedRectangleBorder(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              30)),
+                                                                  side: BorderSide(
+                                                                      color: HexColor(
+                                                                          Mytext[
+                                                                              'tagColor']),
+                                                                      width:
+                                                                          2)),
+                                                            )
+                                                          ],
+                                                        )
+                                                      ],
+                                                    ),
                                                     trailing:
                                                         SingleChildScrollView(
                                                       child: SizedBox(
@@ -171,32 +207,8 @@ class _TagCategoryState extends State<TagCategory> {
                                                                   icon: const Icon(
                                                                       Icons
                                                                           .edit),
-                                                                  onPressed: () =>
-                                                                      showDialog(
-                                                                        context:
-                                                                            context,
-                                                                        builder:
-                                                                            (context) {
-                                                                          return AlertDialog(
-                                                                            title:
-                                                                                Text('Are you sure?'),
-                                                                            content:
-                                                                                Text('This action cannot be undone.'),
-                                                                            actions: [
-                                                                              TextButton(
-                                                                                child: Text('Cancel'),
-                                                                                onPressed: () {
-                                                                                  Navigator.of(context).pop();
-                                                                                },
-                                                                              ),
-                                                                              TextButton(
-                                                                                child: Text('OK'),
-                                                                                onPressed: () {},
-                                                                              ),
-                                                                            ],
-                                                                          );
-                                                                        },
-                                                                      )),
+                                                                  onPressed:
+                                                                      () {}),
                                                               IconButton(
                                                                   icon: const Icon(
                                                                       Icons
@@ -221,7 +233,10 @@ class _TagCategoryState extends State<TagCategory> {
                                                                               ),
                                                                               TextButton(
                                                                                 child: Text('OK'),
-                                                                                onPressed: () {},
+                                                                                onPressed: () {
+                                                                                  _delete(documentSnapshot.id);
+                                                                                  Navigator.of(context).pop();
+                                                                                },
                                                                               ),
                                                                             ],
                                                                           );

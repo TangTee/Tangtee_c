@@ -1,120 +1,126 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:tangteevs/utils/color.dart';
-import 'package:tangteevs/event/Event.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:tangteevs/Profile/Profile.dart';
+import 'package:tangteevs/utils/color.dart';
 
 import '../activity/Activity.dart';
+import '../event/Event.dart';
 import '../feed/FeedPage.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: MyHomePage(),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _selectedIndex = 4;
-
-  final List<Widget> _pages = [
-    HomeTab(),
-    ActivityTab(),
-    Event(),
-    ChatTab(),
-    ProfileTab(),
-  ];
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
+class MyHomePage extends StatelessWidget {
+  const MyHomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    Widget currentPage;
-    switch (_selectedIndex) {
-      case 0:
-        currentPage = _pages[0];
-        break;
-      case 1:
-        currentPage = _pages[1];
-        break;
-      case 2:
-        currentPage = _pages[2];
-        break;
-      case 3:
-        currentPage = _pages[3];
-        break;
-      case 4:
-        currentPage = _pages[4];
-        break;
-      default:
-        currentPage = _pages[0];
-        break;
+    List<Widget> _buildScreens() {
+      return [
+        const HomeTab(),
+        const ActivityTab(),
+        const Event(),
+        const ChatTab(),
+        const ProfileTab(),
+      ];
     }
-    return Scaffold(
-      body: currentPage,
-      bottomNavigationBar: SizedBox(
-        height: 65,
-        child: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          currentIndex: _selectedIndex,
-          backgroundColor: purple,
-          unselectedItemColor: primaryColor,
-          selectedItemColor: lightGreen,
-          onTap: _onItemTapped,
-          iconSize: 30,
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.history),
-              label: 'Activity',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.add_box),
-              label: 'Post',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.chat),
-              label: 'Chat',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.account_circle),
-              label: 'Proflie',
-            ),
-          ],
+
+    List<PersistentBottomNavBarItem> _navBarsItems() {
+      return [
+        PersistentBottomNavBarItem(
+          icon: const Icon(
+            Icons.home,
+            size: 30,
+          ),
+          title: ("Home"),
+          activeColorPrimary: lightGreen,
+          inactiveColorPrimary: primaryColor,
         ),
+        PersistentBottomNavBarItem(
+          icon: const Icon(
+            Icons.history,
+            size: 30,
+          ),
+          title: ("Activity"),
+          activeColorPrimary: lightGreen,
+          inactiveColorPrimary: primaryColor,
+        ),
+        PersistentBottomNavBarItem(
+          icon: const Icon(
+            Icons.add_circle,
+            size: 30,
+          ),
+          title: ("Post"),
+          activeColorPrimary: lightGreen,
+          inactiveColorPrimary: primaryColor,
+        ),
+        PersistentBottomNavBarItem(
+          icon: const Icon(
+            Icons.chat,
+            size: 30,
+          ),
+          title: ("Chat"),
+          activeColorPrimary: lightGreen,
+          inactiveColorPrimary: primaryColor,
+        ),
+        PersistentBottomNavBarItem(
+          icon: const Icon(
+            Icons.account_circle,
+            size: 30,
+          ),
+          title: ("Proflie"),
+          activeColorPrimary: lightGreen,
+          inactiveColorPrimary: primaryColor,
+        ),
+      ];
+    }
+
+    PersistentTabController controller;
+
+    controller = PersistentTabController(initialIndex: 4);
+    return PersistentTabView(
+      context,
+      screens: _buildScreens(),
+      items: _navBarsItems(),
+      controller: controller,
+      confineInSafeArea: true,
+      backgroundColor: purple,
+      handleAndroidBackButtonPress: true,
+      resizeToAvoidBottomInset: true,
+      stateManagement: true,
+      hideNavigationBarWhenKeyboardShows: true,
+      decoration: NavBarDecoration(
+        borderRadius: BorderRadius.circular(10.0),
+        colorBehindNavBar: purple,
       ),
+      popAllScreensOnTapOfSelectedTab: true,
+      popActionScreens: PopActionScreensType.all,
+      itemAnimationProperties: const ItemAnimationProperties(
+        duration: Duration(milliseconds: 200),
+        curve: Curves.ease,
+      ),
+      screenTransitionAnimation: const ScreenTransitionAnimation(
+        animateTabTransition: true,
+        curve: Curves.ease,
+        duration: Duration(milliseconds: 200),
+      ),
+      navBarStyle: NavBarStyle.style6,
     );
   }
 }
 
 class Event extends StatelessWidget {
+  const Event({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: CreateEventScreen(),
     );
   }
 }
 
 class ActivityTab extends StatelessWidget {
+  const ActivityTab({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -124,6 +130,8 @@ class ActivityTab extends StatelessWidget {
 }
 
 class HomeTab extends StatelessWidget {
+  const HomeTab({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -135,15 +143,17 @@ class HomeTab extends StatelessWidget {
 }
 
 class ChatTab extends StatelessWidget {
+  const ChatTab({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: const Text('Add the content for the chat tab here'),
-    );
+    return const Text('Add the content for the chat tab here');
   }
 }
 
 class ProfileTab extends StatelessWidget {
+  const ProfileTab({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
