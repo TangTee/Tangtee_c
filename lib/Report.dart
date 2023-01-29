@@ -7,11 +7,8 @@ import 'package:tangteevs/widgets/custom_textfield.dart';
 
 void showModalBottomSheetRP(BuildContext context, r_pid) {
   final uid = FirebaseAuth.instance.currentUser!.uid;
-  final _report = FirebaseFirestore.instance
-      .collection('report')
-      .doc('reportPost')
-      .collection(r_pid['postid'])
-      .doc();
+  final _report =
+      FirebaseFirestore.instance.collection('report').doc(r_pid['rid']);
   showModalBottomSheet(
     useRootNavigator: true,
     context: context,
@@ -42,6 +39,7 @@ void showModalBottomSheetRP(BuildContext context, r_pid) {
                     'peopleLimit': r_pid['peopleLimit'],
                     'uid': r_pid['uid'],
                     'problem': 'อนาจาร',
+                    'type': 'post',
                     //'likes': [],
                     'timeStamp': DateTime.now(),
                     'reportBy': FirebaseAuth.instance.currentUser?.uid,
@@ -74,11 +72,12 @@ void showModalBottomSheetRP(BuildContext context, r_pid) {
                     'peopleLimit': r_pid['peopleLimit'],
                     'uid': r_pid['uid'],
                     'problem': 'ความรุนแรง',
+                    'type': 'post',
                     //'likes': [],
                     'timeStamp': DateTime.now(),
                     'reportBy': FirebaseAuth.instance.currentUser?.uid,
                   }).whenComplete(() {
-                    nextScreenReplaceOut(context, MyHomePage());
+                     Navigator.of(context).popUntil((route) => route.isFirst);
                   });
                 },
               ),
@@ -106,11 +105,12 @@ void showModalBottomSheetRP(BuildContext context, r_pid) {
                     'peopleLimit': r_pid['peopleLimit'],
                     'uid': r_pid['uid'],
                     'problem': 'การคุกคาม',
+                    'type': 'post',
                     //'likes': [],
                     'timeStamp': DateTime.now(),
                     'reportBy': FirebaseAuth.instance.currentUser?.uid,
                   }).whenComplete(() {
-                    nextScreenReplaceOut(context, MyHomePage());
+                     Navigator.of(context).popUntil((route) => route.isFirst);
                   });
                 },
               ),
@@ -138,11 +138,12 @@ void showModalBottomSheetRP(BuildContext context, r_pid) {
                     'peopleLimit': r_pid['peopleLimit'],
                     'uid': r_pid['uid'],
                     'problem': 'ข้อมูลเท็จ',
+                    'type': 'post',
                     //'likes': [],
                     'timeStamp': DateTime.now(),
                     'reportBy': FirebaseAuth.instance.currentUser?.uid,
                   }).whenComplete(() {
-                    nextScreenReplaceOut(context, MyHomePage());
+                     Navigator.of(context).popUntil((route) => route.isFirst);
                   });
                 },
               ),
@@ -170,11 +171,12 @@ void showModalBottomSheetRP(BuildContext context, r_pid) {
                     'peopleLimit': r_pid['peopleLimit'],
                     'uid': r_pid['uid'],
                     'problem': 'สแปม',
+                    'type': 'post',
                     //'likes': [],
                     'timeStamp': DateTime.now(),
                     'reportBy': FirebaseAuth.instance.currentUser?.uid,
                   }).whenComplete(() {
-                    nextScreenReplaceOut(context, MyHomePage());
+                     Navigator.of(context).popUntil((route) => route.isFirst);
                   });
                 },
               ),
@@ -202,11 +204,12 @@ void showModalBottomSheetRP(BuildContext context, r_pid) {
                     'peopleLimit': r_pid['peopleLimit'],
                     'uid': r_pid['uid'],
                     'problem': 'คำพูดแสดงความเกลีดชัง',
+                    'type': 'post',
                     //'likes': [],
                     'timeStamp': DateTime.now(),
                     'reportBy': FirebaseAuth.instance.currentUser?.uid,
                   }).whenComplete(() {
-                    nextScreenReplaceOut(context, MyHomePage());
+                     Navigator.of(context).popUntil((route) => route.isFirst);
                   });
                 },
               ),
@@ -234,11 +237,9 @@ void showModalBottomSheetRP(BuildContext context, r_pid) {
 
 void showModalBottomSheetRC(BuildContext context, r_pid, Map mytext) {
   final uid = FirebaseAuth.instance.currentUser!.uid;
-  final _report = FirebaseFirestore.instance
-      .collection('report')
-      .doc('reportComment')
-      .collection(mytext['cid'])
-      .doc();
+  final _report =
+      FirebaseFirestore.instance.collection('report').doc(mytext['cid']);
+
   showModalBottomSheet(
     useRootNavigator: true,
     context: context,
@@ -265,6 +266,7 @@ void showModalBottomSheetRC(BuildContext context, r_pid, Map mytext) {
                     'comment': mytext['comment'],
                     'uid': mytext['uid'],
                     'problem': 'อนาจาร',
+                    'type': 'comment',
                     //'likes': [],
                     'timeStamp': DateTime.now(),
                     'reportBy': FirebaseAuth.instance.currentUser?.uid,
@@ -293,6 +295,7 @@ void showModalBottomSheetRC(BuildContext context, r_pid, Map mytext) {
                     'comment': mytext['comment'],
                     'uid': mytext['uid'],
                     'problem': 'ความรุนแรง',
+                    'type': 'comment',
                     //'likes': [],
                     'timeStamp': DateTime.now(),
                     'reportBy': FirebaseAuth.instance.currentUser?.uid,
@@ -321,6 +324,7 @@ void showModalBottomSheetRC(BuildContext context, r_pid, Map mytext) {
                     'comment': mytext['comment'],
                     'uid': mytext['uid'],
                     'problem': 'การคุกคาม',
+                    'type': 'comment',
                     //'likes': [],
                     'timeStamp': DateTime.now(),
                     'reportBy': FirebaseAuth.instance.currentUser?.uid,
@@ -349,6 +353,7 @@ void showModalBottomSheetRC(BuildContext context, r_pid, Map mytext) {
                     'comment': mytext['comment'],
                     'uid': mytext['uid'],
                     'problem': 'ข้อมูลเท็จ',
+                    'type': 'comment',
                     //'likes': [],
                     'timeStamp': DateTime.now(),
                     'reportBy': FirebaseAuth.instance.currentUser?.uid,
@@ -377,6 +382,7 @@ void showModalBottomSheetRC(BuildContext context, r_pid, Map mytext) {
                     'comment': mytext['comment'],
                     'uid': mytext['uid'],
                     'problem': 'สแปม',
+                    'type': 'comment',
                     //'likes': [],
                     'timeStamp': DateTime.now(),
                     'reportBy': FirebaseAuth.instance.currentUser?.uid,
@@ -405,11 +411,12 @@ void showModalBottomSheetRC(BuildContext context, r_pid, Map mytext) {
                     'comment': mytext['comment'],
                     'uid': mytext['uid'],
                     'problem': 'คำพูดแสดงความเกลีดชัง',
+                    'type': 'comment',
                     //'likes': [],
                     'timeStamp': DateTime.now(),
                     'reportBy': FirebaseAuth.instance.currentUser?.uid,
                   }).whenComplete(() {
-                    nextScreenReplaceOut(context, MyHomePage());
+                     Navigator.of(context).popUntil((route) => route.isFirst);
                   });
                 },
               ),

@@ -75,6 +75,7 @@ class MyHomePage extends StatelessWidget {
 
     PersistentTabController controller;
 
+
     controller = PersistentTabController(initialIndex: 4);
     return PersistentTabView(
       context,
@@ -89,7 +90,9 @@ class MyHomePage extends StatelessWidget {
       hideNavigationBarWhenKeyboardShows: true,
       decoration: NavBarDecoration(
         borderRadius: BorderRadius.circular(10.0),
+
         colorBehindNavBar: purple,
+
       ),
       popAllScreensOnTapOfSelectedTab: true,
       popActionScreens: PopActionScreensType.all,
@@ -102,6 +105,7 @@ class MyHomePage extends StatelessWidget {
         curve: Curves.ease,
         duration: Duration(milliseconds: 200),
       ),
+
       navBarStyle: NavBarStyle.style6,
     );
   }

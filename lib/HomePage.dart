@@ -25,6 +25,7 @@ class MyHomePage extends StatelessWidget {
     List<PersistentBottomNavBarItem> _navBarsItems() {
       return [
         PersistentBottomNavBarItem(
+
           icon: const Icon(
             Icons.home,
             size: 30,
@@ -81,13 +82,16 @@ class MyHomePage extends StatelessWidget {
       items: _navBarsItems(),
       controller: controller,
       confineInSafeArea: true,
+
       backgroundColor: purple,
+
       handleAndroidBackButtonPress: true,
       resizeToAvoidBottomInset: true,
       stateManagement: true,
       hideNavigationBarWhenKeyboardShows: true,
       decoration: NavBarDecoration(
         borderRadius: BorderRadius.circular(10.0),
+
         colorBehindNavBar: purple,
       ),
       popAllScreensOnTapOfSelectedTab: true,
@@ -101,7 +105,8 @@ class MyHomePage extends StatelessWidget {
         curve: Curves.ease,
         duration: Duration(milliseconds: 200),
       ),
-      navBarStyle: NavBarStyle.style6,
+
+      navBarStyle: NavBarStyle.style,
     );
   }
 }
