@@ -1,10 +1,11 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, sort_child_properties_last
 
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:tangteevs/utils/showSnackbar.dart';
 import 'package:tangteevs/widgets/custom_textfield.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../tag/before.dart';
 import '../../utils/color.dart';
 import '../tag/tagCategory.dart';
 
@@ -13,10 +14,10 @@ class CategoryWidget extends StatefulWidget {
   const CategoryWidget({required this.snap});
 
   @override
-  _tagCategoryState createState() => _tagCategoryState();
+  _CategoryWidgetState createState() => _CategoryWidgetState();
 }
 
-class _tagCategoryState extends State<CategoryWidget> {
+class _CategoryWidgetState extends State<CategoryWidget> {
   // create category
   final TextEditingController _CategoryController = TextEditingController();
   final TextEditingController _colorController = TextEditingController();
@@ -24,59 +25,6 @@ class _tagCategoryState extends State<CategoryWidget> {
   final CollectionReference _categorys =
       FirebaseFirestore.instance.collection('categorys');
   final categorysSet = FirebaseFirestore.instance.collection('categorys').doc();
-
-  Future<void> _create([DocumentSnapshot? documentSnapshot]) async {
-    await showModalBottomSheet(
-        isScrollControlled: true,
-        context: context,
-        builder: (BuildContext ctx) {
-          return Padding(
-            padding: EdgeInsets.only(
-                top: 20,
-                left: 20,
-                right: 20,
-                bottom: MediaQuery.of(ctx).viewInsets.bottom + 20),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextField(
-                  controller: _CategoryController,
-                  decoration: const InputDecoration(labelText: 'Category'),
-                ),
-                TextField(
-                  controller: _colorController,
-                  decoration: const InputDecoration(labelText: 'Color code'),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: ElevatedButton(
-                    child: const Text('Create'),
-                    onPressed: () async {
-                      final String Category = _CategoryController.text;
-                      final String color = _colorController.text;
-                      if (color != null) {
-                        await categorysSet.set({
-                          "Category": Category,
-                          "color": color,
-                          "categortId": categorysSet.id
-                        });
-
-                        _CategoryController.text = '';
-                        _colorController.text = '';
-                        Navigator.of(context).pop();
-                      }
-                    },
-                  ),
-                )
-              ],
-            ),
-          );
-        });
-  }
 
   Future<void> _update([DocumentSnapshot? documentSnapshot]) async {
     if (documentSnapshot != null) {
@@ -96,62 +44,36 @@ class _tagCategoryState extends State<CategoryWidget> {
                 bottom: MediaQuery.of(ctx).viewInsets.bottom + 20),
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TextField(
+                TextFormField(
                   controller: _CategoryController,
-                  decoration: const InputDecoration(labelText: 'Category'),
+                  decoration: textInputDecorationp.copyWith(),
                 ),
-                TextField(
+                TextFormField(
                   controller: _colorController,
-                  decoration: const InputDecoration(labelText: 'Color code'),
+                  decoration: const InputDecoration(
+                    labelText: 'color',
+                  ),
                 ),
                 const SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    ElevatedButton(
-                      child: const Text('Yes'),
-                      onPressed: () async {
-                        final String Category = _CategoryController.text;
-                        final String color = _colorController.text;
-                        const bool verify = true;
-
-                        await _categorys.doc(documentSnapshot!.id).update({
-                          "verify": verify,
-                          'Category': Category,
-                          'color': color
-                        });
-                        _CategoryController.text = '';
-                        _colorController.text = '';
-                        // nextScreen(context, CategoryWidget());
-                      },
-                    ),
-                    ElevatedButton(
-                      child: const Text('No'),
-                      onPressed: () async {
-                        const bool verify = false;
-                        if (verify != null) {
-                          await _categorys
-                              .doc(documentSnapshot!.id)
-                              .update({"verify": verify});
-                          _CategoryController.text = '';
-                          _colorController.text = '';
-                          nextScreen(
-                              context,
-                              CategoryWidget(
-                                snap: null,
-                              ));
-                        }
-                      },
-                    ),
-                  ],
+                ElevatedButton(
+                  child: const Text('Update'),
+                  onPressed: () async {
+                    final String Category = _CategoryController.text;
+                    final String color = _colorController.text;
+                    if (Category != null) {
+                      // await _categorys
+                      //     .doc(documentSnapshot!.id)
+                      //     .update({"Category": Category, "color": color});
+                      // _CategoryController.text = '';
+                      // _colorController.text = '';
+                      // Navigator.of(context).pop();
+                      Updata();
+                    }
+                  },
                 )
               ],
             ),
@@ -166,7 +88,22 @@ class _tagCategoryState extends State<CategoryWidget> {
         content: Text('You have successfully deleted a category')));
   }
 
+  final _formKey = GlobalKey<FormState>();
+  Updata() async {
+    final String Category = _CategoryController.text;
+    final String color = _colorController.text;
+
+    await _categorys.doc().update({
+      "Category": Category,
+      "color": color,
+    });
+    _CategoryController.text = '';
+    _colorController.text = '';
+    nextScreen(context, BeforeTagPage());
+  }
+
   // call
+  var categoryIdData = {};
   var categoryNameData = {};
   var categoryColorData = {};
   bool isLoading = false;
@@ -188,12 +125,18 @@ class _tagCategoryState extends State<CategoryWidget> {
           .get();
 
       var categoryColorSnap = await FirebaseFirestore.instance
-          .collection('users')
+          .collection('categorys')
           .doc(widget.snap['color'])
+          .get();
+
+      var categoryIdSnap = await FirebaseFirestore.instance
+          .collection('categorys')
+          .doc(widget.snap['categoryId'])
           .get();
 
       categoryNameData = categoryNameSnap.data()!;
       categoryColorData = categoryColorSnap.data()!;
+      categoryIdData = categoryIdSnap.data()!;
       setState(() {});
     } catch (e) {
       showSnackBar(

@@ -267,31 +267,15 @@ class _PostCardState extends State<CardWidget> {
                               SingleChildScrollView(
                                 scrollDirection: Axis.horizontal,
                                 child: Padding(
-                                  padding: EdgeInsets.all(1),
+                                  padding: EdgeInsets.only(top: 2),
                                   child: SizedBox(
-                                    // child: ElevatedButton(
-                                    //   style: ElevatedButton.styleFrom(
-                                    //       backgroundColor: purple,
-                                    //       minimumSize: const Size(100, 30),
-                                    //       elevation: 0,
-                                    //       shape: RoundedRectangleBorder(
-                                    //           borderRadius:
-                                    //               BorderRadius.circular(30))),
-                                    //   child: Text(
-                                    //     widget.snap['tag'],
-                                    //     style: TextStyle(
-                                    //         color: primaryColor, fontSize: 14),
-                                    //   ),
-                                    //   onPressed: () {
-                                    //     //do something;
-                                    //   },
-                                    // ),
                                     child: OutlinedButton(
                                       onPressed: () {},
                                       child: Text(
                                         widget.snap['tag'],
                                         style: const TextStyle(
-                                            color: mobileSearchColor),
+                                            color: mobileSearchColor,
+                                            fontSize: 14),
                                       ),
                                       style: OutlinedButton.styleFrom(
                                           shape: RoundedRectangleBorder(
