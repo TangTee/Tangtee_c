@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:tangteevs/feed/EditAct.dart';
 import 'package:tangteevs/utils/showSnackbar.dart';
 import 'package:tangteevs/widgets/like.dart';
@@ -85,6 +86,10 @@ class _PostCardState extends State<CardWidget> {
   }
 
   Widget build(BuildContext context) {
+    // var Mytext = new Map();
+    // Mytext['tag'] = documentSnapshot['tag'];
+    // Mytext['tagColor'] = documentSnapshot['tagColor'];
+
     return SafeArea(
       child: Container(
         child: Card(
@@ -255,40 +260,80 @@ class _PostCardState extends State<CardWidget> {
                     ),
                     Row(
                       children: [
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Padding(
-                            padding: EdgeInsets.all(1),
-                            child: SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.6,
-                              child: const Text(
-                                'add tag+',
-                                style: TextStyle(
-                                  fontFamily: 'MyCustomFont',
-                                  color: unselected,
-                                  fontSize: 14,
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.40,
+                          child: Row(
+                            children: [
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Padding(
+                                  padding: EdgeInsets.all(1),
+                                  child: SizedBox(
+                                    // child: ElevatedButton(
+                                    //   style: ElevatedButton.styleFrom(
+                                    //       backgroundColor: purple,
+                                    //       minimumSize: const Size(100, 30),
+                                    //       elevation: 0,
+                                    //       shape: RoundedRectangleBorder(
+                                    //           borderRadius:
+                                    //               BorderRadius.circular(30))),
+                                    //   child: Text(
+                                    //     widget.snap['tag'],
+                                    //     style: TextStyle(
+                                    //         color: primaryColor, fontSize: 14),
+                                    //   ),
+                                    //   onPressed: () {
+                                    //     //do something;
+                                    //   },
+                                    // ),
+                                    child: OutlinedButton(
+                                      onPressed: () {},
+                                      child: Text(
+                                        widget.snap['tag'],
+                                        style: const TextStyle(
+                                            color: mobileSearchColor),
+                                      ),
+                                      style: OutlinedButton.styleFrom(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(30)),
+                                          side: BorderSide(
+                                              color: HexColor(
+                                                widget.snap['tagColor'],
+                                              ),
+                                              width: 2)),
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
+                            ],
                           ),
                         ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    Comment(postid: widget.snap),
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.45,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          Comment(postid: widget.snap),
+                                    ),
+                                  );
+                                },
+                                child: const Text(
+                                  'See More >>',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontFamily: 'MyCustomFont',
+                                    color: green,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ),
-                            );
-                          },
-                          child: const Text(
-                            'See More >>',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontFamily: 'MyCustomFont',
-                              color: green,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            ],
                           ),
                         ),
                       ],

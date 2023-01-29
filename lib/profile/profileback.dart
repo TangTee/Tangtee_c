@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
-import 'package:tangteevs/profile/Profile.dart';
+import 'package:tangteevs/Profile/Profile.dart';
 import 'package:tangteevs/utils/color.dart';
 
 import '../activity/Activity.dart';
@@ -26,61 +26,73 @@ class MyHomePage extends StatelessWidget {
     List<PersistentBottomNavBarItem> _navBarsItems() {
       return [
         PersistentBottomNavBarItem(
-          icon: const Icon(Icons.home),
+          icon: const Icon(
+            Icons.home,
+            size: 30,
+          ),
           title: ("Home"),
-          activeColorPrimary: Colors.blue,
-          inactiveColorPrimary: Colors.grey,
-        ),
-        PersistentBottomNavBarItem(
-          icon: const Icon(Icons.history),
-          title: ("Activity"),
-          activeColorPrimary: Colors.blue,
-          inactiveColorPrimary: Colors.grey,
+          activeColorPrimary: lightGreen,
+          inactiveColorPrimary: primaryColor,
         ),
         PersistentBottomNavBarItem(
           icon: const Icon(
-            Icons.add_box,
-            color: Colors.white,
+            Icons.history,
+            size: 30,
           ),
-          inactiveIcon: const Icon(
-            Icons.add_box,
-            color: Colors.white,
-          ),
-          activeColorPrimary: Colors.blue,
-          inactiveColorPrimary: Colors.grey,
+          title: ("Activity"),
+          activeColorPrimary: lightGreen,
+          inactiveColorPrimary: primaryColor,
         ),
         PersistentBottomNavBarItem(
-          icon: const Icon(Icons.chat),
+          icon: const Icon(
+            Icons.add_circle,
+            size: 30,
+          ),
+          title: ("Post"),
+          activeColorPrimary: lightGreen,
+          inactiveColorPrimary: primaryColor,
+        ),
+        PersistentBottomNavBarItem(
+          icon: const Icon(
+            Icons.chat,
+            size: 30,
+          ),
           title: ("Chat"),
-          activeColorPrimary: Colors.blue,
-          inactiveColorPrimary: Colors.grey,
+          activeColorPrimary: lightGreen,
+          inactiveColorPrimary: primaryColor,
         ),
         PersistentBottomNavBarItem(
-          icon: const Icon(Icons.account_circle),
+          icon: const Icon(
+            Icons.account_circle,
+            size: 30,
+          ),
           title: ("Proflie"),
-          activeColorPrimary: Colors.blue,
-          inactiveColorPrimary: Colors.grey,
+          activeColorPrimary: lightGreen,
+          inactiveColorPrimary: primaryColor,
         ),
       ];
     }
 
     PersistentTabController controller;
 
-    controller = PersistentTabController(initialIndex: 0);
+
+    controller = PersistentTabController(initialIndex: 4);
     return PersistentTabView(
       context,
       screens: _buildScreens(),
       items: _navBarsItems(),
       controller: controller,
       confineInSafeArea: true,
-      backgroundColor: Colors.white,
+      backgroundColor: purple,
       handleAndroidBackButtonPress: true,
       resizeToAvoidBottomInset: true,
       stateManagement: true,
       hideNavigationBarWhenKeyboardShows: true,
       decoration: NavBarDecoration(
         borderRadius: BorderRadius.circular(10.0),
-        colorBehindNavBar: Colors.white,
+
+        colorBehindNavBar: purple,
+
       ),
       popAllScreensOnTapOfSelectedTab: true,
       popActionScreens: PopActionScreensType.all,
@@ -93,7 +105,8 @@ class MyHomePage extends StatelessWidget {
         curve: Curves.ease,
         duration: Duration(milliseconds: 200),
       ),
-      navBarStyle: NavBarStyle.style16,
+
+      navBarStyle: NavBarStyle.style6,
     );
   }
 }

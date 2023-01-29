@@ -1,3 +1,5 @@
+import 'package:timeago/timeago.dart';
+
 class Post {
   final String activityName;
   final String place;
@@ -9,6 +11,7 @@ class Post {
   final String uid;
   final String timeStamp;
   final String postId;
+  final String tag;
 
   Post({
     required this.activityName,
@@ -21,6 +24,7 @@ class Post {
     required this.uid,
     required this.timeStamp,
     required this.postId,
+    required this.tag,
   });
 
   factory Post.fromMap(Map<String, dynamic> map) {
@@ -33,6 +37,7 @@ class Post {
       detail: map['detail'] ?? '',
       peopleLimit: map['peopleLimit'] ?? '',
       uid: map['uid'] ?? '',
+      tag: map['tag'] ?? '',
       timeStamp: map['timeStamp'] ?? '',
       postId: map['postId'] ?? '',
     );
@@ -49,6 +54,7 @@ class Post {
       "detail": detail,
       "peopleLimit": peopleLimit,
       "uid": uid,
+      "tag": tag,
       "timeStamp": timeStamp,
       "postId": postId,
     };

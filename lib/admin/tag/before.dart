@@ -17,7 +17,6 @@ class BeforeTagPage extends StatefulWidget {
 class _BeforeTagPageState extends State<BeforeTagPage> {
   final CollectionReference _categorys =
       FirebaseFirestore.instance.collection('categorys');
-
   final TextEditingController _CategoryController = TextEditingController();
   final TextEditingController _colorController = TextEditingController();
   final categorysSet = FirebaseFirestore.instance.collection('categorys').doc();
@@ -59,7 +58,7 @@ class _BeforeTagPageState extends State<BeforeTagPage> {
                         await categorysSet.set({
                           "Category": Category,
                           "color": color,
-                          "categortId": categorysSet.id
+                          "categoryId": categorysSet.id
                         });
 
                         _CategoryController.text = '';
@@ -80,6 +79,17 @@ class _BeforeTagPageState extends State<BeforeTagPage> {
     return MaterialApp(
       home: DismissKeyboard(
         child: Scaffold(
+          appBar: AppBar(
+            toolbarHeight: 50,
+            backgroundColor: mobileBackgroundColor,
+            leadingWidth: 130,
+            centerTitle: true,
+            leading: Container(
+              padding: const EdgeInsets.all(0),
+              child: Image.asset('assets/images/logo with name.png',
+                  fit: BoxFit.scaleDown),
+            ),
+          ),
           resizeToAvoidBottomInset: false,
           backgroundColor: mobileBackgroundColor,
           body: Category(),
@@ -96,28 +106,17 @@ class _BeforeTagPageState extends State<BeforeTagPage> {
 class Category extends StatelessWidget {
   final CollectionReference _categorys =
       FirebaseFirestore.instance.collection('categorys');
-  Future<void> _delete(String usersId) async {
-    await _categorys
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .collection('categorys')
-        .doc(usersId)
-        .delete();
-  }
+  // Future<void> _delete(String usersId) async {
+  //   await _categorys
+  //       .doc(FirebaseAuth.instance.currentUser!.uid)
+  //       .collection('categorys')
+  //       .doc(usersId)
+  //       .delete();
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 50,
-        backgroundColor: mobileBackgroundColor,
-        leadingWidth: 130,
-        centerTitle: true,
-        leading: Container(
-          padding: const EdgeInsets.all(0),
-          child: Image.asset('assets/images/logo with name.png',
-              fit: BoxFit.scaleDown),
-        ),
-      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -134,7 +133,7 @@ class Category extends StatelessWidget {
               child: StreamBuilder<QuerySnapshot>(
                   stream: _categorys.snapshots(),
                   builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
+                    if (!snapshot.hasData) {
                       return Center(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -150,8 +149,12 @@ class Category extends StatelessWidget {
                     }
                     return ListView.builder(
                         itemCount: (snapshot.data! as dynamic).docs.length,
-                        itemBuilder: (context, index) => CategoryWidget(
-                            snap: (snapshot.data! as dynamic).docs[index]));
+                        itemBuilder: (context, index) {
+                          final DocumentSnapshot documentSnapshot =
+                              snapshot.data!.docs[index];
+                          return CategoryWidget(
+                              snap: (snapshot.data! as dynamic).docs[index]);
+                        });
                   })),
         ],
       ),
