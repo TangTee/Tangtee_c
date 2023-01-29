@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tangteevs/admin/report/report.dart';
-import 'package:tangteevs/admin/tag/before.dart';
+import 'package:tangteevs/admin/tag/tag.dart';
 import 'package:tangteevs/admin/user/user.dart';
 import 'package:tangteevs/utils/color.dart';
 
@@ -109,6 +109,8 @@ class tagTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser!;
-    return const MaterialApp(home: BeforeTagPage());
+    return MaterialApp(
+      home: tag(),
+    );
   }
 }
