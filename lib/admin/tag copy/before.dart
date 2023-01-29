@@ -106,6 +106,13 @@ class _BeforeTagPageState extends State<BeforeTagPage> {
 class Category extends StatelessWidget {
   final CollectionReference _categorys =
       FirebaseFirestore.instance.collection('categorys');
+  // Future<void> _delete(String usersId) async {
+  //   await _categorys
+  //       .doc(FirebaseAuth.instance.currentUser!.uid)
+  //       .collection('categorys')
+  //       .doc(usersId)
+  //       .delete();
+  // }
 
   @override
   Widget build(BuildContext context) {
