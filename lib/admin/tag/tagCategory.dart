@@ -26,6 +26,63 @@ class _TagCategoryState extends State<TagCategory> {
   final CollectionReference _tags =
       FirebaseFirestore.instance.collection('tags');
 
+  Future<void> _update(String tagId) async {
+    await showModalBottomSheet(
+        isScrollControlled: true,
+        context: context,
+        builder: (BuildContext ctx) {
+          return Padding(
+            padding: EdgeInsets.only(
+                top: 20,
+                left: 20,
+                right: 20,
+                bottom: MediaQuery.of(ctx).viewInsets.bottom + 20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextFormField(
+                  controller: _tagController,
+                  decoration: textInputDecorationp.copyWith(
+                      hintText: 'change tag name'.toString()),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Align(
+                    alignment: Alignment.bottomRight,
+                    child: ElevatedButton(
+                      child: const Text(
+                        'change',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontFamily: 'MyCustomFont',
+                          color: white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      onPressed: () async {
+                        final String tag = _tagController.text;
+
+                        if (tag != null) {
+                          await _tags.doc(tagId).update({"tag": tag});
+                          _tagController.text = '';
+                          Navigator.of(context).pop();
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: lightGreen,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                    ))
+              ],
+            ),
+          );
+        });
+  }
+
   Future<void> _delete(String tagId) async {
     await _tags.doc(tagId).delete();
 
@@ -71,43 +128,47 @@ class _TagCategoryState extends State<TagCategory> {
                     }
                     return null;
                   },
-                  decoration: const InputDecoration(
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(15)),
-                      borderSide: BorderSide(width: 2, color: unselected),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(70)),
-                      borderSide: BorderSide(width: 2, color: unselected),
-                    ),
-                    hintText: 'Add Tag here',
-                    hintStyle: TextStyle(
-                      color: unselected,
-                      fontFamily: 'MyCustomFont',
-                    ),
-                  ),
+                  decoration:
+                      textInputDecorationp.copyWith(hintText: 'tag'.toString()),
                 ),
-                IconButton(
-                  onPressed: () async {
-                    setState(() {
-                      _isLoading = true;
-                    });
-                    var tagSet2 = tagSet.doc();
-                    await tagSet2.set({
-                      'tagId': tagSet2.id,
-                      'tag': tagController.text,
-                      'tagColor': widget.categoryId['color'],
-                      'categoryId': widget.categoryId['categoryId']
-                    }).whenComplete(() {
-                      tagController.clear();
-                    });
-                  },
-                  icon: const Icon(
-                    Icons.add,
-                    size: 30,
-                    color: purple,
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ElevatedButton.icon(
+                        icon: Icon(Icons.add),
+                        label: const Text(
+                          'create',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontFamily: 'MyCustomFont',
+                            color: white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: lightGreen,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                        ),
+                        onPressed: () async {
+                          setState(() {
+                            _isLoading = true;
+                          });
+                          var tagSet2 = tagSet.doc();
+                          await tagSet2.set({
+                            'tagId': tagSet2.id,
+                            'tag': tagController.text,
+                            'tagColor': widget.categoryId['color'],
+                            'categoryId': widget.categoryId['categoryId']
+                          }).whenComplete(() {
+                            tagController.clear();
+                          });
+                        },
+                      ),
+                    ],
                   ),
                 )
               ],
@@ -173,25 +234,39 @@ class _TagCategoryState extends State<TagCategory> {
                                                       children: [
                                                         Column(
                                                           children: [
-                                                            OutlinedButton(
-                                                              onPressed: () {},
-                                                              child: Text(
-                                                                Mytext['tag'],
-                                                                style: const TextStyle(
-                                                                    color:
-                                                                        mobileSearchColor),
-                                                              ),
-                                                              style: OutlinedButton.styleFrom(
-                                                                  shape: RoundedRectangleBorder(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      top: 8.0),
+                                                              child: Container(
+                                                                height: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .height *
+                                                                    0.035,
+                                                                child:
+                                                                    OutlinedButton(
+                                                                  onPressed:
+                                                                      () {},
+                                                                  child: Text(
+                                                                    Mytext[
+                                                                        'tag'],
+                                                                    style: const TextStyle(
+                                                                        color:
+                                                                            mobileSearchColor),
+                                                                  ),
+                                                                  style: OutlinedButton.styleFrom(
+                                                                      shape: RoundedRectangleBorder(
+                                                                          borderRadius: BorderRadius.circular(
                                                                               30)),
-                                                                  side: BorderSide(
-                                                                      color: HexColor(
-                                                                          Mytext[
+                                                                      side: BorderSide(
+                                                                          color: HexColor(Mytext[
                                                                               'tagColor']),
-                                                                      width:
-                                                                          2)),
+                                                                          width:
+                                                                              2)),
+                                                                ),
+                                                              ),
                                                             )
                                                           ],
                                                         )
@@ -204,11 +279,13 @@ class _TagCategoryState extends State<TagCategory> {
                                                           child: Row(
                                                             children: [
                                                               IconButton(
-                                                                  icon: const Icon(
-                                                                      Icons
-                                                                          .edit),
-                                                                  onPressed:
-                                                                      () {}),
+                                                                icon: const Icon(
+                                                                    Icons.edit),
+                                                                onPressed: () =>
+                                                                    _update(
+                                                                        documentSnapshot
+                                                                            .id),
+                                                              ),
                                                               IconButton(
                                                                   icon: const Icon(
                                                                       Icons

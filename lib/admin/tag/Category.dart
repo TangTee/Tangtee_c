@@ -26,12 +26,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
       FirebaseFirestore.instance.collection('categorys');
   final categorysSet = FirebaseFirestore.instance.collection('categorys').doc();
 
-  Future<void> _update([DocumentSnapshot? documentSnapshot]) async {
-    if (documentSnapshot != null) {
-      _CategoryController.text = documentSnapshot['Category'];
-      _colorController.text = documentSnapshot['color'];
-    }
-
+  Future<void> _update(String categoryId) async {
     await showModalBottomSheet(
         isScrollControlled: true,
         context: context,
@@ -48,80 +43,51 @@ class _CategoryWidgetState extends State<CategoryWidget> {
               children: [
                 TextFormField(
                   controller: _CategoryController,
-                  decoration: textInputDecorationp.copyWith(),
+                  decoration: textInputDecorationp.copyWith(
+                      hintText: widget.snap['Category'].toString()),
                 ),
-                TextFormField(
-                  controller: _colorController,
-                  decoration: const InputDecoration(
-                    labelText: 'color',
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: TextFormField(
+                    controller: _colorController,
+                    decoration: textInputDecorationp.copyWith(
+                        hintText: widget.snap['color'].toString()),
                   ),
                 ),
                 const SizedBox(
-                  height: 20,
+                  height: 10,
                 ),
-                ElevatedButton(
-                  child: const Text('Update'),
-                  onPressed: () async {
-                    final String Category = _CategoryController.text;
-                    final String color = _colorController.text;
-                    if (Category != null) {
-                      await _categorys
-                          .doc(documentSnapshot!.id)
-                          .update({"Category": Category, "color": color});
-                      _CategoryController.text = '';
-                      _colorController.text = '';
-                      Navigator.of(context).pop();
-                    }
-                  },
-                )
-              ],
-            ),
-          );
-        });
-  }
-
-  Future<void> _update2(String categoryId) async {
-    await showModalBottomSheet(
-        isScrollControlled: true,
-        context: context,
-        builder: (BuildContext ctx) {
-          return Padding(
-            padding: EdgeInsets.only(
-                top: 20,
-                left: 20,
-                right: 20,
-                bottom: MediaQuery.of(ctx).viewInsets.bottom + 20),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextFormField(
-                  controller: _CategoryController,
-                  decoration: textInputDecorationp.copyWith(),
-                ),
-                TextFormField(
-                  controller: _colorController,
-                  decoration: const InputDecoration(
-                    labelText: 'color',
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: ElevatedButton(
+                    child: const Text(
+                      'change',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontFamily: 'MyCustomFont',
+                        color: white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: lightGreen,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                    onPressed: () async {
+                      final String Category = _CategoryController.text;
+                      final String color = _colorController.text;
+                      if (Category != null) {
+                        await _categorys
+                            .doc(categoryId)
+                            .update({"Category": Category, "color": color});
+                        _CategoryController.text = '';
+                        _colorController.text = '';
+                        Navigator.of(context).pop();
+                      }
+                    },
                   ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                ElevatedButton(
-                  child: const Text('Update'),
-                  onPressed: () async {
-                    final String Category = _CategoryController.text;
-                    final String color = _colorController.text;
-                    if (Category != null) {
-                      await _categorys
-                          .doc(categoryId)
-                          .update({"Category": Category, "color": color});
-                      _CategoryController.text = '';
-                      _colorController.text = '';
-                      Navigator.of(context).pop();
-                    }
-                  },
                 )
               ],
             ),
@@ -247,7 +213,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                     ),
                     IconButton(
                         icon: const Icon(Icons.edit),
-                        onPressed: () => _update2(widget.snap.id)),
+                        onPressed: () => _update(widget.snap.id)),
                     IconButton(
                         icon: const Icon(Icons.delete),
                         onPressed: () => showDialog(

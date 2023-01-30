@@ -45,7 +45,8 @@ class _LoadTagState extends State<LoadTag> {
   final dateController = TextEditingController();
   final _time = TextEditingController();
   final _detail = TextEditingController();
-  late var _tag = TextEditingController();
+  // late var _tag = TextEditingController();
+  var _tag;
   final _peopleLimit = TextEditingController();
   var _tag2;
   var _tag2Color;

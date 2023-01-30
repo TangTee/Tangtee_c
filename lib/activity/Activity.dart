@@ -32,7 +32,7 @@ class ActivityPage extends StatelessWidget {
             bottom: const TabBar(
               indicatorColor: green,
               labelColor: green,
-              labelPadding: EdgeInsets.symmetric(horizontal: 30),
+              labelPadding: EdgeInsets.symmetric(horizontal: 28),
               unselectedLabelColor: unselected,
               labelStyle: TextStyle(
                   fontSize: 20.0,
@@ -47,12 +47,14 @@ class ActivityPage extends StatelessWidget {
               ],
             ),
           ),
-          body: TabBarView(
-            children: [
-              Waiting(),
-              History(),
-              Favorite(),
-            ],
+          body: SafeArea(
+            child: TabBarView(
+              children: [
+                Waiting(),
+                History(),
+                Favorite(),
+              ],
+            ),
           ),
         ));
   }

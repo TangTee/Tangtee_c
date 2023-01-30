@@ -38,19 +38,38 @@ class _BeforeTagPageState extends State<BeforeTagPage> {
               children: [
                 TextField(
                   controller: _CategoryController,
-                  decoration: const InputDecoration(labelText: 'Category'),
+                  decoration: textInputDecorationp.copyWith(
+                      hintText: 'category'.toString()),
                 ),
-                TextField(
-                  controller: _colorController,
-                  decoration: const InputDecoration(labelText: 'Color code'),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: TextField(
+                    controller: _colorController,
+                    decoration: textInputDecorationp.copyWith(
+                        hintText: 'color (Hex color)'.toString()),
+                  ),
                 ),
                 const SizedBox(
-                  height: 20,
+                  height: 10,
                 ),
                 Align(
                   alignment: Alignment.bottomRight,
                   child: ElevatedButton(
-                    child: const Text('Create'),
+                    child: const Text(
+                      'Create',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontFamily: 'MyCustomFont',
+                        color: white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: lightGreen,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
                     onPressed: () async {
                       final String Category = _CategoryController.text;
                       final String color = _colorController.text;
@@ -67,60 +86,6 @@ class _BeforeTagPageState extends State<BeforeTagPage> {
                       }
                     },
                   ),
-                )
-              ],
-            ),
-          );
-        });
-  }
-
-  Future<void> _update([DocumentSnapshot? documentSnapshot]) async {
-    if (documentSnapshot != null) {
-      _CategoryController.text = documentSnapshot['Category'];
-      _colorController.text = documentSnapshot['color'];
-    }
-
-    await showModalBottomSheet(
-        isScrollControlled: true,
-        context: context,
-        builder: (BuildContext ctx) {
-          return Padding(
-            padding: EdgeInsets.only(
-                top: 20,
-                left: 20,
-                right: 20,
-                bottom: MediaQuery.of(ctx).viewInsets.bottom + 20),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextFormField(
-                  controller: _CategoryController,
-                  decoration: textInputDecorationp.copyWith(),
-                ),
-                TextFormField(
-                  controller: _colorController,
-                  decoration: const InputDecoration(
-                    labelText: 'color',
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                ElevatedButton(
-                  child: const Text('Update'),
-                  onPressed: () async {
-                    final String Category = _CategoryController.text;
-                    final String color = _colorController.text;
-                    if (Category != null) {
-                      await _categorys
-                          .doc(documentSnapshot!.id)
-                          .update({"Category": Category, "color": color});
-                      _CategoryController.text = '';
-                      _colorController.text = '';
-                      Navigator.of(context).pop();
-                    }
-                  },
                 )
               ],
             ),
