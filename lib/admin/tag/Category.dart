@@ -20,7 +20,7 @@ class CategoryWidget extends StatefulWidget {
 class _CategoryWidgetState extends State<CategoryWidget> {
   // create category
   final TextEditingController _CategoryController = TextEditingController();
-  final TextEditingController _colorController = TextEditingController();
+  // final TextEditingController _colorController = TextEditingController();
 
   final CollectionReference _categorys =
       FirebaseFirestore.instance.collection('categorys');
@@ -46,14 +46,14 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                   decoration: textInputDecorationp.copyWith(
                       hintText: widget.snap['Category'].toString()),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: TextFormField(
-                    controller: _colorController,
-                    decoration: textInputDecorationp.copyWith(
-                        hintText: widget.snap['color'].toString()),
-                  ),
-                ),
+                // Padding(
+                //   padding: const EdgeInsets.only(top: 8.0),
+                //   child: TextFormField(
+                //     // controller: _colorController,
+                //     decoration: textInputDecorationp.copyWith(
+                //         hintText: widget.snap['color'].toString()),
+                //   ),
+                // ),
                 const SizedBox(
                   height: 10,
                 ),
@@ -77,13 +77,13 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                     ),
                     onPressed: () async {
                       final String Category = _CategoryController.text;
-                      final String color = _colorController.text;
+                      // final String color = _colorController.text;
                       if (Category != null) {
-                        await _categorys
-                            .doc(categoryId)
-                            .update({"Category": Category, "color": color});
+                        await _categorys.doc(categoryId)
+                            // .update({"Category": Category, "color": color});
+                            .update({"Category": Category});
                         _CategoryController.text = '';
-                        _colorController.text = '';
+                        // _colorController.text = '';
                         Navigator.of(context).pop();
                       }
                     },
@@ -105,14 +105,14 @@ class _CategoryWidgetState extends State<CategoryWidget> {
   final _formKey = GlobalKey<FormState>();
   Updata() async {
     final String Category = _CategoryController.text;
-    final String color = _colorController.text;
+    // final String color = _colorController.text;
 
     await _categorys.doc().update({
       "Category": Category,
-      "color": color,
+      // "color": color,
     });
     _CategoryController.text = '';
-    _colorController.text = '';
+    // _colorController.text = '';
     nextScreen(context, BeforeTagPage());
   }
 

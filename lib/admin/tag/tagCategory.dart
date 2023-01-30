@@ -182,6 +182,7 @@ class _TagCategoryState extends State<TagCategory> {
     return DismissKeyboard(
       child: MaterialApp(
         home: Scaffold(
+          resizeToAvoidBottomInset: false,
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
