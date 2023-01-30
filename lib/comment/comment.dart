@@ -410,12 +410,12 @@ class _MyCommentState extends State<Comment> {
                                                                           context)
                                                                       .size
                                                                       .width *
-                                                                  0.64,
+                                                                  0.4,
                                                               height: MediaQuery.of(
                                                                           context)
                                                                       .size
                                                                       .height *
-                                                                  0.03,
+                                                                  0.04,
                                                               child: Container(
                                                                 width: MediaQuery.of(
                                                                             context)
@@ -431,14 +431,19 @@ class _MyCommentState extends State<Comment> {
                                                                       onPressed:
                                                                           () {},
                                                                       child:
-                                                                          Text(
-                                                                        postData[
-                                                                            'tag'],
-                                                                        style: const TextStyle(
-                                                                            color:
-                                                                                mobileSearchColor,
-                                                                            fontSize:
-                                                                                14),
+                                                                          Padding(
+                                                                        padding:
+                                                                            const EdgeInsets.only(top: 2),
+                                                                        child:
+                                                                            Text(
+                                                                          postData[
+                                                                              'tag'],
+                                                                          style: const TextStyle(
+                                                                              color: mobileSearchColor,
+                                                                              fontSize: 14),
+                                                                          textAlign:
+                                                                              TextAlign.center,
+                                                                        ),
                                                                       ),
                                                                       style: OutlinedButton.styleFrom(
                                                                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
@@ -465,7 +470,7 @@ class _MyCommentState extends State<Comment> {
                                                                         context)
                                                                     .size
                                                                     .width *
-                                                                0.3,
+                                                                0.45,
                                                             child: Row(
                                                               mainAxisAlignment:
                                                                   MainAxisAlignment
@@ -516,7 +521,7 @@ class _MyCommentState extends State<Comment> {
                                                                         context)
                                                                     .size
                                                                     .width *
-                                                                0.3,
+                                                                0.45,
                                                             child: Row(
                                                               mainAxisAlignment:
                                                                   MainAxisAlignment

@@ -108,8 +108,7 @@ class ReportTab extends StatelessWidget {
 class tagTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser!;
-    return MaterialApp(
+    return const MaterialApp(
       home: BeforeTagPage(),
     );
   }

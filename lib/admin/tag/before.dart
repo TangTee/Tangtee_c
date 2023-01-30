@@ -74,6 +74,60 @@ class _BeforeTagPageState extends State<BeforeTagPage> {
         });
   }
 
+  Future<void> _update([DocumentSnapshot? documentSnapshot]) async {
+    if (documentSnapshot != null) {
+      _CategoryController.text = documentSnapshot['Category'];
+      _colorController.text = documentSnapshot['color'];
+    }
+
+    await showModalBottomSheet(
+        isScrollControlled: true,
+        context: context,
+        builder: (BuildContext ctx) {
+          return Padding(
+            padding: EdgeInsets.only(
+                top: 20,
+                left: 20,
+                right: 20,
+                bottom: MediaQuery.of(ctx).viewInsets.bottom + 20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextFormField(
+                  controller: _CategoryController,
+                  decoration: textInputDecorationp.copyWith(),
+                ),
+                TextFormField(
+                  controller: _colorController,
+                  decoration: const InputDecoration(
+                    labelText: 'color',
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                ElevatedButton(
+                  child: const Text('Update'),
+                  onPressed: () async {
+                    final String Category = _CategoryController.text;
+                    final String color = _colorController.text;
+                    if (Category != null) {
+                      await _categorys
+                          .doc(documentSnapshot!.id)
+                          .update({"Category": Category, "color": color});
+                      _CategoryController.text = '';
+                      _colorController.text = '';
+                      Navigator.of(context).pop();
+                    }
+                  },
+                )
+              ],
+            ),
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -106,13 +160,6 @@ class _BeforeTagPageState extends State<BeforeTagPage> {
 class Category extends StatelessWidget {
   final CollectionReference _categorys =
       FirebaseFirestore.instance.collection('categorys');
-  // Future<void> _delete(String usersId) async {
-  //   await _categorys
-  //       .doc(FirebaseAuth.instance.currentUser!.uid)
-  //       .collection('categorys')
-  //       .doc(usersId)
-  //       .delete();
-  // }
 
   @override
   Widget build(BuildContext context) {
