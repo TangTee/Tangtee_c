@@ -1,11 +1,7 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tangteevs/HomePage.dart';
 import 'package:tangteevs/regis,login/Register.dart';
 import 'package:tangteevs/services/auth_service.dart';
@@ -57,7 +53,7 @@ class _LoginState extends State<Login> {
                   image: AssetImage("assets/images/login.png"),
                   fit: BoxFit.fill)),
         ),
-        backgroundColor: Colors.transparent,
+        backgroundColor: transparent,
         elevation: 0,
       ),
       body: _isLoading
@@ -190,7 +186,7 @@ class _LoginState extends State<Login> {
                           backgroundColor: mobileBackgroundColor,
                           side: const BorderSide(
                             width: 2.0,
-                            color: Colors.purple,
+                            color: purple,
                           ),
                           minimumSize: const Size(307, 49),
                           elevation: 0,
@@ -198,7 +194,7 @@ class _LoginState extends State<Login> {
                               borderRadius: BorderRadius.circular(30))),
                       child: const Text(
                         "Login",
-                        style: TextStyle(color: Colors.purple, fontSize: 24),
+                        style: TextStyle(color: purple, fontSize: 24),
                       ),
                       onPressed: () {
                         login();
@@ -215,7 +211,7 @@ class _LoginState extends State<Login> {
                     ),
                     Text.rich(TextSpan(
                       style: const TextStyle(
-                          color: Colors.black,
+                          color: mobileSearchColor,
                           fontSize: 12,
                           fontFamily: 'MyCustomFont'),
                       children: <TextSpan>[
@@ -285,7 +281,7 @@ class _LoginState extends State<Login> {
           }
           //nextScreenReplace(context, MyHomePage());
         } else {
-          showSnackbar(context, Colors.red, value);
+          showSnackbar(context, redColor, value);
           setState(() {
             _isLoading = false;
           });

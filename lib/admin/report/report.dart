@@ -1,11 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tangteevs/Landing.dart';
-import 'package:tangteevs/admin/user/data.dart';
-import 'package:tangteevs/admin/user/verify.dart';
 import 'package:tangteevs/profile/profileback.dart';
-import '../../../Profile/Profile.dart';
 import '../../../utils/color.dart';
 import '../../../widgets/custom_textfield.dart';
 import 'Comment-report.dart';
@@ -123,8 +119,8 @@ class _ReportPageState extends State<ReportPage> {
                 fontSize: 20.0,
                 fontFamily: 'MyCustomFont'), //For Un-selected Tabs
             tabs: [
-              Tab(text: 'Verify'),
-              Tab(text: 'Data'),
+              Tab(text: 'Post'),
+              Tab(text: 'Comment'),
             ],
           ),
         ),

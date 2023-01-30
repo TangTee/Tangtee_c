@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-const primaryColor = Colors.white;
+const primaryColor = white;
 const redColor = Color.fromRGBO(225, 0, 0, 1);
 const disable = Color.fromRGBO(216, 216, 216, 1);
 const unselected = Color.fromRGBO(107, 106, 106, 1);
@@ -22,4 +22,12 @@ const orange = Color.fromRGBO(255, 189, 89, 1);
 const lightOrange = Color.fromRGBO(255, 204, 102, 1);
 const lightestOrange = Color.fromRGBO(255, 221, 89, 1);
 
+//white
+const white = Color.fromARGB(255, 255, 255, 255);
+
+//transparent
+const transparent = Color.fromARGB(0, 0, 0, 0);
+
+//amber
+const amber = Color.fromARGB(255, 255, 248, 255);
 //family: MyCustomFont

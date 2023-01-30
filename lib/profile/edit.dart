@@ -8,7 +8,6 @@ import 'package:tangteevs/profile/Profile.dart';
 import 'package:tangteevs/profile/profileback.dart';
 import 'package:tangteevs/services/auth_service.dart';
 import 'package:tangteevs/services/database_service.dart';
-import '../helper/helper_function.dart';
 import '../utils/color.dart';
 import '../utils/showSnackbar.dart';
 import '../widgets/custom_textfield.dart';
@@ -95,7 +94,13 @@ class _EditPageState extends State<EditPage> {
                   leading: IconButton(
                     icon: const Icon(Icons.arrow_back_ios,
                         color: mobileSearchColor, size: 30),
-                    onPressed: () => {nextScreen(context, MyHomePage())},
+                    onPressed: () => {
+                      nextScreen(
+                          context,
+                          ProfilePage(
+                            uid: FirebaseAuth.instance.currentUser!.uid,
+                          ))
+                    },
                   ),
                   toolbarHeight: MediaQuery.of(context).size.height * 0.13,
                   centerTitle: true,
@@ -162,7 +167,7 @@ class _EditPageState extends State<EditPage> {
                                               )),
                                           child: CircleAvatar(
                                             radius: 60,
-                                            backgroundColor: Colors.transparent,
+                                            backgroundColor: transparent,
                                             child: ClipRRect(
                                               borderRadius:
                                                   BorderRadius.circular(60),

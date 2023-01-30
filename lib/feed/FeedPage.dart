@@ -1,13 +1,6 @@
-import 'package:favorite_button/favorite_button.dart';
 import 'package:flutter/material.dart';
-import 'package:tangteevs/HomePage.dart';
 import 'package:tangteevs/utils/color.dart';
-import 'package:tangteevs/services/auth_service.dart';
-import 'package:getwidget/getwidget.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'dart:math';
 import '../widgets/PostCard.dart';
 import '../widgets/SearchResult.dart';
 import '../widgets/custom_textfield.dart';
@@ -54,19 +47,23 @@ class _FeedPageState extends State<FeedPage> {
   }
 }
 
-class SearchForm extends StatelessWidget {
-  SearchForm({super.key});
+class SearchForm extends StatefulWidget {
+  const SearchForm({super.key});
+
+  @override
+  State<SearchForm> createState() => _SearchFormState();
+}
+
+class _SearchFormState extends State<SearchForm> {
+  final activitySearch = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    final _activitySearch = TextEditingController();
     return NestedScrollView(
       floatHeaderSlivers: true,
       headerSliverBuilder: (context, innerBoxIsScrolled) {
         return <Widget>[
           SliverAppBar(
-            //preferredSize: const Size.fromHeight(80),
-            //child: AppBar(
             floating: true,
             snap: true,
             forceElevated: innerBoxIsScrolled,
@@ -78,30 +75,42 @@ class SearchForm extends StatelessWidget {
               child: SizedBox(
                 width: MediaQuery.of(context).size.width * 0.9,
                 height: MediaQuery.of(context).size.height * 0.05,
-                child: Form(
-                  child: TextFormField(
-                    controller: _activitySearch,
-                    decoration: searchInputDecoration.copyWith(
-                      hintText: 'ค้นหากิจกรรม หรือ Tag ที่คุณสนใจ',
-                      hintStyle: TextStyle(
-                        color: unselected,
-                        fontFamily: 'MyCustomFont',
-                      ),
-                      suffixIcon: IconButton(
-                        icon: Icon(Icons.search_outlined),
-                        color: orange,
-                        iconSize: 30,
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  SearchResult(activity: _activitySearch.text),
-                            ),
-                          );
-                        },
-                      ),
+                child: TextFormField(
+                  controller: activitySearch,
+                  textInputAction: TextInputAction.search,
+                  onChanged: (value) {
+                    setState(() {});
+                  },
+                  decoration: searchInputDecoration.copyWith(
+                    hintText: 'ค้นหากิจกรรม หรือ Tag ที่คุณสนใจ',
+                    hintStyle: TextStyle(
+                      color: unselected,
+                      fontFamily: 'MyCustomFont',
                     ),
+                    prefixIcon: const Icon(
+                      Icons.search_outlined,
+                      color: orange,
+                      size: 30,
+                    ),
+                    suffixIcon: activitySearch.text.isEmpty
+                        ? null
+                        : IconButton(
+                            icon: Icon(Icons.clear),
+                            color: orange,
+                            iconSize: 18,
+                            onPressed: (() {
+                              activitySearch.clear();
+                              setState(() {});
+                            })),
                   ),
+                  onFieldSubmitted: (value) {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            SearchResult(activity: activitySearch.text),
+                      ),
+                    );
+                  },
                 ),
               ),
             ),
@@ -196,3 +205,4 @@ class PostCard extends StatelessWidget {
         });
   }
 }
+

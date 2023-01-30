@@ -1,6 +1,4 @@
-import 'package:favorite_button/favorite_button.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:tangteevs/feed/EditAct.dart';
 import 'package:tangteevs/utils/showSnackbar.dart';
 import 'package:tangteevs/widgets/custom_textfield.dart';
@@ -8,13 +6,9 @@ import 'package:url_launcher/url_launcher.dart';
 import '../HomePage.dart';
 import '../Report.dart';
 import '../utils/color.dart';
-import '../services/auth_service.dart';
-import 'package:getwidget/getwidget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:timeago/timeago.dart' as timeago;
-import 'dart:math';
 
 import '../widgets/like.dart';
 
@@ -34,6 +28,7 @@ class _MyCommentState extends State<Comment> {
   var commentLen = 0;
   bool isLoading = false;
   bool _waiting = false;
+  bool enable = false;
 
   @override
   void initState() {
@@ -90,6 +85,12 @@ class _MyCommentState extends State<Comment> {
     });
   }
 
+  @override
+  void dispose() {
+    _commentController.dispose();
+    super.dispose();
+  }
+
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final CollectionReference _comment =
       FirebaseFirestore.instance.collection('comments');
@@ -134,6 +135,7 @@ class _MyCommentState extends State<Comment> {
                     ),
                   ],
                 ),
+
                 body: SafeArea(
                   child: StreamBuilder<QuerySnapshot>(
                       stream: FirebaseFirestore.instance
@@ -162,6 +164,7 @@ class _MyCommentState extends State<Comment> {
                                                 backgroundColor: green,
                                                 backgroundImage: NetworkImage(
                                                   userData['profile']
+
                                                       .toString(),
                                                 ),
                                                 radius: 25,
@@ -223,6 +226,7 @@ class _MyCommentState extends State<Comment> {
                                                 width: 0.5,
                                               ),
                                             ),
+
                                             //margin: const EdgeInsets.only(top: 15),
                                             child: Padding(
                                               padding:
@@ -248,6 +252,7 @@ class _MyCommentState extends State<Comment> {
                                                         child: Row(
                                                           children: [
                                                             SizedBox(
+
                                                               width: MediaQuery.of(
                                                                           context)
                                                                       .size
@@ -676,6 +681,7 @@ class _MyCommentState extends State<Comment> {
                                                                             NetworkImage(
                                                                           Mytext['profile']
                                                                               .toString(),
+
                                                                         ),
                                                                         radius:
                                                                             20,
@@ -710,6 +716,7 @@ class _MyCommentState extends State<Comment> {
                                                                             left:
                                                                                 10),
                                                                         child:
+
                                                                             Padding(
                                                                           padding:
                                                                               EdgeInsets.all(15.00),
@@ -729,6 +736,7 @@ class _MyCommentState extends State<Comment> {
                                                                                           color: mobileSearchColor,
                                                                                           fontWeight: FontWeight.bold,
                                                                                         )),
+
                                                                                   ),
                                                                                   Padding(
                                                                                     padding: const EdgeInsets.only(left: 1),
@@ -812,7 +820,7 @@ class _MyCommentState extends State<Comment> {
                       }),
                 ),
                 bottomNavigationBar: Container(
-                  color: Colors.white,
+                  color: white,
                   child: Form(
                     key: _formKey,
                     child: Row(
@@ -832,12 +840,20 @@ class _MyCommentState extends State<Comment> {
                             maxLines: 5,
                             minLines: 1,
                             controller: commentController,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Please enter a comment';
+                            onChanged: (data) {
+                              if (commentController.text.isEmpty) {
+                                enable = false;
+                              } else {
+                                enable = true;
                               }
-                              return null;
+                              setState(() {});
                             },
+                            // validator: (value) {
+                            //   if (value!.isEmpty) {
+                            //     return 'Please enter a comment';
+                            //   }
+                            //   return null;
+                            // },
                             decoration: const InputDecoration(
                               contentPadding: EdgeInsets.symmetric(
                                   vertical: 15, horizontal: 10),
@@ -862,28 +878,37 @@ class _MyCommentState extends State<Comment> {
                           ),
                         ),
                         IconButton(
-                          onPressed: () async {
-                            if (_formKey.currentState!.validate() == true) {
-                              setState(() {
-                                _isLoading = true;
-                              });
-                              var commentSet2 = commentSet
-                                  .doc(postData['postid'])
-                                  .collection('comments')
-                                  .doc();
-                              await commentSet2.set({
-                                'cid': commentSet2.id,
-                                'comment': commentController.text,
-                                'postid': postData['postid'],
-                                'uid': FirebaseAuth.instance.currentUser!.uid,
-                                'profile': currentUser['profile'],
-                                'Displayname': currentUser['Displayname'],
-                                'timeStamp': DateTime.now(),
-                              }).whenComplete(() {
-                                commentController.clear();
-                              });
-                            }
-                          },
+                          onPressed: enable
+                              ? () async {
+                                  if (_formKey.currentState!.validate() ==
+                                      true) {
+                                    setState(() {
+                                      _isLoading = true;
+                                    });
+                                    var commentSet2 = commentSet
+                                        .doc(postData['postid'])
+                                        .collection('comments')
+                                        .doc();
+                                    await commentSet2.set({
+                                      'cid': commentSet2.id,
+                                      'comment': commentController.text,
+                                      'postid': postData['postid'],
+                                      'uid': FirebaseAuth
+                                          .instance.currentUser!.uid,
+                                      'profile': currentUser['profile'],
+                                      'Displayname': currentUser['Displayname'],
+                                      'timeStamp': DateTime.now(),
+                                    }).whenComplete(() {
+                                      commentController.clear();
+                                      FocusManager.instance.primaryFocus
+                                          ?.unfocus();
+                                      setState(() {
+                                        enable = false;
+                                      });
+                                    });
+                                  }
+                                }
+                              : null,
                           icon: const Icon(
                             Icons.send_outlined,
                             size: 30,
@@ -1012,7 +1037,7 @@ class _MyCommentState extends State<Comment> {
   }
 
   void _showModalBottomSheet(
-      BuildContext context, postidD, Map mytext, timeStamp) {
+      BuildContext context, postidD, Map mytext) {
     _commentController.text = mytext['comment'].toString();
     String Comment = '';
 
@@ -1080,7 +1105,7 @@ class _MyCommentState extends State<Comment> {
                                         'uid': mytext['uid'],
                                         'profile': mytext['profile'],
                                         'Displayname': mytext['Displayname'],
-                                        'timeStamp': timeStamp,
+                                        'timeStamp': mytext['timeStamp'],
                                         "comment": _commentController.text
                                       }).whenComplete(() {
                                         Navigator.of(context)

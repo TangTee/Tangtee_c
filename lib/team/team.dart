@@ -18,7 +18,7 @@ class TermsPage extends StatelessWidget {
         ),
         centerTitle: true,
         elevation: 0,
-        backgroundColor: Colors.transparent,
+        backgroundColor: transparent,
       ),
       body: Container(
         // alignment: Alignment.center,
