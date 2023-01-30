@@ -5,6 +5,7 @@ import 'package:tangteevs/utils/showSnackbar.dart';
 import 'package:tangteevs/widgets/custom_textfield.dart';
 import '../HomePage.dart';
 import '../Report.dart';
+import '../activity/waiting.dart';
 import '../utils/color.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -547,74 +548,63 @@ class _MyCommentState extends State<Comment> {
                                                                         .end,
                                                                 children: [
                                                                   ElevatedButton(
-                                                                    onPressed:
-                                                                        () {
-                                                                      _onPress();
-                                                                      print(
-                                                                          _waiting);
-                                                                      if (_waiting ==
-                                                                          true) {
-                                                                        var uid = FirebaseAuth
+                                                                    style: documentSnapshot['waiting'].contains(FirebaseAuth
                                                                             .instance
                                                                             .currentUser!
-                                                                            .uid;
-                                                                        FirebaseFirestore
+                                                                            .uid)
+                                                                        ? ElevatedButton
+                                                                            .styleFrom(
+                                                                            backgroundColor:
+                                                                                lightPurple,
+                                                                            shape:
+                                                                                RoundedRectangleBorder(
+                                                                              borderRadius: BorderRadius.circular(10.0),
+                                                                            ),
+                                                                          )
+                                                                        : ElevatedButton
+                                                                            .styleFrom(
+                                                                            backgroundColor:
+                                                                                lightGreen,
+                                                                            shape:
+                                                                                RoundedRectangleBorder(
+                                                                              borderRadius: BorderRadius.circular(10.0),
+                                                                            ),
+                                                                          ),
+                                                                    child: documentSnapshot['waiting'].contains(FirebaseAuth
                                                                             .instance
-                                                                            .collection("activity")
-                                                                            .doc(uid)
-                                                                            .collection('waiting list')
-                                                                            .doc(widget.postid.id)
-                                                                            .set({
-                                                                          "activityName":
-                                                                              widget.postid['activityName'],
-                                                                          "date":
-                                                                              widget.postid['date'],
-                                                                          "time":
-                                                                              widget.postid['time'],
-                                                                          "place":
-                                                                              widget.postid['place'],
-                                                                          "location":
-                                                                              widget.postid['location'],
-                                                                          "peopleLimit":
-                                                                              widget.postid['peopleLimit'],
-                                                                          "detail":
-                                                                              widget.postid['detail'],
-                                                                          "uid":
-                                                                              widget.postid['uid'],
-                                                                          "timeStamp":
-                                                                              widget.postid['timeStamp'],
-                                                                          "postid":
-                                                                              widget.postid['postid'],
-                                                                        });
-                                                                      }
-                                                                    },
-                                                                    style: ElevatedButton
-                                                                        .styleFrom(
-                                                                      backgroundColor: _waiting
-                                                                          ? lightPurple
-                                                                          : lightGreen,
-                                                                      shape:
-                                                                          RoundedRectangleBorder(
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(10.0),
-                                                                      ),
-                                                                    ),
-                                                                    child: Text(
-                                                                      _waiting
-                                                                          ? 'Waiting'
-                                                                          : 'Request',
-                                                                      style:
-                                                                          TextStyle(
-                                                                        fontSize:
-                                                                            16,
-                                                                        fontFamily:
-                                                                            'MyCustomFont',
-                                                                        color: _waiting
-                                                                            ? primaryColor
-                                                                            : unselected,
-                                                                        fontWeight:
-                                                                            FontWeight.bold,
-                                                                      ),
+                                                                            .currentUser!
+                                                                            .uid)
+                                                                        ? const Text(
+                                                                            'Waiting',
+                                                                            style:
+                                                                                TextStyle(
+                                                                              fontSize: 16,
+                                                                              fontFamily: 'MyCustomFont',
+                                                                              color: mobileBackgroundColor,
+                                                                              fontWeight: FontWeight.bold,
+                                                                            ),
+                                                                          )
+                                                                        : const Text(
+                                                                            'Request',
+                                                                            style:
+                                                                                TextStyle(
+                                                                              fontSize: 16,
+                                                                              fontFamily: 'MyCustomFont',
+                                                                              color: unselected,
+                                                                              fontWeight: FontWeight.bold,
+                                                                            ),
+                                                                          ),
+                                                                    onPressed: () =>
+                                                                        requestToLoin(
+                                                                      documentSnapshot[
+                                                                              'postid']
+                                                                          .toString(),
+                                                                      FirebaseAuth
+                                                                          .instance
+                                                                          .currentUser!
+                                                                          .uid,
+                                                                      documentSnapshot[
+                                                                          'waiting'],
                                                                     ),
                                                                   ),
                                                                 ],

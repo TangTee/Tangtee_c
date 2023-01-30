@@ -92,10 +92,6 @@ class _PostCardState extends State<CardWidget> {
   }
 
   Widget build(BuildContext context) {
-    // var Mytext = new Map();
-    // Mytext['tag'] = documentSnapshot['tag'];
-    // Mytext['tagColor'] = documentSnapshot['tagColor'];
-
     return SafeArea(
       child: Container(
         child: Card(
