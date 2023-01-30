@@ -26,68 +26,70 @@ class _BeforeTagPageState extends State<BeforeTagPage> {
         isScrollControlled: true,
         context: context,
         builder: (BuildContext ctx) {
-          return Padding(
-            padding: EdgeInsets.only(
-                top: 20,
-                left: 20,
-                right: 20,
-                bottom: MediaQuery.of(ctx).viewInsets.bottom + 20),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextField(
-                  controller: _CategoryController,
-                  decoration: textInputDecorationp.copyWith(
-                      hintText: 'category'.toString()),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: TextField(
-                    controller: _colorController,
+          return SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.only(
+                  top: 20,
+                  left: 20,
+                  right: 20,
+                  bottom: MediaQuery.of(ctx).viewInsets.bottom + 20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextField(
+                    controller: _CategoryController,
                     decoration: textInputDecorationp.copyWith(
-                        hintText: 'color (Hex color)'.toString()),
+                        hintText: 'category'.toString()),
                   ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: ElevatedButton(
-                    child: const Text(
-                      'Create',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontFamily: 'MyCustomFont',
-                        color: white,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: TextField(
+                      controller: _colorController,
+                      decoration: textInputDecorationp.copyWith(
+                          hintText: 'color (Hex color)'.toString()),
                     ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: lightGreen,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: ElevatedButton(
+                      child: const Text(
+                        'Create',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontFamily: 'MyCustomFont',
+                          color: white,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    onPressed: () async {
-                      final String Category = _CategoryController.text;
-                      final String color = _colorController.text;
-                      if (color != null) {
-                        await categorysSet.set({
-                          "Category": Category,
-                          "color": color,
-                          "categoryId": categorysSet.id
-                        });
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: lightGreen,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                      onPressed: () async {
+                        final String Category = _CategoryController.text;
+                        final String color = _colorController.text;
+                        if (color != null) {
+                          await categorysSet.set({
+                            "Category": Category,
+                            "color": color,
+                            "categoryId": categorysSet.id
+                          });
 
-                        _CategoryController.text = '';
-                        _colorController.text = '';
-                        Navigator.of(context).pop();
-                      }
-                    },
-                  ),
-                )
-              ],
+                          _CategoryController.text = '';
+                          _colorController.text = '';
+                          Navigator.of(context).pop();
+                        }
+                      },
+                    ),
+                  )
+                ],
+              ),
             ),
           );
         });
