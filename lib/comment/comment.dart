@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tangteevs/feed/EditAct.dart';
 import 'package:tangteevs/utils/showSnackbar.dart';
 import 'package:tangteevs/widgets/custom_textfield.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../HomePage.dart';
 import '../Report.dart';
 import '../utils/color.dart';
@@ -134,120 +135,340 @@ class _MyCommentState extends State<Comment> {
                     ),
                   ],
                 ),
-                body: StreamBuilder<QuerySnapshot>(
-                    stream: FirebaseFirestore.instance
-                        .collection('post')
-                        .orderBy('timeStamp', descending: true)
-                        .where('postid', isEqualTo: widget.postid['postid'])
-                        .snapshots(),
-                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                      if (snapshot.hasData) {
-                        return ListView.builder(
-                            itemCount: (snapshot.data! as dynamic).docs.length,
-                            itemBuilder: (context, index) {
-                              final DocumentSnapshot documentSnapshot =
-                                  snapshot.data!.docs[index];
-                              return Column(
-                                children: [
-                                  Column(
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.all(16),
-                                        child: Row(
-                                          children: [
-                                            CircleAvatar(
-                                              backgroundColor: green,
-                                              backgroundImage: NetworkImage(
-                                                userData['profile'].toString(),
-                                              ),
-                                              radius: 25,
-                                            ),
-                                            SizedBox(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.67,
-                                              child: Text(
-                                                  '\t\t' +
-                                                      userData['Displayname'],
-                                                  style: const TextStyle(
-                                                    fontSize: 20,
-                                                    fontFamily: 'MyCustomFont',
-                                                    color: mobileSearchColor,
-                                                    fontWeight: FontWeight.bold,
-                                                  )),
-                                            ),
-                                            Container(
-                                              child: IconButton(
-                                                icon: documentSnapshot['likes']
-                                                        .contains(FirebaseAuth
-                                                            .instance
-                                                            .currentUser!
-                                                            .uid)
-                                                    ? const Icon(
-                                                        Icons.favorite,
-                                                        color: redColor,
-                                                        size: 30,
-                                                      )
-                                                    : const Icon(
-                                                        Icons.favorite_border,
-                                                        size: 30,
-                                                      ),
-                                                onPressed: () => likePost(
-                                                  documentSnapshot['postid']
+
+                body: SafeArea(
+                  child: StreamBuilder<QuerySnapshot>(
+                      stream: FirebaseFirestore.instance
+                          .collection('post')
+                          .orderBy('timeStamp', descending: true)
+                          .where('postid', isEqualTo: widget.postid['postid'])
+                          .snapshots(),
+                      builder:
+                          (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (snapshot.hasData) {
+                          return ListView.builder(
+                              itemCount:
+                                  (snapshot.data! as dynamic).docs.length,
+                              itemBuilder: (context, index) {
+                                final DocumentSnapshot documentSnapshot =
+                                    snapshot.data!.docs[index];
+                                return Column(
+                                  children: [
+                                    Column(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(16),
+                                          child: Row(
+                                            children: [
+                                              CircleAvatar(
+                                                backgroundColor: green,
+                                                backgroundImage: NetworkImage(
+                                                  userData['profile']
+
                                                       .toString(),
-                                                  FirebaseAuth.instance
-                                                      .currentUser!.uid,
-                                                  documentSnapshot['likes'],
                                                 ),
+                                                radius: 25,
                                               ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                      Card(
-                                          clipBehavior: Clip.hardEdge,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(5.0),
-                                            side: const BorderSide(
-                                              color: Color.fromARGB(
-                                                  255, 151, 150, 150),
-                                              width: 0.5,
-                                            ),
+                                              SizedBox(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.65,
+                                                child: Text(
+                                                    '\t\t' +
+                                                        userData['Displayname'],
+                                                    style: const TextStyle(
+                                                      fontSize: 20,
+                                                      fontFamily:
+                                                          'MyCustomFont',
+                                                      color: mobileSearchColor,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    )),
+                                              ),
+                                              Container(
+                                                child: IconButton(
+                                                  icon: documentSnapshot[
+                                                              'likes']
+                                                          .contains(FirebaseAuth
+                                                              .instance
+                                                              .currentUser!
+                                                              .uid)
+                                                      ? const Icon(
+                                                          Icons.favorite,
+                                                          color: redColor,
+                                                          size: 30,
+                                                        )
+                                                      : const Icon(
+                                                          Icons.favorite_border,
+                                                          size: 30,
+                                                        ),
+                                                  onPressed: () => likePost(
+                                                    documentSnapshot['postid']
+                                                        .toString(),
+                                                    FirebaseAuth.instance
+                                                        .currentUser!.uid,
+                                                    documentSnapshot['likes'],
+                                                  ),
+                                                ),
+                                              )
+                                            ],
                                           ),
-                                          //margin: const EdgeInsets.only(top: 15),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: SizedBox(
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width,
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 15.0, top: 8.0),
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              bottom: 8.0),
-                                                      child: Row(
-                                                        children: [
-                                                          SizedBox(
-                                                            width: MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width *
-                                                                0.62,
-                                                            child: Text(
+                                        ),
+                                        Card(
+                                            clipBehavior: Clip.hardEdge,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(5.0),
+                                              side: const BorderSide(
+                                                color: Color.fromARGB(
+                                                    255, 151, 150, 150),
+                                                width: 0.5,
+                                              ),
+                                            ),
+
+                                            //margin: const EdgeInsets.only(top: 15),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: SizedBox(
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 15.0, top: 8.0),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                bottom: 8.0),
+                                                        child: Row(
+                                                          children: [
+                                                            SizedBox(
+
+                                                              width: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width *
+                                                                  0.62,
+                                                              child: Text(
+                                                                  documentSnapshot[
+                                                                      'activityName'],
+                                                                  style:
+                                                                      const TextStyle(
+                                                                    fontSize:
+                                                                        20,
+                                                                    fontFamily:
+                                                                        'MyCustomFont',
+                                                                    color:
+                                                                        unselected,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                  )),
+                                                            ),
+                                                            SizedBox(
+                                                                child: Icon(Icons
+                                                                    .person)),
+                                                            Text.rich(TextSpan(
+                                                                children: <
+                                                                    InlineSpan>[
+                                                                  TextSpan(
+                                                                      text: '\t' +
+                                                                          '0 / ' +
+                                                                          documentSnapshot[
+                                                                              'peopleLimit'],
+                                                                      style:
+                                                                          const TextStyle(
+                                                                        fontSize:
+                                                                            20,
+                                                                        fontFamily:
+                                                                            'MyCustomFont',
+                                                                        color:
+                                                                            unselected,
+                                                                      )),
+                                                                ])),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      Text.rich(
+                                                          TextSpan(children: <
+                                                              InlineSpan>[
+                                                        const TextSpan(
+                                                          text: '',
+                                                        ),
+                                                        const WidgetSpan(
+                                                          child: Icon(
+                                                            Icons
+                                                                .calendar_today,
+                                                          ),
+                                                        ),
+                                                        TextSpan(
+                                                            text:
+                                                                '${'\t\t' + documentSnapshot['date'] + '\t\t(' + documentSnapshot['time']})',
+                                                            style:
+                                                                const TextStyle(
+                                                              fontFamily:
+                                                                  'MyCustomFont',
+                                                              color: unselected,
+                                                            )),
+                                                      ])),
+                                                      SizedBox(
+                                                        height: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .height *
+                                                            0.01,
+                                                      ),
+                                                      Text.rich(
+                                                          TextSpan(children: <
+                                                              InlineSpan>[
+                                                        const TextSpan(
+                                                          text: '',
+                                                        ),
+                                                        const WidgetSpan(
+                                                          child: Icon(
+                                                            Icons
+                                                                .maps_home_work,
+                                                          ),
+                                                        ),
+                                                        TextSpan(
+                                                            text: '\t\t' +
                                                                 documentSnapshot[
-                                                                    'activityName'],
+                                                                    'place'],
+                                                            style:
+                                                                const TextStyle(
+                                                              fontFamily:
+                                                                  'MyCustomFont',
+                                                              color: unselected,
+                                                            )),
+                                                      ])),
+                                                      SizedBox(
+                                                        height: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .height *
+                                                            0.01,
+                                                      ),
+                                                      Container(
+                                                        height: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .height *
+                                                            0.04,
+                                                        child: Row(
+                                                          children: [
+                                                            Icon(
+                                                              Icons.place,
+                                                            ),
+                                                            TextButton(
+                                                              onPressed: () {
+                                                                Uri uri = Uri.parse(
+                                                                    documentSnapshot[
+                                                                        'location']);
+                                                                _launchUrl(uri);
+                                                              },
+                                                              child: Text(
+                                                                'Location',
                                                                 style:
-                                                                    const TextStyle(
-                                                                  fontSize: 20,
+                                                                    TextStyle(
+                                                                  fontSize: 14,
+                                                                  color: purple,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                          width: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width *
+                                                              0.7,
+                                                          child: Text(
+                                                              '\nDetail\n\t\t\t\t\t' +
+                                                                  documentSnapshot[
+                                                                          'detail']
+                                                                      .toString(),
+                                                              style: const TextStyle(
+                                                                  fontSize: 16,
+                                                                  fontFamily:
+                                                                      'MyCustomFont',
+                                                                  color:
+                                                                      unselected))),
+                                                      SizedBox(
+                                                        height: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .height *
+                                                            0.02,
+                                                      ),
+                                                      Row(
+                                                        children: [
+                                                          SingleChildScrollView(
+                                                            scrollDirection:
+                                                                Axis.horizontal,
+                                                            child: Padding(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(1),
+                                                              child: SizedBox(
+                                                                width: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width *
+                                                                    0.62,
+                                                                height: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .height *
+                                                                    0.03,
+                                                                child: const Text(
+                                                                    'add tag+',
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontFamily:
+                                                                          'MyCustomFont',
+                                                                      color:
+                                                                          unselected,
+                                                                    )),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          if (FirebaseAuth
+                                                                  .instance
+                                                                  .currentUser!
+                                                                  .uid ==
+                                                              documentSnapshot[
+                                                                  'uid'])
+                                                            ElevatedButton(
+                                                              onPressed: () {},
+                                                              style:
+                                                                  ElevatedButton
+                                                                      .styleFrom(
+                                                                backgroundColor:
+                                                                    lightGreen,
+                                                                shape:
+                                                                    RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              10.0),
+                                                                ),
+                                                              ),
+                                                              child: const Text(
+                                                                'Accepting',
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize: 16,
                                                                   fontFamily:
                                                                       'MyCustomFont',
                                                                   color:
@@ -255,543 +476,349 @@ class _MyCommentState extends State<Comment> {
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .bold,
-                                                                )),
-                                                          ),
-                                                          SizedBox(
-                                                              child: Icon(Icons
-                                                                  .person)),
-                                                          Text.rich(TextSpan(
-                                                              children: <
-                                                                  InlineSpan>[
-                                                                TextSpan(
-                                                                    text: '\t' +
-                                                                        '0 / ' +
-                                                                        documentSnapshot[
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          if (FirebaseAuth
+                                                                  .instance
+                                                                  .currentUser!
+                                                                  .uid !=
+                                                              documentSnapshot[
+                                                                  'uid'])
+                                                            ElevatedButton(
+                                                              onPressed: () {
+                                                                _onPress();
+                                                                print(_waiting);
+                                                                if (_waiting ==
+                                                                    true) {
+                                                                  var uid = FirebaseAuth
+                                                                      .instance
+                                                                      .currentUser!
+                                                                      .uid;
+                                                                  FirebaseFirestore
+                                                                      .instance
+                                                                      .collection(
+                                                                          "activity")
+                                                                      .doc(uid)
+                                                                      .collection(
+                                                                          'waiting list')
+                                                                      .doc(widget
+                                                                          .postid
+                                                                          .id)
+                                                                      .set({
+                                                                    "activityName":
+                                                                        widget.postid[
+                                                                            'activityName'],
+                                                                    "date": widget
+                                                                            .postid[
+                                                                        'date'],
+                                                                    "time": widget
+                                                                            .postid[
+                                                                        'time'],
+                                                                    "place": widget
+                                                                            .postid[
+                                                                        'place'],
+                                                                    "location":
+                                                                        widget.postid[
+                                                                            'location'],
+                                                                    "peopleLimit":
+                                                                        widget.postid[
                                                                             'peopleLimit'],
-                                                                    style:
-                                                                        const TextStyle(
-                                                                      fontSize:
-                                                                          20,
-                                                                      fontFamily:
-                                                                          'MyCustomFont',
-                                                                      color:
-                                                                          unselected,
-                                                                    )),
-                                                              ])),
+                                                                    "detail": widget
+                                                                            .postid[
+                                                                        'detail'],
+                                                                    "uid": widget
+                                                                            .postid[
+                                                                        'uid'],
+                                                                    "timeStamp":
+                                                                        widget.postid[
+                                                                            'timeStamp'],
+                                                                    "postid": widget
+                                                                            .postid[
+                                                                        'postid'],
+                                                                  });
+                                                                }
+                                                              },
+                                                              style:
+                                                                  ElevatedButton
+                                                                      .styleFrom(
+                                                                backgroundColor:
+                                                                    _waiting
+                                                                        ? lightPurple
+                                                                        : lightGreen,
+                                                                shape:
+                                                                    RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              10.0),
+                                                                ),
+                                                              ),
+                                                              child: Text(
+                                                                _waiting
+                                                                    ? 'Waiting'
+                                                                    : 'Request',
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize: 16,
+                                                                  fontFamily:
+                                                                      'MyCustomFont',
+                                                                  color: _waiting
+                                                                      ? primaryColor
+                                                                      : unselected,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                ),
+                                                              ),
+                                                            ),
                                                         ],
                                                       ),
-                                                    ),
-                                                    Text.rich(TextSpan(
-                                                        children: <InlineSpan>[
-                                                          const TextSpan(
-                                                            text: '',
-                                                          ),
-                                                          const WidgetSpan(
-                                                            child: Icon(
-                                                              Icons
-                                                                  .calendar_today,
-                                                            ),
-                                                          ),
-                                                          TextSpan(
-                                                              text:
-                                                                  '${'\t\t' + documentSnapshot['date'] + '\t\t(' + documentSnapshot['time']})',
-                                                              style:
-                                                                  const TextStyle(
-                                                                fontFamily:
-                                                                    'MyCustomFont',
-                                                                color:
-                                                                    unselected,
-                                                              )),
-                                                        ])),
-                                                    SizedBox(
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            )),
+                                        Row(
+                                          children: const [
+                                            Padding(
+                                              padding: EdgeInsets.all(16),
+                                              child: Text('Comment',
+                                                  style: TextStyle(
+                                                    fontSize: 20,
+                                                    fontFamily: 'MyCustomFont',
+                                                    color: unselected,
+                                                    fontWeight: FontWeight.bold,
+                                                  )),
+                                            ),
+                                          ],
+                                        ),
+                                        StreamBuilder<QuerySnapshot>(
+                                          stream: commentSet
+                                              .doc(documentSnapshot['postid'])
+                                              .collection('comments')
+                                              .orderBy('timeStamp',
+                                                  descending: true)
+                                              .snapshots(),
+                                          builder: (context,
+                                              AsyncSnapshot<QuerySnapshot>
+                                                  snapshot) {
+                                            if (snapshot.hasData) {
+                                              return Row(
+                                                children: <Widget>[
+                                                  Expanded(
+                                                    child: SizedBox(
                                                       height:
                                                           MediaQuery.of(context)
                                                                   .size
                                                                   .height *
-                                                              0.01,
-                                                    ),
-                                                    Text.rich(TextSpan(
-                                                        children: <InlineSpan>[
-                                                          const TextSpan(
-                                                            text: '',
-                                                          ),
-                                                          const WidgetSpan(
-                                                            child: Icon(
-                                                              Icons
-                                                                  .maps_home_work,
-                                                            ),
-                                                          ),
-                                                          TextSpan(
-                                                              text: '\t\t' +
-                                                                  documentSnapshot[
-                                                                      'place'],
-                                                              style:
-                                                                  const TextStyle(
-                                                                fontFamily:
-                                                                    'MyCustomFont',
-                                                                color:
-                                                                    unselected,
-                                                              )),
-                                                        ])),
-                                                    SizedBox(
-                                                      height:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .height *
-                                                              0.01,
-                                                    ),
-                                                    Text.rich(TextSpan(
-                                                        children: <InlineSpan>[
-                                                          const TextSpan(
-                                                            text: '',
-                                                          ),
-                                                          const WidgetSpan(
-                                                            child: Icon(
-                                                              Icons.place,
-                                                            ),
-                                                          ),
-                                                          TextSpan(
-                                                              text: '\t\t' +
-                                                                  documentSnapshot[
-                                                                      'location'],
-                                                              style:
-                                                                  const TextStyle(
-                                                                fontFamily:
-                                                                    'MyCustomFont',
-                                                                color:
-                                                                    unselected,
-                                                              )),
-                                                        ])),
-                                                    SizedBox(
-                                                      height:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .height *
-                                                              0.01,
-                                                    ),
-                                                    SizedBox(
-                                                        width: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width *
-                                                            0.7,
-                                                        child: Text(
-                                                            '\nDetail\n\t\t\t\t\t' +
+                                                              0.33,
+                                                      child: ListView.builder(
+                                                          itemCount: snapshot
+                                                              .data!
+                                                              .docs
+                                                              .length,
+                                                          itemBuilder:
+                                                              (context, index) {
+                                                            final DocumentSnapshot
+                                                                documentSnapshot =
+                                                                snapshot.data!
+                                                                        .docs[
+                                                                    index];
+
+                                                            var postidD =
+                                                                postData[
+                                                                    'postid'];
+                                                            var timeStamp =
+                                                                postData[
+                                                                    'timeStamp'];
+
+                                                            var Mytext =
+                                                                new Map();
+                                                            Mytext['Displayname'] =
                                                                 documentSnapshot[
-                                                                        'detail']
-                                                                    .toString(),
-                                                            style: const TextStyle(
-                                                                fontSize: 16,
-                                                                fontFamily:
-                                                                    'MyCustomFont',
-                                                                color:
-                                                                    unselected))),
-                                                    SizedBox(
-                                                      height:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .height *
-                                                              0.02,
+                                                                    'Displayname'];
+                                                            Mytext['cid'] =
+                                                                documentSnapshot[
+                                                                    'cid'];
+                                                            Mytext['comment'] =
+                                                                documentSnapshot[
+                                                                    'comment'];
+                                                            Mytext['postid'] =
+                                                                documentSnapshot[
+                                                                    'postid'];
+                                                            Mytext['profile'] =
+                                                                documentSnapshot[
+                                                                    'profile'];
+                                                            Mytext['time'] = timeago.format(
+                                                                documentSnapshot[
+                                                                        'timeStamp']
+                                                                    .toDate(),
+                                                                locale:
+                                                                    'en_short');
+                                                            Mytext['uid'] =
+                                                                documentSnapshot[
+                                                                    'uid'];
+
+                                                            return Center(
+                                                              child: Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                            .only(
+                                                                        left:
+                                                                            10),
+                                                                child: Row(
+                                                                  children: [
+                                                                    Padding(
+                                                                      padding: EdgeInsets.only(
+                                                                          bottom:
+                                                                              45),
+                                                                      child:
+                                                                          CircleAvatar(
+                                                                        backgroundColor:
+                                                                            green,
+                                                                        backgroundImage:
+                                                                            NetworkImage(
+                                                                          Mytext['profile']
+                                                                              .toString(),
+
+                                                                        ),
+                                                                        radius:
+                                                                            20,
+                                                                      ),
+                                                                    ),
+                                                                    GestureDetector(
+                                                                      onLongPress: () => _showModalBottomSheet(
+                                                                          context,
+                                                                          postidD,
+                                                                          Mytext,
+                                                                          timeStamp),
+                                                                      child:
+                                                                          Card(
+                                                                        clipBehavior:
+                                                                            Clip.hardEdge,
+                                                                        shape:
+                                                                            RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(15.0),
+                                                                          side:
+                                                                              const BorderSide(
+                                                                            color: Color.fromARGB(
+                                                                                255,
+                                                                                151,
+                                                                                150,
+                                                                                150),
+                                                                            width:
+                                                                                2,
+                                                                          ),
+                                                                        ),
+                                                                        margin: const EdgeInsets.only(
+                                                                            left:
+                                                                                10),
+                                                                        child:
+
+                                                                            Padding(
+                                                                          padding:
+                                                                              EdgeInsets.all(15.00),
+                                                                          child:
+                                                                              Column(
+                                                                            crossAxisAlignment:
+                                                                                CrossAxisAlignment.start,
+                                                                            children: [
+                                                                              Row(
+                                                                                children: [
+                                                                                  SizedBox(
+                                                                                    width: 180,
+                                                                                    child: Text(Mytext['Displayname'],
+                                                                                        style: const TextStyle(
+                                                                                          fontSize: 16,
+                                                                                          fontFamily: 'MyCustomFont',
+                                                                                          color: mobileSearchColor,
+                                                                                          fontWeight: FontWeight.bold,
+                                                                                        )),
+
+                                                                                  ),
+                                                                                  Padding(
+                                                                                    padding: const EdgeInsets.only(left: 1),
+                                                                                    child: Text(Mytext['time'].toString(),
+                                                                                        style: const TextStyle(
+                                                                                          fontSize: 12,
+                                                                                          fontFamily: 'MyCustomFont',
+                                                                                          color: unselected,
+                                                                                        )),
+                                                                                  )
+                                                                                ],
+                                                                              ),
+                                                                              SizedBox(
+                                                                                width: 250,
+                                                                                child: Padding(
+                                                                                  padding: const EdgeInsets.all(8.0),
+                                                                                  child: Text(
+                                                                                    Mytext['comment'],
+                                                                                    style: const TextStyle(
+                                                                                      fontSize: 16,
+                                                                                      fontFamily: 'MyCustomFont',
+                                                                                      color: unselected,
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                              )
+                                                                            ],
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            );
+                                                          }),
                                                     ),
-                                                    Row(
-                                                      children: [
-                                                        SingleChildScrollView(
-                                                          scrollDirection:
-                                                              Axis.horizontal,
-                                                          child: Padding(
-                                                            padding:
-                                                                EdgeInsets.all(
-                                                                    1),
-                                                            child: SizedBox(
-                                                              width: MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width *
-                                                                  0.64,
-                                                              height: MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .height *
-                                                                  0.03,
-                                                              child: const Text(
-                                                                  'add tag+',
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontFamily:
-                                                                        'MyCustomFont',
-                                                                    color:
-                                                                        unselected,
-                                                                  )),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        if (FirebaseAuth
-                                                                .instance
-                                                                .currentUser!
-                                                                .uid ==
-                                                            documentSnapshot[
-                                                                'uid'])
-                                                          ElevatedButton(
-                                                            onPressed: () {},
-                                                            style:
-                                                                ElevatedButton
-                                                                    .styleFrom(
-                                                              backgroundColor:
-                                                                  lightGreen,
-                                                              shape:
-                                                                  RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            10.0),
-                                                              ),
-                                                            ),
-                                                            child: const Text(
-                                                              'Accepting',
-                                                              style: TextStyle(
-                                                                fontSize: 16,
-                                                                fontFamily:
-                                                                    'MyCustomFont',
-                                                                color:
-                                                                    unselected,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        if (FirebaseAuth
-                                                                .instance
-                                                                .currentUser!
-                                                                .uid !=
-                                                            documentSnapshot[
-                                                                'uid'])
-                                                          ElevatedButton(
-                                                            onPressed: () {
-                                                              _onPress();
-                                                              print(_waiting);
-                                                              if (_waiting ==
-                                                                  true) {
-                                                                var uid =
-                                                                    FirebaseAuth
-                                                                        .instance
-                                                                        .currentUser!
-                                                                        .uid;
-                                                                FirebaseFirestore
-                                                                    .instance
-                                                                    .collection(
-                                                                        "activity")
-                                                                    .doc(uid)
-                                                                    .collection(
-                                                                        'waiting list')
-                                                                    .doc(widget
-                                                                        .postid
-                                                                        .id)
-                                                                    .set({
-                                                                  "activityName":
-                                                                      widget.postid[
-                                                                          'activityName'],
-                                                                  "date": widget
-                                                                          .postid[
-                                                                      'date'],
-                                                                  "time": widget
-                                                                          .postid[
-                                                                      'time'],
-                                                                  "place": widget
-                                                                          .postid[
-                                                                      'place'],
-                                                                  "location": widget
-                                                                          .postid[
-                                                                      'location'],
-                                                                  "peopleLimit":
-                                                                      widget.postid[
-                                                                          'peopleLimit'],
-                                                                  "detail": widget
-                                                                          .postid[
-                                                                      'detail'],
-                                                                  "uid": widget
-                                                                          .postid[
-                                                                      'uid'],
-                                                                  "timeStamp": widget
-                                                                          .postid[
-                                                                      'timeStamp'],
-                                                                  "postid": widget
-                                                                          .postid[
-                                                                      'postid'],
-                                                                });
-                                                              }
-                                                            },
-                                                            style:
-                                                                ElevatedButton
-                                                                    .styleFrom(
-                                                              backgroundColor:
-                                                                  _waiting
-                                                                      ? lightPurple
-                                                                      : lightGreen,
-                                                              shape:
-                                                                  RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            10.0),
-                                                              ),
-                                                            ),
-                                                            child: Text(
-                                                              _waiting
-                                                                  ? 'Waiting'
-                                                                  : 'Request',
-                                                              style: TextStyle(
-                                                                fontSize: 16,
-                                                                fontFamily:
-                                                                    'MyCustomFont',
-                                                                color: _waiting
-                                                                    ? primaryColor
-                                                                    : unselected,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                      ],
+                                                  ),
+                                                ],
+                                              );
+                                            }
+                                            return Container(
+                                              child: Center(
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: const <Widget>[
+                                                    SizedBox(
+                                                      height: 30.0,
+                                                      width: 30.0,
+                                                      child:
+                                                          CircularProgressIndicator(),
                                                     ),
                                                   ],
                                                 ),
                                               ),
-                                            ),
-                                          )),
-                                      Row(
-                                        children: const [
-                                          Padding(
-                                            padding: EdgeInsets.all(16),
-                                            child: Text('Comment',
-                                                style: TextStyle(
-                                                  fontSize: 20,
-                                                  fontFamily: 'MyCustomFont',
-                                                  color: unselected,
-                                                  fontWeight: FontWeight.bold,
-                                                )),
-                                          ),
-                                        ],
-                                      ),
-                                      StreamBuilder<QuerySnapshot>(
-                                        stream: commentSet
-                                            .doc(documentSnapshot['postid'])
-                                            .collection('comments')
-                                            .orderBy('timeStamp',
-                                                descending: true)
-                                            .snapshots(),
-                                        builder: (context,
-                                            AsyncSnapshot<QuerySnapshot>
-                                                snapshot) {
-                                          if (snapshot.hasData) {
-                                            return Row(
-                                              children: <Widget>[
-                                                Expanded(
-                                                  child: SizedBox(
-                                                    height:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .height *
-                                                            0.33,
-                                                    child: ListView.builder(
-                                                        itemCount: snapshot
-                                                            .data!.docs.length,
-                                                        itemBuilder:
-                                                            (context, index) {
-                                                          final DocumentSnapshot
-                                                              documentSnapshot =
-                                                              snapshot.data!
-                                                                  .docs[index];
-
-                                                          var postidD =
-                                                              postData[
-                                                                  'postid'];
-
-                                                          var Mytext =
-                                                              new Map();
-                                                          Mytext['Displayname'] =
-                                                              documentSnapshot[
-                                                                  'Displayname'];
-                                                          Mytext['cid'] =
-                                                              documentSnapshot[
-                                                                  'cid'];
-                                                          Mytext['comment'] =
-                                                              documentSnapshot[
-                                                                  'comment'];
-                                                          Mytext['postid'] =
-                                                              documentSnapshot[
-                                                                  'postid'];
-                                                          Mytext['profile'] =
-                                                              documentSnapshot[
-                                                                  'profile'];
-                                                          Mytext['time'] =
-                                                              timeago.format(
-                                                                  documentSnapshot[
-                                                                          'timeStamp']
-                                                                      .toDate(),
-                                                                  locale:
-                                                                      'en_short');
-                                                          Mytext['uid'] =
-                                                              documentSnapshot[
-                                                                  'uid'];
-                                                          Mytext['timeStamp'] =
-                                                              documentSnapshot[
-                                                                  'timeStamp'];
-
-                                                          return Center(
-                                                            child: Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                          .only(
-                                                                      left: 10),
-                                                              child: Row(
-                                                                children: [
-                                                                  Padding(
-                                                                    padding: EdgeInsets.only(
-                                                                        bottom:
-                                                                            45),
-                                                                    child:
-                                                                        CircleAvatar(
-                                                                      backgroundColor:
-                                                                          green,
-                                                                      backgroundImage:
-                                                                          NetworkImage(
-                                                                        Mytext['profile']
-                                                                            .toString(),
-                                                                      ),
-                                                                      radius:
-                                                                          20,
-                                                                    ),
-                                                                  ),
-                                                                  GestureDetector(
-                                                                    onLongPress: () => _showModalBottomSheet(
-                                                                        context,
-                                                                        postidD,
-                                                                        Mytext),
-                                                                    child: Card(
-                                                                      clipBehavior:
-                                                                          Clip.hardEdge,
-                                                                      shape:
-                                                                          RoundedRectangleBorder(
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(15.0),
-                                                                        side:
-                                                                            const BorderSide(
-                                                                          color: Color.fromARGB(
-                                                                              255,
-                                                                              151,
-                                                                              150,
-                                                                              150),
-                                                                          width:
-                                                                              2,
-                                                                        ),
-                                                                      ),
-                                                                      margin: const EdgeInsets
-                                                                              .only(
-                                                                          left:
-                                                                              10),
-                                                                      child:
-                                                                          Padding(
-                                                                        padding:
-                                                                            EdgeInsets.all(15.00),
-                                                                        child:
-                                                                            Column(
-                                                                          crossAxisAlignment:
-                                                                              CrossAxisAlignment.start,
-                                                                          children: [
-                                                                            Row(
-                                                                              children: [
-                                                                                SizedBox(
-                                                                                  width: 180,
-                                                                                  child: Text(Mytext['Displayname'],
-                                                                                      style: const TextStyle(
-                                                                                        fontSize: 16,
-                                                                                        fontFamily: 'MyCustomFont',
-                                                                                        color: mobileSearchColor,
-                                                                                        fontWeight: FontWeight.bold,
-                                                                                      )),
-                                                                                ),
-                                                                                Padding(
-                                                                                  padding: const EdgeInsets.only(left: 1),
-                                                                                  child: Text(Mytext['time'].toString(),
-                                                                                      style: const TextStyle(
-                                                                                        fontSize: 12,
-                                                                                        fontFamily: 'MyCustomFont',
-                                                                                        color: unselected,
-                                                                                      )),
-                                                                                )
-                                                                              ],
-                                                                            ),
-                                                                            SizedBox(
-                                                                              width: 250,
-                                                                              child: Padding(
-                                                                                padding: const EdgeInsets.all(8.0),
-                                                                                child: Text(
-                                                                                  Mytext['comment'],
-                                                                                  style: const TextStyle(
-                                                                                    fontSize: 16,
-                                                                                    fontFamily: 'MyCustomFont',
-                                                                                    color: unselected,
-                                                                                  ),
-                                                                                ),
-                                                                              ),
-                                                                            )
-                                                                          ],
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                          );
-                                                        }),
-                                                  ),
-                                                ),
-                                              ],
                                             );
-                                          }
-                                          return Container(
-                                            child: Center(
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                children: const <Widget>[
-                                                  SizedBox(
-                                                    height: 30.0,
-                                                    width: 30.0,
-                                                    child:
-                                                        CircularProgressIndicator(),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      )
-                                    ],
-                                  ),
-                                ],
-                              );
-                              //),
-                            });
-                      }
-                      return Container(
-                        child: Center(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: const <Widget>[
-                              SizedBox(
-                                height: 30.0,
-                                width: 30.0,
-                                child: CircularProgressIndicator(),
-                              ),
-                            ],
+                                          },
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                );
+                                //),
+                              });
+                        }
+                        return Container(
+                          child: Center(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: const <Widget>[
+                                SizedBox(
+                                  height: 30.0,
+                                  width: 30.0,
+                                  child: CircularProgressIndicator(),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      );
-                    }),
+                        );
+                      }),
+                ),
                 bottomNavigationBar: Container(
                   color: white,
                   child: Form(
@@ -801,13 +828,13 @@ class _MyCommentState extends State<Comment> {
                         IconButton(
                           onPressed: () {},
                           icon: const Icon(
-                            Icons.attach_file_outlined,
+                            Icons.photo_library,
                             color: purple,
                             size: 30,
                           ),
                         ),
                         SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.76,
+                          width: MediaQuery.of(context).size.width * 0.74,
                           child: TextFormField(
                             keyboardType: TextInputType.multiline,
                             maxLines: 5,
@@ -1165,5 +1192,24 @@ class _MyCommentState extends State<Comment> {
         );
       },
     );
+  }
+
+  Future<void> _launchUrl(Uri url) async {
+    try {
+      if (await canLaunchUrl(url)) {
+        await launchUrl(
+          url,
+        );
+      } else {
+        throw 'Could not launch $url';
+      }
+    } catch (_) {}
+  }
+
+  String? encodeQueryParameters(Map<String, String> params) {
+    return params.entries
+        .map((MapEntry<String, String> e) =>
+            '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+        .join('&');
   }
 }
