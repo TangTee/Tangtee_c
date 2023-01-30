@@ -31,6 +31,12 @@ class _ProfilePageState extends State<ProfilePage> {
   DateDuration duration = DateDuration();
 
   @override
+  void setState(VoidCallback fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
   void initState() {
     super.initState();
     getData();

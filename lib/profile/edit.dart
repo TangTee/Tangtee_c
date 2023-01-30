@@ -46,6 +46,12 @@ class _EditPageState extends State<EditPage> {
   bool isLoading = false;
 
   @override
+  void setState(VoidCallback fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
+  }
+
   void initState() {
     super.initState();
     getData();

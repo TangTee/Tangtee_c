@@ -9,8 +9,6 @@ import 'package:tangteevs/utils/color.dart';
 import 'package:tangteevs/widgets/custom_textfield.dart';
 import 'package:intl/intl.dart';
 
-// import 'AddTag.dart';
-
 class CreateEventScreen extends StatefulWidget {
   const CreateEventScreen({Key? key}) : super(key: key);
   @override
@@ -45,12 +43,12 @@ class _LoadTagState extends State<LoadTag> {
   final dateController = TextEditingController();
   final _time = TextEditingController();
   final _detail = TextEditingController();
-  late var _tag = TextEditingController();
   final _peopleLimit = TextEditingController();
+  var _tag;
   var _tag2;
   var _tag2Color;
 
-  void showModalBottomSheetC(BuildContext context, tag) {
+  showModalBottomSheetC(BuildContext context, tag) {
     final CollectionReference _categorys =
         FirebaseFirestore.instance.collection('categorys');
 
@@ -141,7 +139,7 @@ class _LoadTagState extends State<LoadTag> {
                                 fontFamily: 'MyCustomFont', fontSize: 20),
                           )),
                           onTap: () {
-                            _tag2 = Mytext['tag'].toString();
+                            _tag2 = documentSnapshot['tag'].toString();
                             _tag2Color = Mytext['tagColor'].toString();
                             Navigator.of(context)
                                 .popUntil((route) => route.isFirst);
@@ -453,8 +451,7 @@ class _LoadTagState extends State<LoadTag> {
                               onPressed: () {
                                 showModalBottomSheetC(context, _tag);
                                 setState(() {
-                                  _tag =
-                                      _tag2.toString() as TextEditingController;
+                                  _tag = _tag2.toString();
                                 });
                               },
                               style: OutlinedButton.styleFrom(
