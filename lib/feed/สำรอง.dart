@@ -26,7 +26,6 @@ class _EditActState extends State<EditAct> {
   String detail = "";
   String people = "";
   String tag = '';
-  String tagColor = '';
   DatabaseService databaseService = DatabaseService();
   bool _isLoading = false;
   final _formKey = GlobalKey<FormState>();
@@ -41,125 +40,122 @@ class _EditActState extends State<EditAct> {
   final TextEditingController _peopleLimitController = TextEditingController();
   final TextEditingController _placeController = TextEditingController();
   final TextEditingController _timeController = TextEditingController();
-  var _tagController = TextEditingController();
-  var _tagColorController = TextEditingController();
-  var _tag;
-  var _tag2;
-  var _tag2Color;
-  var test;
+  final TextEditingController _tagController = TextEditingController();
+
   var postData = {};
   bool isLoading = false;
 
-  void showModalBottomSheetC(BuildContext context, tag) {
-    final CollectionReference _categorys =
-        FirebaseFirestore.instance.collection('categorys');
+  // void showModalBottomSheetC(BuildContext context, tag) {
+  //   final CollectionReference _categorys =
+  //       FirebaseFirestore.instance.collection('categorys');
 
-    showModalBottomSheet(
-      useRootNavigator: true,
-      context: context,
-      builder: (BuildContext context) {
-        return StreamBuilder(
-          stream: _categorys.snapshots(),
-          builder: ((context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.hasData) {
-              return ListView.builder(
-                itemCount: (snapshot.data! as dynamic).docs.length,
-                itemBuilder: (context, index) {
-                  final DocumentSnapshot documentSnapshot =
-                      snapshot.data!.docs[index];
+  //   showModalBottomSheet(
+  //     useRootNavigator: true,
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return StreamBuilder(
+  //         stream: _categorys.snapshots(),
+  //         builder: ((context, AsyncSnapshot<QuerySnapshot> snapshot) {
+  //           if (snapshot.hasData) {
+  //             return ListView.builder(
+  //               itemCount: (snapshot.data! as dynamic).docs.length,
+  //               itemBuilder: (context, index) {
+  //                 final DocumentSnapshot documentSnapshot =
+  //                     snapshot.data!.docs[index];
 
-                  var Mytext = new Map();
-                  Mytext['Category'] = documentSnapshot['Category'];
-                  Mytext['categoryId'] = documentSnapshot['categoryId'];
-                  Mytext['color'] = documentSnapshot['color'];
+  //                 var Mytext = new Map();
+  //                 Mytext['Category'] = documentSnapshot['Category'];
+  //                 Mytext['categoryId'] = documentSnapshot['categoryId'];
+  //                 Mytext['color'] = documentSnapshot['color'];
 
-                  return Card(
-                    child: Column(
-                      children: [
-                        ListTile(
-                          tileColor: HexColor(Mytext['color']),
-                          textColor: mobileSearchColor,
-                          contentPadding:
-                              const EdgeInsets.symmetric(vertical: 8.0),
-                          title: Center(
-                              child: Text(Mytext['Category'],
-                                  style: TextStyle(
-                                      fontFamily: 'MyCustomFont',
-                                      fontSize: 20))),
-                          onTap: () {
-                            showModalBottomSheetT(
-                                context, Mytext['categoryId']);
-                          },
-                        )
-                      ],
-                    ),
-                  );
-                },
-              );
-            }
-            return const Text('helo');
-          }),
-        );
-      },
-    );
-  }
+  //                 return Card(
+  //                   child: Column(
+  //                     children: [
+  //                       ListTile(
+  //                         tileColor: HexColor(Mytext['color']),
+  //                         textColor: mobileSearchColor,
+  //                         contentPadding:
+  //                             const EdgeInsets.symmetric(vertical: 8.0),
+  //                         title: Center(
+  //                             child: Text(Mytext['Category'],
+  //                                 style: TextStyle(
+  //                                     fontFamily: 'MyCustomFont',
+  //                                     fontSize: 20))),
+  //                         onTap: () {
+  //                           showModalBottomSheetT(
+  //                               context, Mytext['categoryId']);
+  //                         },
+  //                       )
+  //                     ],
+  //                   ),
+  //                 );
+  //               },
+  //             );
+  //           }
+  //           return const Text('helo');
+  //         }),
+  //       );
+  //     },
+  //   );
+  // }
 
-  showModalBottomSheetT(BuildContext context, categoryId) {
-    final CollectionReference _tags =
-        FirebaseFirestore.instance.collection('tags');
+  // showModalBottomSheetT(BuildContext context, categoryId) {
+  //   final CollectionReference _tags =
+  //       FirebaseFirestore.instance.collection('tags');
 
-    showModalBottomSheet(
-      useRootNavigator: true,
-      context: context,
-      builder: (BuildContext context) {
-        return StreamBuilder(
-          stream: _tags.where("categoryId", isEqualTo: categoryId).snapshots(),
-          builder: ((context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.hasData) {
-              return ListView.builder(
-                itemCount: (snapshot.data! as dynamic).docs.length,
-                itemBuilder: (context, index) {
-                  final DocumentSnapshot documentSnapshot =
-                      snapshot.data!.docs[index];
+  //   showModalBottomSheet(
+  //     useRootNavigator: true,
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return StreamBuilder(
+  //         stream: _tags.where("categoryId", isEqualTo: categoryId).snapshots(),
+  //         builder: ((context, AsyncSnapshot<QuerySnapshot> snapshot) {
+  //           if (snapshot.hasData) {
+  //             return ListView.builder(
+  //               itemCount: (snapshot.data! as dynamic).docs.length,
+  //               itemBuilder: (context, index) {
+  //                 final DocumentSnapshot documentSnapshot =
+  //                     snapshot.data!.docs[index];
 
-                  var Mytext = new Map();
-                  Mytext['tag'] = documentSnapshot['tag'];
-                  Mytext['tagColor'] = documentSnapshot['tagColor'];
+  //                 var Mytext = new Map();
+  //                 Mytext['tag'] = documentSnapshot['tag'];
+  //                 Mytext['tagColor'] = documentSnapshot['tagColor'];
 
-                  return Card(
-                    child: Column(
-                      children: [
-                        ListTile(
-                          tileColor: HexColor(Mytext['tagColor']),
-                          textColor: mobileSearchColor,
-                          contentPadding:
-                              const EdgeInsets.symmetric(vertical: 8.0),
-                          title: Center(
-                              child: Text(
-                            Mytext['tag'],
-                            style: TextStyle(
-                                fontFamily: 'MyCustomFont', fontSize: 20),
-                          )),
-                          onTap: () {
-                            _tag2 = Mytext['tag'].toString();
-                            _tag2Color = Mytext['tagColor'].toString();
-                            // _tag = Mytext['tag'].toString();
-                            Navigator.of(context)
-                                .popUntil((route) => route.isFirst);
-                          },
-                        )
-                      ],
-                    ),
-                  );
-                },
-              );
-            }
-            return const Text('helo');
-          }),
-        );
-      },
-    );
-  }
+  //                 return Card(
+  //                   child: Column(
+  //                     children: [
+  //                       ListTile(
+  //                         tileColor: HexColor(Mytext['tagColor']),
+  //                         textColor: mobileSearchColor,
+  //                         contentPadding:
+  //                             const EdgeInsets.symmetric(vertical: 8.0),
+  //                         title: Center(
+  //                             child: Text(
+  //                           Mytext['tag'],
+  //                           style: TextStyle(
+  //                               fontFamily: 'MyCustomFont', fontSize: 20),
+  //                         )),
+  //                         onTap: () {
+  //                           _tag2 = Mytext['tag'].toString();
+  //                           _tag2Color = Mytext['tagColor'].toString();
+  //                           Navigator.of(context)
+  //                               .popUntil((route) => route.isFirst);
+  //                           // ignore: void_checks
+  //                           return _tag2;
+  //                         },
+  //                       )
+  //                     ],
+  //                   ),
+  //                 );
+  //               },
+  //             );
+  //           }
+  //           return const Text('helo');
+  //         }),
+  //       );
+  //     },
+  //   );
+  // }
 
   @override
   void initState() {
@@ -178,6 +174,7 @@ class _EditActState extends State<EditAct> {
           .get();
 
       postData = postSnap.data()!;
+
       _activityNameController.text = postData['activityName'].toString();
       _dateController.text = postData['date'].toString();
       _detailController.text = postData['detail'].toString();
@@ -186,7 +183,6 @@ class _EditActState extends State<EditAct> {
       _placeController.text = postData['place'].toString();
       _timeController.text = postData['time'].toString();
       _tagController.text = postData['tag'].toString();
-      _tagColorController.text = postData['tagColor'].toString();
 
       setState(() {});
     } catch (e) {
@@ -201,12 +197,6 @@ class _EditActState extends State<EditAct> {
   }
 
   @override
-  void setState(VoidCallback fn) {
-    if (mounted) {
-      super.setState(fn);
-    }
-  }
-
   Widget build(BuildContext context) {
     return isLoading
         ? const Center()
@@ -413,7 +403,7 @@ class _EditActState extends State<EditAct> {
                                   child: TextFormField(
                                     controller: _timeController,
                                     decoration: textInputDecorationp.copyWith(
-                                      hintText: "Time",
+                                      hintText: "Time)",
                                       prefixIcon: Icon(
                                         Icons.query_builder,
                                         color: lightPurple,
@@ -504,143 +494,32 @@ class _EditActState extends State<EditAct> {
                                       MediaQuery.of(context).size.height * 0.02,
                                 ),
                                 // add here
-                                // StreamBuilder<QuerySnapshot>(
-                                //     stream: _post.snapshots(),
-                                //     builder: (context,
-                                //         AsyncSnapshot<QuerySnapshot> snapshot) {
-                                //       return ListView.builder(
-                                //           itemCount: (snapshot.data! as dynamic)
-                                //               .docs
-                                //               .length,
-                                //           itemBuilder: (context, index) {
-                                //             final DocumentSnapshot
-                                //                 documentSnapshot =
-                                //                 snapshot.data!.docs[index];
-                                //             if (!snapshot.hasData) {
-                                //               return Text('sad');
-                                //             }
-                                //             return Container(
-                                //               alignment: Alignment.center,
-                                //               width: MediaQuery.of(context)
-                                //                       .size
-                                //                       .width *
-                                //                   0.85,
-                                //               child: Container(
-                                //                 height: MediaQuery.of(context)
-                                //                         .size
-                                //                         .height *
-                                //                     0.04,
-                                //                 child: Row(
-                                //                   children: [
-                                //                     SingleChildScrollView(
-                                //                       scrollDirection:
-                                //                           Axis.horizontal,
-                                //                       child: Padding(
-                                //                           padding:
-                                //                               EdgeInsets.only(
-                                //                                   top: 3),
-                                //                           child: SizedBox(
-                                //                             child:
-                                //                                 OutlinedButton(
-                                //                               onPressed: () {
-                                //                                 showModalBottomSheetC(
-                                //                                     context,
-                                //                                     _tag);
-                                //                                 setState(() {
-                                //                                   _tagController =
-                                //                                       _tag2.toString()
-                                //                                           as TextEditingController;
-                                //                                 });
-                                //                               },
-                                //                               style:
-                                //                                   OutlinedButton
-                                //                                       .styleFrom(
-                                //                                 shape: RoundedRectangleBorder(
-                                //                                     borderRadius:
-                                //                                         BorderRadius.circular(
-                                //                                             30)),
-                                //                                 side: BorderSide(
-                                //                                     color: HexColor(
-                                //                                       documentSnapshot[
-                                //                                           'tagColor'],
-                                //                                     ),
-                                //                                     width: 1.5),
-                                //                               ),
-                                //                               child: Text(
-                                //                                 documentSnapshot[
-                                //                                     'tag'],
-                                //                                 style: const TextStyle(
-                                //                                     color:
-                                //                                         mobileSearchColor,
-                                //                                     fontSize:
-                                //                                         14),
-                                //                               ),
-                                //                             ),
-                                //                           )),
-                                //                     ),
-                                //                   ],
-                                //                 ),
-                                //               ),
-                                //             );
-                                //           });
-                                //     }),
-
                                 Container(
                                   alignment: Alignment.center,
                                   width:
                                       MediaQuery.of(context).size.width * 0.85,
-                                  child: Container(
-                                    height: MediaQuery.of(context).size.height *
-                                        0.04,
-                                    child: Row(
-                                      children: [
-                                        SingleChildScrollView(
-                                          scrollDirection: Axis.horizontal,
-                                          child: Padding(
-                                              padding: EdgeInsets.only(top: 3),
-                                              child: SizedBox(
-                                                child: OutlinedButton(
-                                                  onPressed: () {
-                                                    showModalBottomSheetC(
-                                                        context, _tag);
-                                                    setState(() {
-                                                      _tagController = _tag2
-                                                              .toString()
-                                                          as TextEditingController;
-                                                    });
-                                                  },
-                                                  style:
-                                                      OutlinedButton.styleFrom(
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        30)),
-                                                    side: BorderSide(
-                                                        color: HexColor(
-                                                            // _tagColorController:
-                                                            // //     _tag2Color,
-                                                            // _tagColorController
-                                                            _tagColorController
-                                                                .text),
-                                                        width: 1.5),
-                                                  ),
-                                                  child: Text(
-                                                    _tagController.text,
-                                                    style: const TextStyle(
-                                                        color:
-                                                            mobileSearchColor,
-                                                        fontSize: 14),
-                                                  ),
-                                                ),
-                                              )),
-                                        ),
-                                      ],
-                                    ),
+                                  child: TextFormField(
+                                    controller: _tagController,
+                                    decoration: textInputDecorationp.copyWith(
+                                        hintText: 'tag',
+                                        prefixIcon: Icon(
+                                          Icons.person_outline,
+                                          color: lightPurple,
+                                        )),
+                                    validator: (val) {
+                                      if (val!.isNotEmpty) {
+                                        return null;
+                                      } else {
+                                        return "plase Enter Your Place";
+                                      }
+                                    },
+                                    onChanged: (val) {
+                                      setState(() {
+                                        people = val;
+                                      });
+                                    },
                                   ),
                                 ),
-
                                 SizedBox(
                                   height:
                                       MediaQuery.of(context).size.height * 0.02,
@@ -692,8 +571,7 @@ class _EditActState extends State<EditAct> {
         'detail': detail,
         'peopleLimit': peopleLimit,
         'timeStamp': timeStamp,
-        'tag': _tag2,
-        'tagColor': _tag2Color,
+        'tag': tag,
       });
 
       _activityNameController.text = '';
@@ -704,7 +582,6 @@ class _EditActState extends State<EditAct> {
       _detailController.text = '';
       _peopleLimitController.text = '';
       _tagController.text = '';
-      _tagColorController.text = '';
 
       nextScreen(context, MyHomePage());
     }

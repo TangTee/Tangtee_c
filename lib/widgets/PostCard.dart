@@ -10,6 +10,7 @@ import '../comment/comment.dart';
 import '../utils/color.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'TagResult.dart';
 
 class CardWidget extends StatefulWidget {
   final snap;
@@ -271,7 +272,15 @@ class _PostCardState extends State<CardWidget> {
                                   padding: EdgeInsets.only(top: 3),
                                   child: SizedBox(
                                     child: OutlinedButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) => TagResult(
+                                                Tag: widget.snap['tag']
+                                                    .toString()),
+                                          ),
+                                        );
+                                      },
                                       child: Text(
                                         widget.snap['tag'],
                                         style: const TextStyle(
