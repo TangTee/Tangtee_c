@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
+import 'package:tangteevs/widgets/tag.dart';
 import 'package:tangteevs/profile/profileback.dart';
 import 'package:tangteevs/services/auth_service.dart';
 import 'package:tangteevs/services/database_service.dart';
@@ -46,158 +47,10 @@ class _EditActState extends State<EditAct> {
   var _tag;
   var _tag2;
   var _tag2Color;
+  var value;
   var test;
   var postData = {};
   bool isLoading = false;
-
-  void showModalBottomSheetC(BuildContext context, tag) {
-    final CollectionReference _categorys =
-        FirebaseFirestore.instance.collection('categorys');
-
-    showModalBottomSheet(
-      useRootNavigator: true,
-      context: context,
-      builder: (BuildContext context) {
-        return SizedBox(
-          width: MediaQuery.of(context).size.width * 0.1,
-          height: MediaQuery.of(context).size.height * 0.5,
-          child: StreamBuilder(
-            stream: _categorys.snapshots(),
-            builder: ((context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (snapshot.hasData) {
-                return ListView.builder(
-                  padding: new EdgeInsets.only(top: 10.0),
-                  itemCount: (snapshot.data! as dynamic).docs.length,
-                  itemBuilder: (context, index) {
-                    final DocumentSnapshot documentSnapshot =
-                        snapshot.data!.docs[index];
-
-                    var Mytext = new Map();
-                    Mytext['Category'] = documentSnapshot['Category'];
-                    Mytext['categoryId'] = documentSnapshot['categoryId'];
-                    Mytext['color'] = documentSnapshot['color'];
-
-                    return Card(
-                      color: HexColor(Mytext['color']),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(70.0),
-                        side: const BorderSide(
-                          color: transparent,
-                          width: 2,
-                        ),
-                      ),
-                      child: Column(
-                        children: [
-                          ListTile(
-                            textColor: mobileSearchColor,
-                            contentPadding:
-                                const EdgeInsets.symmetric(vertical: 8.0),
-                            title: Center(
-                                child: Text(Mytext['Category'],
-                                    style: TextStyle(
-                                        fontFamily: 'MyCustomFont',
-                                        fontSize: 20))),
-                            onTap: () {
-                              showModalBottomSheetT(
-                                  context, Mytext['categoryId']);
-                            },
-                          )
-                        ],
-                      ),
-                    );
-                  },
-                );
-              }
-              return const Text('helo');
-            }),
-          ),
-        );
-      },
-    );
-  }
-
-  showModalBottomSheetT(BuildContext context, categoryId) {
-    final CollectionReference _tags =
-        FirebaseFirestore.instance.collection('tags');
-
-    showModalBottomSheet(
-      useRootNavigator: true,
-      context: context,
-      builder: (BuildContext context) {
-        return Container(
-          height: MediaQuery.of(context).size.height * 0.5,
-          width: MediaQuery.of(context).size.width * 0.5,
-          child: StreamBuilder(
-            stream:
-                _tags.where("categoryId", isEqualTo: categoryId).snapshots(),
-            builder: ((context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (snapshot.hasData) {
-                return Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: SizedBox(
-                    child: Expanded(
-                      child: ListView.builder(
-                        padding: new EdgeInsets.only(top: 10.0),
-                        physics: const AlwaysScrollableScrollPhysics(),
-                        scrollDirection: Axis.horizontal,
-                        shrinkWrap: true,
-                        itemCount: (snapshot.data! as dynamic).docs.length,
-                        itemBuilder: (context, index) {
-                          final DocumentSnapshot documentSnapshot =
-                              snapshot.data!.docs[index];
-
-                          var Mytext = new Map();
-                          Mytext['tag'] = documentSnapshot['tag'];
-                          Mytext['tagColor'] = documentSnapshot['tagColor'];
-
-                          return Wrap(direction: Axis.horizontal, children: <
-                              Widget>[
-                            Container(
-                                width: MediaQuery.of(context).size.width * 0.27,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.07,
-                                child: Column(children: [
-                                  SizedBox(
-                                    child: OutlinedButton(
-                                      onPressed: () {
-                                        _tag2 = Mytext['tag'].toString();
-                                        _tag2Color =
-                                            Mytext['tagColor'].toString();
-                                        Navigator.of(context)
-                                            .popUntil((route) => route.isFirst);
-                                      },
-                                      child: Text(
-                                        Mytext['tag'],
-                                        style: const TextStyle(
-                                            color: mobileSearchColor,
-                                            fontSize: 14),
-                                      ),
-                                      style: OutlinedButton.styleFrom(
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(30)),
-                                          side: BorderSide(
-                                              color: HexColor(
-                                                Mytext['tagColor'],
-                                              ),
-                                              width: 1.5)),
-                                    ),
-                                  ),
-                                ])),
-                          ]);
-                        },
-                      ),
-                    ),
-                  ),
-                );
-              }
-              return const Text('helo');
-            }),
-          ),
-        );
-      },
-    );
-  }
 
   @override
   void initState() {
@@ -672,12 +525,13 @@ class _EditActState extends State<EditAct> {
                                                 child: SizedBox(
                                                   child: OutlinedButton(
                                                     onPressed: () {
-                                                      showModalBottomSheetC(
-                                                          context, _tag);
+                                                      value =
+                                                          showModalBottomSheetC(
+                                                              context);
                                                       setState(() {
-                                                        _tagController = _tag2
-                                                                .toString()
-                                                            as TextEditingController;
+                                                        // _tagController = _tag2
+                                                        //         .toString()
+                                                        //     as Text-EditingController;
                                                       });
                                                     },
                                                     style: OutlinedButton
@@ -759,8 +613,8 @@ class _EditActState extends State<EditAct> {
         'detail': detail,
         'peopleLimit': peopleLimit,
         'timeStamp': timeStamp,
-        'tag': _tag2,
-        'tagColor': _tag2Color,
+        'tag': value['_tag2'],
+        'tagColor': value['_tag2Color'],
       });
 
       _activityNameController.text = '';
