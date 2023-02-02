@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:tangteevs/HomePage.dart';
 import 'package:tangteevs/utils/color.dart';
@@ -424,51 +425,258 @@ class _LoadTagState extends State<LoadTag> {
       useRootNavigator: true,
       context: context,
       builder: (BuildContext context) {
-        return StreamBuilder(
-          stream: _categorys.snapshots(),
-          builder: ((context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.hasData) {
-              return ListView.builder(
-                itemCount: (snapshot.data! as dynamic).docs.length,
-                itemBuilder: (context, index) {
-                  final DocumentSnapshot documentSnapshot =
-                      snapshot.data!.docs[index];
+        return SizedBox(
+          width: MediaQuery.of(context).size.width * 0.1,
+          height: MediaQuery.of(context).size.height * 0.5,
+          child: StreamBuilder(
+            stream: _categorys.snapshots(),
+            builder: ((context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasData) {
+                return ListView.builder(
+                  padding: new EdgeInsets.only(top: 10.0),
+                  itemCount: (snapshot.data! as dynamic).docs.length,
+                  itemBuilder: (context, index) {
+                    final DocumentSnapshot documentSnapshot =
+                        snapshot.data!.docs[index];
 
-                  var Mytext = new Map();
-                  Mytext['Category'] = documentSnapshot['Category'];
-                  Mytext['categoryId'] = documentSnapshot['categoryId'];
-                  Mytext['color'] = documentSnapshot['color'];
+                    var Mytext = new Map();
+                    Mytext['Category'] = documentSnapshot['Category'];
+                    Mytext['categoryId'] = documentSnapshot['categoryId'];
+                    Mytext['color'] = documentSnapshot['color'];
 
-                  return Card(
-                    child: Column(
-                      children: [
-                        ListTile(
-                          tileColor: HexColor(Mytext['color']),
-                          textColor: mobileSearchColor,
-                          contentPadding:
-                              const EdgeInsets.symmetric(vertical: 8.0),
-                          title: Center(
-                              child: Text(Mytext['Category'],
-                                  style: TextStyle(
-                                      fontFamily: 'MyCustomFont',
-                                      fontSize: 20))),
-                          onTap: () {
-                            showModalBottomSheetT(
-                                context, Mytext['categoryId']);
-                          },
-                        )
-                      ],
-                    ),
-                  );
-                },
-              );
-            }
-            return const Text('helo');
-          }),
+                    return Card(
+                      color: HexColor(Mytext['color']),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(70.0),
+                        side: const BorderSide(
+                          color: transparent,
+                          width: 2,
+                        ),
+                      ),
+                      child: Column(
+                        children: [
+                          ListTile(
+                            textColor: mobileSearchColor,
+                            contentPadding:
+                                const EdgeInsets.symmetric(vertical: 8.0),
+                            title: Center(
+                                child: Text(Mytext['Category'],
+                                    style: TextStyle(
+                                        fontFamily: 'MyCustomFont',
+                                        fontSize: 20))),
+                            onTap: () {
+                              showModalBottomSheetT(
+                                  context, Mytext['categoryId']);
+                            },
+                          )
+                        ],
+                      ),
+                    );
+                  },
+                );
+              }
+              return const Text('helo');
+            }),
+          ),
         );
       },
     );
   }
+
+  // showModalBottomSheetT(BuildContext context, categoryId) {
+  //   final CollectionReference _tags =
+  //       FirebaseFirestore.instance.collection('tags');
+
+  //   showModalBottomSheet(
+  //     useRootNavigator: true,
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return Container(
+  //         height: MediaQuery.of(context).size.height * 1,
+  //         width: MediaQuery.of(context).size.width * 1,
+  //         child: Row(
+  //           children: [
+  //             Container(
+  //               height: MediaQuery.of(context).size.height * 0.5,
+  //               width: MediaQuery.of(context).size.width * 0.5,
+  //               child: Column(
+  //                 children: [
+  //                   Container(
+  //                     height: MediaQuery.of(context).size.height * 0.5,
+  //                     width: MediaQuery.of(context).size.width * 0.5,
+  //                     child: StreamBuilder(
+  //                       stream: _tags
+  //                           .where("categoryId", isEqualTo: categoryId)
+  //                           .snapshots(),
+  //                       builder:
+  //                           ((context, AsyncSnapshot<QuerySnapshot> snapshot) {
+  //                         if (snapshot.hasData) {
+  //                           return ListView.builder(
+  //                             itemCount:
+  //                                 (snapshot.data! as dynamic).docs.length,
+  //                             itemBuilder: (context, index) {
+  //                               final DocumentSnapshot documentSnapshot =
+  //                                   snapshot.data!.docs[index];
+
+  //                               var Mytext = new Map();
+  //                               Mytext['tag'] = documentSnapshot['tag'];
+  //                               Mytext['tagColor'] =
+  //                                   documentSnapshot['tagColor'];
+
+  //                               // return Card(
+  //                               //   child: Column(
+  //                               //     children: [
+  //                               //       ListTile(
+  //                               //         tileColor: HexColor(Mytext['tagColor']),
+  //                               //         textColor: mobileSearchColor,
+  //                               //         contentPadding:
+  //                               //             const EdgeInsets.symmetric(vertical: 8.0),
+  //                               //         title: Center(
+  //                               //             child: Text(
+  //                               //           Mytext['tag'],
+  //                               //           style: TextStyle(
+  //                               //               fontFamily: 'MyCustomFont', fontSize: 20),
+  //                               //         )),
+  //                               //         onTap: () {
+  //                               //           _tag2 = Mytext['tag'].toString();
+  //                               //           _tag2Color = Mytext['tagColor'].toString();
+  //                               //           Navigator.of(context)
+  //                               //               .popUntil((route) => route.isFirst);
+  //                               //         },
+  //                               //       )
+  //                               //     ],
+  //                               //   ),
+  //                               // );
+  //                               return Container(
+  //                                   width:
+  //                                       MediaQuery.of(context).size.width * 0.1,
+  //                                   height: MediaQuery.of(context).size.height *
+  //                                       0.07,
+  //                                   child: Column(children: [
+  //                                     SizedBox(
+  //                                       child: OutlinedButton(
+  //                                         onPressed: () {
+  //                                           _tag2 = Mytext['tag'].toString();
+  //                                           _tag2Color =
+  //                                               Mytext['tagColor'].toString();
+  //                                           Navigator.of(context).popUntil(
+  //                                               (route) => route.isFirst);
+  //                                         },
+  //                                         child: Text(
+  //                                           Mytext['tag'],
+  //                                           style: const TextStyle(
+  //                                               color: mobileSearchColor,
+  //                                               fontSize: 14),
+  //                                         ),
+  //                                         style: OutlinedButton.styleFrom(
+  //                                             shape: RoundedRectangleBorder(
+  //                                                 borderRadius:
+  //                                                     BorderRadius.circular(
+  //                                                         30)),
+  //                                             side: BorderSide(
+  //                                                 color: HexColor(
+  //                                                   Mytext['tagColor'],
+  //                                                 ),
+  //                                                 width: 1.5)),
+  //                                       ),
+  //                                     ),
+  //                                   ]));
+  //                             },
+  //                           );
+  //                         }
+  //                         return const Text('helo');
+  //                       }),
+  //                     ),
+  //                   ),
+  //                 ],
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
+
+  // showModalBottomSheetT(BuildContext context, categoryId) {
+  //   final CollectionReference _tags =
+  //       FirebaseFirestore.instance.collection('tags');
+
+  //   showModalBottomSheet(
+  //     useRootNavigator: true,
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return Container(
+  //         height: MediaQuery.of(context).size.height * 0.5,
+  //         width: MediaQuery.of(context).size.width * 0.5,
+  //         child: StreamBuilder(
+  //           stream:
+  //               _tags.where("categoryId", isEqualTo: categoryId).snapshots(),
+  //           builder: ((context, AsyncSnapshot<QuerySnapshot> snapshot) {
+  //             if (snapshot.hasData) {
+  //               return Flexible(
+  //                 child: Padding(
+  //                   padding: const EdgeInsets.all(20),
+  //                   child: SizedBox(
+  //                     child: Expanded(
+  //                       child: ListView.builder(
+  //                         scrollDirection: Axis.horizontal,
+  //                         shrinkWrap: true,
+  //                         itemCount: (snapshot.data! as dynamic).docs.length,
+  //                         itemBuilder: (context, index) {
+  //                           final DocumentSnapshot documentSnapshot =
+  //                               snapshot.data!.docs[index];
+
+  //                           var Mytext = new Map();
+  //                           Mytext['tag'] = documentSnapshot['tag'];
+  //                           Mytext['tagColor'] = documentSnapshot['tagColor'];
+
+  //                           return Container(
+  //                               width: MediaQuery.of(context).size.width * 0.24,
+  //                               height:
+  //                                   MediaQuery.of(context).size.height * 0.07,
+  //                               child: Column(children: [
+  //                                 SizedBox(
+  //                                   child: OutlinedButton(
+  //                                     onPressed: () {
+  //                                       _tag2 = Mytext['tag'].toString();
+  //                                       _tag2Color =
+  //                                           Mytext['tagColor'].toString();
+  //                                       Navigator.of(context)
+  //                                           .popUntil((route) => route.isFirst);
+  //                                     },
+  //                                     child: Text(
+  //                                       Mytext['tag'],
+  //                                       style: const TextStyle(
+  //                                           color: mobileSearchColor,
+  //                                           fontSize: 14),
+  //                                     ),
+  //                                     style: OutlinedButton.styleFrom(
+  //                                         shape: RoundedRectangleBorder(
+  //                                             borderRadius:
+  //                                                 BorderRadius.circular(30)),
+  //                                         side: BorderSide(
+  //                                             color: HexColor(
+  //                                               Mytext['tagColor'],
+  //                                             ),
+  //                                             width: 1.5)),
+  //                                   ),
+  //                                 ),
+  //                               ]));
+  //                         },
+  //                       ),
+  //                     ),
+  //                   ),
+  //                 ),
+  //               );
+  //             }
+  //             return const Text('helo');
+  //           }),
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
   showModalBottomSheetT(BuildContext context, categoryId) {
     final CollectionReference _tags =
@@ -478,57 +686,167 @@ class _LoadTagState extends State<LoadTag> {
       useRootNavigator: true,
       context: context,
       builder: (BuildContext context) {
-        return StreamBuilder(
-          stream: _tags.where("categoryId", isEqualTo: categoryId).snapshots(),
-          builder: ((context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.hasData) {
-              return ListView.builder(
-                itemCount: (snapshot.data! as dynamic).docs.length,
-                itemBuilder: (context, index) {
-                  final DocumentSnapshot documentSnapshot =
-                      snapshot.data!.docs[index];
+        return Container(
+          height: MediaQuery.of(context).size.height * 0.5,
+          width: MediaQuery.of(context).size.width * 0.5,
+          child: StreamBuilder(
+            stream:
+                _tags.where("categoryId", isEqualTo: categoryId).snapshots(),
+            builder: ((context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasData) {
+                return Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: SizedBox(
+                    child: Expanded(
+                      child: ListView.builder(
+                        padding: new EdgeInsets.only(top: 10.0),
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        scrollDirection: Axis.horizontal,
+                        shrinkWrap: true,
+                        itemCount: (snapshot.data! as dynamic).docs.length,
+                        itemBuilder: (context, index) {
+                          final DocumentSnapshot documentSnapshot =
+                              snapshot.data!.docs[index];
 
-                  var Mytext = new Map();
-                  Mytext['tag'] = documentSnapshot['tag'];
-                  Mytext['tagColor'] = documentSnapshot['tagColor'];
+                          var Mytext = new Map();
+                          Mytext['tag'] = documentSnapshot['tag'];
+                          Mytext['tagColor'] = documentSnapshot['tagColor'];
 
-                  return Card(
-                    child: Column(
-                      children: [
-                        ListTile(
-                          tileColor: HexColor(Mytext['tagColor']),
-                          textColor: mobileSearchColor,
-                          contentPadding:
-                              const EdgeInsets.symmetric(vertical: 8.0),
-                          title: Center(
-                              child: Text(
-                            Mytext['tag'],
-                            style: TextStyle(
-                                fontFamily: 'MyCustomFont', fontSize: 20),
-                          )),
-                          onTap: () {
-                            _tag2 = Mytext['tag'].toString();
-                            _tag2Color = Mytext['tagColor'].toString();
-                            // Navigator.of(context)
-                            //     .popUntil((route) => route.isFirst);
-                            Navigator.of(context)
-                                .popUntil((route) => route.isFirst);
-                            // ignore: void_checks
-                            // return _tag2;
-                          },
-                        )
-                      ],
+                          return Wrap(direction: Axis.horizontal, children: <
+                              Widget>[
+                            Container(
+                                width: MediaQuery.of(context).size.width * 0.27,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.07,
+                                child: Column(children: [
+                                  SizedBox(
+                                    child: OutlinedButton(
+                                      onPressed: () {
+                                        _tag2 = Mytext['tag'].toString();
+                                        _tag2Color =
+                                            Mytext['tagColor'].toString();
+                                        Navigator.of(context)
+                                            .popUntil((route) => route.isFirst);
+                                      },
+                                      child: Text(
+                                        Mytext['tag'],
+                                        style: const TextStyle(
+                                            color: mobileSearchColor,
+                                            fontSize: 14),
+                                      ),
+                                      style: OutlinedButton.styleFrom(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(30)),
+                                          side: BorderSide(
+                                              color: HexColor(
+                                                Mytext['tagColor'],
+                                              ),
+                                              width: 1.5)),
+                                    ),
+                                  ),
+                                ])),
+                          ]);
+                        },
+                      ),
                     ),
-                  );
-                },
-              );
-            }
-            return const Text('helo');
-          }),
+                  ),
+                );
+              }
+              return const Text('helo');
+            }),
+          ),
         );
       },
     );
   }
+  // showModalBottomSheetT(BuildContext context, categoryId) {
+  //   final CollectionReference _tags =
+  //       FirebaseFirestore.instance.collection('tags');
+
+  //   showModalBottomSheet(
+  //     useRootNavigator: true,
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return SizedBox(
+  //         height: 500,
+  //         width: 1000,
+  //         child: Container(
+  //           height: 200,
+  //           width: 400,
+  //           child: Row(
+  //             children: [
+  //               Column(
+  //                 children: [
+  //                   Container(
+  //                     height: 200,
+  //                     width: 300,
+  //                     child: StreamBuilder(
+  //                       stream: _tags
+  //                           .where("categoryId", isEqualTo: categoryId)
+  //                           .snapshots(),
+  //                       builder:
+  //                           ((context, AsyncSnapshot<QuerySnapshot> snapshot) {
+  //                         if (snapshot.hasData) {
+  //                           return ListView.builder(
+  //                             itemCount:
+  //                                 (snapshot.data! as dynamic).docs.length,
+  //                             itemBuilder: (context, index) {
+  //                               final DocumentSnapshot documentSnapshot =
+  //                                   snapshot.data!.docs[index];
+
+  //                               var Mytext = new Map();
+  //                               Mytext['tag'] = documentSnapshot['tag'];
+  //                               Mytext['tagColor'] =
+  //                                   documentSnapshot['tagColor'];
+
+  //                               return Card(
+  //                                 child: Column(
+  //                                   children: [
+  //                                     ListTile(
+  //                                       tileColor: HexColor(Mytext['tagColor']),
+  //                                       textColor: mobileSearchColor,
+  //                                       contentPadding:
+  //                                           const EdgeInsets.symmetric(
+  //                                               vertical: 8.0),
+  //                                       title: Center(
+  //                                           child: Text(
+  //                                         Mytext['tag'],
+  //                                         style: TextStyle(
+  //                                             fontFamily: 'MyCustomFont',
+  //                                             fontSize: 20),
+  //                                       )),
+  //                                       onTap: () {
+  //                                         _tag2 = Mytext['tag'].toString();
+  //                                         _tag2Color =
+  //                                             Mytext['tagColor'].toString();
+  //                                         // Navigator.of(context)
+  //                                         //     .popUntil((route) => route.isFirst);
+  //                                         Navigator.of(context).popUntil(
+  //                                             (route) => route.isFirst);
+  //                                         // ignore: void_checks
+  //                                         // return _tag2;
+  //                                       },
+  //                                     )
+  //                                   ],
+  //                                 ),
+  //                               );
+  //                             },
+  //                           );
+  //                         }
+  //                         return const Text('helo');
+  //                       }),
+  //                     ),
+  //                   ),
+  //                 ],
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
   void initState() {
     dateController.text = "";
